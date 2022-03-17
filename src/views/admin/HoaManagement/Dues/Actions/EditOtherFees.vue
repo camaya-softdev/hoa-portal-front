@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="editFees"
-    title="Add Other Fees"
+    title="Edit Other Fees"
     width="50%"
     :before-close="handleClose"
     center
@@ -31,7 +31,7 @@
         <el-select-v2
           v-model="form.paymentSchedule"
           :options="periodDateRecurrentOptions"
-          placeholder="Please select Status"
+          placeholder="Please select Schedule"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </el-form-item>

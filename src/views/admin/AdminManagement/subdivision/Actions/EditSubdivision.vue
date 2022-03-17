@@ -40,35 +40,6 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="Association Dues">
-        <el-input
-          v-model="form.associationDues"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item label="Payment Target">
-        <el-input
-          v-model="form.paymentTarget"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        ></el-input>
-      </el-form-item>
-
-      <el-form-item label="Payment Schedule">
-        <div class="demo-date-picker">
-          <div class="block mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-            <el-date-picker
-              v-model="form.startDate"
-              type="daterange"
-              range-separator="To"
-              start-placeholder="Payment Start date"
-              end-placeholder="Payment End date"
-
-            ></el-date-picker>
-          </div>
-        </div>
-      </el-form-item>
-
       <el-form-item label="Contact Person">
         <el-select-v2
           v-model="form.contactPerson"

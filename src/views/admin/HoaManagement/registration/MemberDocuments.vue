@@ -20,6 +20,14 @@
       <el-dialog v-model="dialogVisible">
         <img style="width: 100%" :src="dialogImageUrl" alt="" />
       </el-dialog>
+      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <router-link
+          :to="{ name: 'MemberRegistration' }"
+          class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+        >
+          Back
+        </router-link>
+      </div>
     </template>
   </page-component>
 </template>

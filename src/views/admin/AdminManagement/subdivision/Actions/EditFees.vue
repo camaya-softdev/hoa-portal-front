@@ -60,7 +60,7 @@
         <el-select-v2
           v-model="form.periodDateRecurrent"
           :options="periodDateRecurrentOptions"
-          placeholder="Please select Status"
+          placeholder="Please select Date Recurrent"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </el-form-item>

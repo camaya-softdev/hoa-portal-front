@@ -44,15 +44,6 @@
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Edit Fees" placement="bottom" effect="light">
-                <el-button
-                  size="small"
-                  type="primary"
-                  :icon="Edit"
-                  @click="editFees = true"
-                ></el-button>
-              </el-tooltip>
-
               <el-tooltip
                 content="Delete Fees"
                 placement="bottom"
