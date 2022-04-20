@@ -71,7 +71,7 @@
           disabled
         ></el-input>
       </el-form-item>
-      <el-form-item label="Last Name">
+      <el-form-item label="Middle Name">
         <el-input
           v-model="form.middleName"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

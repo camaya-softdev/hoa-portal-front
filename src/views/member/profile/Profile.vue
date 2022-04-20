@@ -11,25 +11,7 @@
   </header>
   <main>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <!-- Replace with your content -->
       <div class="px-4 py-6 sm:px-0">
-        <!--
-  This example requires Tailwind CSS v2.0+
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
-
         <div class="mt-10 sm:mt-0">
           <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1">
@@ -671,3 +653,27 @@
     </div>
   </main>
 </template>
+
+<script setup>
+import store from "../../../store";
+import { useRouter } from "vue-router";
+const router = useRouter();
+if (parseInt(store.state.auth.user.hoa_member_registered) === 1) {
+  router.push({
+    name:'Home'
+  })
+}
+if (
+  parseInt(store.state.auth.user.hoa_admin) === 1 &&
+  parseInt(store.state.auth.user.hoa_member) === 0
+) {
+  store.commit("alert/notify", {
+    title: "Unathourized",
+    type: "error",
+    message: "You are Hoa Admin and not registered as Hoa Member",
+  });
+  router.push({
+    name: "Dashboard",
+  });
+}
+</script>

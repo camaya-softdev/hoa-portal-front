@@ -1,5 +1,5 @@
 <template>
-  <page-component navTitle="Hoa Management" navContent="Autogate Management">
+  <page-component navTitle="Member Management" navContent="Autogate Management">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addAutogate = true"
         >Add Autogate</el-button

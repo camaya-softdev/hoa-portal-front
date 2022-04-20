@@ -141,6 +141,7 @@
                   >
                     <MenuItem
                       v-for="item in userNavigation"
+                      @click="logout"
                       :key="item.name"
                       v-slot="{ active }"
                     >
@@ -186,12 +187,15 @@
             :aria-current="navigation.current ? 'page' : undefined"
             >Dashboard</DisclosureButton
           >
-          <DisclosureButton  class="cursor-pointer" :class="[
+          <DisclosureButton
+            class="cursor-pointer"
+            :class="[
               navigation.current
                 ? 'bg-gray-900 text-white'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
-            ]">
+            ]"
+          >
             <Menu as="div">
               <MenuButton
                 :class="[
@@ -232,12 +236,15 @@
               </transition>
             </Menu>
           </DisclosureButton>
-          <DisclosureButton  class="cursor-pointer" :class="[
+          <DisclosureButton
+            class="cursor-pointer"
+            :class="[
               navigation.current
                 ? 'bg-gray-900 text-white'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
-            ]">
+            ]"
+          >
             <Menu as="div">
               <MenuButton
                 :class="[
@@ -296,6 +303,7 @@
           <div class="mt-3 px-2 space-y-1">
             <DisclosureButton
               v-for="item in userNavigation"
+              @click="logout"
               :key="item.name"
               as="a"
               :href="item.href"
@@ -321,6 +329,9 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
+import { useStore } from "vuex";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 
 const user = {
   name: "Adrian Ardais",
@@ -341,7 +352,8 @@ const userNavigation = [
 const adminManagement = [
   { name: "Subdivision Management", to: "Subdivision" },
   { name: "User Management", to: "UserManagement" },
-   { name: "Privilege Management", to: "PrivilegeManagement" },
+  { name: "Privilege Management", to: "PrivilegeManagement" },
+  { name: "Sales Agent", to: "SalesAgent" },
 ];
 
 const hoaManagement = [
@@ -366,12 +378,32 @@ export default {
     XIcon,
   },
   setup() {
+    const store = useStore();
+    const router = useRouter();
+    if (parseInt(store.state.auth.user.hoa_admin) !== 1) {
+      store.commit("alert/notify", {
+        title: "Unathourized",
+        type: "error",
+        message: "You are Hoa Member and not registered as Hoa Admin",
+      });
+      router.push({
+        name: "Profile",
+      });
+    }
+    function logout() {
+      store.dispatch("auth/logout").then(() => {
+        router.push({
+          name: "Login",
+        });
+      });
+    }
     return {
       user,
       adminManagement,
       hoaManagement,
       navigation,
       userNavigation,
+      logout,
     };
   },
 };

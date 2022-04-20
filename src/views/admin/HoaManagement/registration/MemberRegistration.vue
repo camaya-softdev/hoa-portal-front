@@ -1,16 +1,22 @@
 <template>
-  <page-component navTitle="Hoa Management" navContent="Member Registration">
+  <page-component navTitle="Member Management" navContent="Member Registration">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addMember = true"
         >Add Member</el-button
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="memberLoading"
+        v-loading.fullscreen.lock="memberLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
+        :row-class-name="tableRowClassName"
         :data="filterTableData"
-        stripe
         border
         style="width: 100%"
       >
@@ -99,10 +105,11 @@
                   size="small"
                   type="primary"
                   :icon="Edit"
-                  @click="editMember = true"
+                  @click="editModal(scope.$index, scope.row)"
                 ></el-button>
               </el-tooltip>
-                <el-tooltip
+              <el-tooltip
+                v-if="scope.row.hoa_member_status === 1"
                 content="Disabled Member"
                 placement="bottom"
                 effect="light"
@@ -111,7 +118,20 @@
                   size="small"
                   type="warning"
                   :icon="Lock"
-                  @click="disableSubdivision"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip
+                v-else
+                content="Enabled Member"
+                placement="bottom"
+                effect="light"
+              >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Unlock"
+                  @click="changeStatus(scope.$index, scope.row)"
                 ></el-button
               ></el-tooltip>
               <el-tooltip
@@ -123,22 +143,58 @@
                   size="small"
                   type="danger"
                   :icon="Delete"
-                  @click="deleteSubdivision"
+                  @click="deleteMember(scope.$index, scope.row)"
                 ></el-button
               ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-center mt-5">
+        <nav
+          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
+          aria-label="Pagination"
+        >
+          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+          <a
+            v-for="(link, i) of tableData.links"
+            :key="i"
+            :disabled="!link.url"
+            href="#"
+            @click="getForPage($event, link)"
+            aria-current="page"
+            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
+            :class="[
+              link.active
+                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
+              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
+            ]"
+            v-html="link.label"
+          >
+          </a>
+        </nav>
+      </div>
     </template>
   </page-component>
-<add-member :addMember="addMember" @closeModal="addMember = false"></add-member>
-<edit-member :editMember="editMember" @closeModal="editMember = false"></edit-member>
+  <add-member
+    :addMember="addMember"
+    @closeModal="addMember = false"
+  ></add-member>
+
+  <edit-member
+    v-if="editId !== 0"
+    :editMember="editMember"
+    :edit-id="editId"
+    @closeModal="editMember = false"
+    @editId="editId = 0"
+  ></edit-member>
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import AddMember from "./Actions/AddMember.vue"
-import EditMember from "./Actions/EditMember.vue"
+import AddMember from "./Actions/AddMember.vue";
+import EditMember from "./Actions/EditMember.vue";
 import PageComponent from "../../../../components/PageComponent.vue";
 import {
   Edit,
@@ -147,91 +203,108 @@ import {
   Document,
   Loading,
   CreditCard,
-  Lock
+  Lock,
+  Unlock,
 } from "@element-plus/icons-vue";
 import store from "../../../../store";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+
+const router = useRouter();
 const addMember = ref(false);
 const editMember = ref(false);
+const search = ref("");
 
-const user = {
-  last_name: "",
-  first_name: "",
-  middle_name: "",
-  email: "",
-  notifications: "",
+//get all hoa member data
+store.dispatch("member/getMembers");
+const memberLoading = computed(() => store.state.member.members.loading);
+let tableData = computed(() => store.state.member.members);
+
+
+const tableRowClassName = ({ row, rowIndex }) => {
+  //change table row to  red if the users is disable
+  if (row.hoa_member_status === 0) {
+    return "danger-row";
+  }
+  return "";
 };
 
 const tableHeader = [
-  { id: "0", name: "Member Id", prop: "id", width: "100" },
-  { id: "1", name: "Email Address", prop: "emailAddress", width: "200" },
-  { id: "2", name: "Last Name", prop: "lastName", width: "180" },
-  { id: "2", name: "First Name", prop: "firstName", width: "180" },
-  { id: "3", name: "Middle Name", prop: "middleName", width: "180" },
-  { id: "4", name: "E Bill", prop: "eBill", width: "180" },
-  { id: "5", name: "SMS", prop: "sms", width: "180" },
+  { id: "0", name: "Member Id", prop: "id", width: "180" },
+  { id: "1", name: "Email Address", prop: "email", width: "200" },
+  { id: "2", name: "Last Name", prop: "hoa_member_lname", width: "180" },
+  { id: "3", name: "First Name", prop: "hoa_member_fname", width: "180" },
+  { id: "4", name: "Middle Name", prop: "hoa_member_mname", width: "180" },
+  { id: "5", name: "Suffix", prop: "hoa_member_suffix", width: "180" },
+  { id: "6", name: "E Bill", prop: "hoa_member_ebill", width: "180" },
+  { id: "7", name: "SMS", prop: "hoa_member_sms", width: "180" },
 ];
-
-const tableData = [
-  {
-    id: "1",
-    emailAddress: "franciscofelizardo123@gmail.com",
-    lastName: "Felizardo",
-    firstName: "Francisco",
-    middleName: "Cortez",
-    eBill: "Yes",
-    sms: "No",
-  },
-  {
-    id: "2",
-    emailAddress: "LagunaRoldan321@yahoo.com",
-    lastName: "Laguna",
-    firstName: "Roldan",
-    middleName: "Barros",
-    eBill: "Yes",
-    sms: "Yes",
-  },
-  {
-    id: "3",
-    emailAddress: "julietg0621@gmail.com",
-    lastName: "Guevara",
-    firstName: "Juliet",
-    middleName: "Anico",
-    eBill: "No",
-    sms: "No",
-  },
-];
-
-const search = ref("");
 
 const filterTableData = computed(() =>
-  tableData.filter(
+  tableData.value.data.filter(
     (data) =>
       !search.value ||
-      data.emailAddress.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.lastName.toLowerCase().includes(search.value.toLowerCase())
+      data.email.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.hoa_member_lname
+        .toLowerCase()
+        .includes(search.value.toLowerCase()) ||
+      data.hoa_member_fname
+        .toLowerCase()
+        .includes(search.value.toLowerCase()) ||
+      data.hoa_member_mname.toLowerCase().includes(search.value.toLowerCase())
   )
 );
-
-function registration(ev) {
-  ev.preventDefault();
-  store.dispatch("registerMember", user).then((res) => {
-    this.closeModal();
-  });
+const editId = ref(0);
+function editModal(index, row) {
+  editId.value = row.id;
+  editMember.value = true;
 }
-function deleteSubdivision(survey) {
+
+async function deleteMember(index, row) {
   if (
     confirm(
       `Are you sure you want to delete this data? Operation can't be undone`
     )
   ) {
+    try {
+      const res = await store.dispatch("member/deleteMember", row.id);
+      if (res.status === 204) {
+        await store.dispatch("member/getMembers");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The user data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
-function disableSubdivision(survey) {
-  if (confirm(`Are you sure you want to disable this data?`)) {
+async function changeStatus(index, row) {
+  if (confirm(`Are you sure you want to update users data status?`)) {
+    try {
+      const res = await store.dispatch("member/changeStatus", row.id);
+      if (res.status === 204) {
+        await store.dispatch("member/getMembers");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The user data status was successfully updated",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
+}
+//pagination
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  await store.dispatch("member/getMembers", { url: link.url });
 }
 
 function resetPassword(survey) {
@@ -239,12 +312,19 @@ function resetPassword(survey) {
   }
 }
 function property() {
-  router.push({name:'MemberAddress'})
+  router.push({ name: "MemberAddress" });
 }
 function documents() {
-  router.push({name:'MemberDocuments'})
+  router.push({ name: "MemberDocuments" });
 }
 function paymentHistory() {
-  router.push({name:'MemberPaymentHistory'})
+  router.push({ name: "MemberPaymentHistory" });
 }
 </script>
+<style>
+.el-table .danger-row {
+  --el-table-tr-bg-color: var(--el-color-danger-light-9);
+}
+
+
+</style>

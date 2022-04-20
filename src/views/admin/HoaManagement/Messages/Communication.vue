@@ -1,5 +1,5 @@
 <template>
-  <page-component navTitle="Hoa Management" navContent="Email Management">
+  <page-component navTitle="Member Management" navContent="Email Management">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addEmail = true"
         >Add Email</el-button

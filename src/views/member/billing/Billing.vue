@@ -7,11 +7,7 @@
       >
         Billing Statement
       </h1>
-      <div class="border-4 border-dashed border-gray-200 rounded-lg h-80 mb-3">
-        <div class="px-4 flex justify-center mt-10">
-          <img src="../../../assets/soa.png" class="transform h-50 bg-blue-400 w-96 hover:bg-blue-600 transition duration-500 hover:scale-125">
-        </div>
-      </div>
+      <Statement />
       <div class="bg-gray-100 px-4 py-3 text-right sm:px-6">
         <a
           type="button"
@@ -50,16 +46,66 @@
           </thead>
           <tbody class="divide-y divide-gray-100">
             <tr class="bg-gray-50">
-              <td class="text-sm text-gray-700 text-center">March 10 2022</td>
+              <td class="text-sm text-gray-700 text-center">February 28 2022</td>
               <td
                 class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
               >
-                March 15 2022
+
               </td>
               <td
                 class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
               >
-                2004
+                26,200
+              </td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                Unpaid
+              </td>
+              <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                <a
+                  href="/billing"
+                  class="font-bold text-blue-500 hover:underline cursor-pointer text-center"
+                  >View Bill
+                </a>
+              </td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="text-sm text-gray-700 text-center">January 30 2022</td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                February 28, 2022
+              </td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                20,600
+              </td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                Unpaid
+              </td>
+              <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                <a
+                  href="/billing"
+                  class="font-bold text-blue-500 hover:underline cursor-pointer text-center"
+                  >View Bill
+                </a>
+              </td>
+            </tr>
+               <tr class="bg-gray-50">
+              <td class="text-sm text-gray-700 text-center">December 30 2021</td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                January 13, 2021
+              </td>
+              <td
+                class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
+              >
+                5,900
               </td>
               <td
                 class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
@@ -82,4 +128,5 @@
 </template>
 <script setup>
 import Table from "../../../components/Table.vue";
+import Statement from "./Statement.vue"
 </script>

@@ -1,5 +1,5 @@
 <template>
-<PageComponent navTitle="Hoa Management" navContent="Dues & Fees">
+<PageComponent navTitle="Member Management" navContent="Dues & Fees">
 
     <template v-slot:content>
       <el-table

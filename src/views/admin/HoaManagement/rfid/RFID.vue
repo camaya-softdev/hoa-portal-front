@@ -1,5 +1,5 @@
 <template>
-  <page-component navTitle="Hoa Management" navContent="RFID Registration">
+  <page-component navTitle="Member Management" navContent="RFID Registration">
      <template v-slot:buttons>
       <el-button class="button" type="text" @click="addRFID = true"
         >Add RFID</el-button

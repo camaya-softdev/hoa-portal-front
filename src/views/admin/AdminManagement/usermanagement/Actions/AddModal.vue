@@ -1,8 +1,4 @@
 <template>
-  <!-- <el-button type="text" @click="dialogVisible = true"
-    >click to open the Dialog</el-button
-  > -->
-
   <el-dialog
     v-model="addDialog"
     title="Add User"
@@ -71,7 +67,7 @@
           disabled
         ></el-input>
       </el-form-item>
-      <el-form-item label="Last Name">
+      <el-form-item label="Middle Name">
         <el-input
           v-model="form.middleName"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -140,7 +136,7 @@ const emailAddressOptions = Array.from({
   label: `${emailAddressInitials[idx % 10]}`,
 }));
 
-const form = reactive({
+const form = ref({
   memberType: [],
   accessType: "",
   assignedSubdivision: [],
@@ -151,9 +147,12 @@ const form = reactive({
   contactNumber: "",
 });
 
+
+
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")
     .then(() => {
+      console.log(form.value.memberType)
       emits("closeModal");
       done();
     })

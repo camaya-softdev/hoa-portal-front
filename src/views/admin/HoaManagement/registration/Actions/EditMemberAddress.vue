@@ -12,11 +12,11 @@
       :model="form"
       label-width="120px"
     >
-    <el-form-item label="Subdivision Name">
+      <el-form-item label="Subdivision Name">
         <el-select-v2
           v-model="form.subdivisionName"
           :options="subdivisionNameRecurrentOptions"
-          placeholder="Please select Status"
+          placeholder="Please select Subdivision"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </el-form-item>
@@ -39,7 +39,7 @@
         <el-select-v2
           v-model="form.blockNumber"
           :options="blockNumberRecurrentOptions"
-          placeholder="Please select Status"
+          placeholder="Please select Block Number"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         />
       </el-form-item>
@@ -55,6 +55,22 @@
       <el-form-item label="Lot Area">
         <el-input
           v-model="form.lotArea"
+          disabled
+          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="Sales Agent">
+        <el-select-v2
+          v-model="form.agent"
+          :options="agentRecurrentOptions"
+          placeholder="Please select Agent"
+          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        />
+      </el-form-item>
+            <el-form-item label="Sales Agent Contact Number">
+        <el-input
+          v-model="form.agentContact"
           disabled
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
@@ -76,7 +92,7 @@ import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 
 const props = defineProps<{
- editProperty: Boolean;
+  editProperty: Boolean;
 }>();
 
 const fileList = ref([{ name: "", url: "" }]);
@@ -90,6 +106,8 @@ const form = reactive({
   blockNumber: "",
   lotNumber: "",
   lotArea: "",
+  agent:'',
+  agentContact:''
 });
 
 const blockNumberRecurrentInitials = ["None", "1", "2", "3"];
@@ -101,7 +119,20 @@ const blockNumberRecurrentOptions = Array.from({
   label: `${blockNumberRecurrentInitials[idx % 10]}`,
 }));
 
-const subdivisionNameRecurrentInitials = ["Bayu Peaks", "Mont Kiarra Phase 1", "Mont Kiarra Phase 1"];
+const agentRecurrentInitials = ["Angelo Pangilinan"];
+
+const agentRecurrentOptions = Array.from({
+  length: agentRecurrentInitials.length,
+}).map((_, idx) => ({
+  value: `Option ${idx + 1}`,
+  label: `${agentRecurrentInitials[idx % 10]}`,
+}));
+
+const subdivisionNameRecurrentInitials = [
+  "Bayu Peaks",
+  "Mont Kiarra Phase 1",
+  "Mont Kiarra Phase 1",
+];
 
 const subdivisionNameRecurrentOptions = Array.from({
   length: subdivisionNameRecurrentInitials.length,

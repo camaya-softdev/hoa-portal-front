@@ -31,6 +31,6 @@ const tableHeader = [
 ];
 
 const tableData = [
-  {id:'1',name:'133',desc:'5,600',type:'March 30 2022'}
+  {id:'1',name:'133',desc:'26,200',type:'March 30 2022'}
 ]
 </script>

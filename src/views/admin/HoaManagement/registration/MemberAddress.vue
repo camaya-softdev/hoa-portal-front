@@ -1,8 +1,8 @@
 <template>
-  <page-component navTitle="Member Registration" navContent="Member Address">
+  <page-component navTitle="Member Registration" navContent="Member Property">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addProperty = true"
-        >Add Member Address</el-button
+        >Add Member Property</el-button
       >
     </template>
     <template v-slot:content>
@@ -40,7 +40,11 @@
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Edit Member Address" placement="bottom" effect="light">
+              <el-tooltip
+                content="Edit Member Address"
+                placement="bottom"
+                effect="light"
+              >
                 <el-button
                   size="small"
                   type="primary"
@@ -75,15 +79,21 @@
       </div>
     </template>
   </page-component>
-  <add-member-address :add-property="addProperty" @closeModal="addProperty = false"></add-member-address>
-  <edit-member-address :edit-property="editProperty" @closeModal="editProperty = false"></edit-member-address>
+  <add-member-address
+    :add-property="addProperty"
+    @closeModal="addProperty = false"
+  ></add-member-address>
+  <edit-member-address
+    :edit-property="editProperty"
+    @closeModal="editProperty = false"
+  ></edit-member-address>
 </template>
 <script setup>
 import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
-import {Edit,Delete} from "@element-plus/icons-vue";
-import AddMemberAddress from "./Actions/AddMemberAddress.vue"
-import EditMemberAddress from "./Actions/EditMemberAddress.vue"
+import { Edit, Delete } from "@element-plus/icons-vue";
+import AddMemberAddress from "./Actions/AddMemberAddress.vue";
+import EditMemberAddress from "./Actions/EditMemberAddress.vue";
 
 const addProperty = ref(false);
 const editProperty = ref(false);
@@ -96,11 +106,29 @@ const tableHeader = [
   { id: "5", name: "Block #", prop: "block", width: "180" },
   { id: "6", name: "Lot #", prop: "lot", width: "180" },
   { id: "7", name: "Lot Area (SQM)", prop: "lotArea", width: "180" },
+  { id: "8", name: "Sales Agent", prop: "agent", width: "180" },
+  {
+    id: "9",
+    name: "Sales Agent Contact Number",
+    prop: "agentContact",
+    width: "180",
+  },
 ];
 
 const tableData = [
-  {id:'1',subId:'1',subName:'Bayu Peaks',houseNumber:'',streetName:'',block:'1',lot:'5',lotArea:'180'}
-]
+  {
+    id: "1",
+    subId: "1",
+    subName: "Bayu Peaks",
+    houseNumber: "",
+    streetName: "",
+    block: "1",
+    lot: "5",
+    lotArea: "180",
+    agent:'Angelo Pangilinan',
+    agentContact:'09123876541'
+  },
+];
 
 const search = ref("");
 

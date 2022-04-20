@@ -1,5 +1,5 @@
 <template>
-  <page-component navTitle="Hoa Management" navContent="Announcement">
+  <page-component navTitle="Member Management" navContent="Announcement">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addAnnouncement = true"
         >Add Announcement</el-button

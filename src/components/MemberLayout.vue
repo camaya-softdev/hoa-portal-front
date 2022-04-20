@@ -16,7 +16,7 @@
                 <router-link
                   v-for="item in navigation"
                   :key="item.name"
-                  :to="{name:item.to}"
+                  :to="{ name: item.to }"
                   :class="[
                     item.current
                       ? 'bg-gray-900 text-white'
@@ -31,8 +31,6 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
-
-
               <!-- Profile dropdown -->
               <Menu as="div" class="ml-3 relative">
                 <div>
@@ -60,6 +58,7 @@
                   >
                     <MenuItem
                       v-for="item in userNavigation"
+                      @click="logout"
                       :key="item.name"
                       v-slot="{ active }"
                     >
@@ -124,6 +123,7 @@
           <div class="mt-3 px-2 space-y-1">
             <DisclosureButton
               v-for="item in userNavigation"
+              @click="logout"
               :key="item.name"
               as="a"
               :href="item.href"
@@ -149,6 +149,9 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
+import { useStore } from "vuex";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 
 const user = {
   name: "Tom Cook",
@@ -178,10 +181,33 @@ export default {
     XIcon,
   },
   setup() {
+    const store = useStore();
+    const router = useRouter();
+    function logout() {
+      store.dispatch("auth/logout").then(() => {
+        router.push({
+          name: "Login",
+        });
+      });
+    }
+    if (
+      parseInt(store.state.auth.user.hoa_admin) === 1 &&
+      parseInt(store.state.auth.user.hoa_member) === 0
+    ) {
+      store.commit("alert/notify", {
+        title: "Unathourized",
+        type: "error",
+        message: "You are Hoa Admin and not registered as Hoa Member",
+      });
+      router.push({
+        name: "Dashboard",
+      });
+    }
     return {
       user,
       navigation,
       userNavigation,
+      logout,
     };
   },
 };

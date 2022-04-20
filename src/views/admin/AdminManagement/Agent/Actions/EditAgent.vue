@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-    v-model="addProperty"
-    title="Add Member Address"
+    v-model="editAgent"
+    title="Edit Sales Agent"
     width="50%"
     :before-close="handleClose"
     center
@@ -12,66 +12,51 @@
       :model="form"
       label-width="120px"
     >
-      <el-form-item label="Subdivision Name">
-        <el-select-v2
-          v-model="form.subdivisionName"
-          :options="subdivisionNameRecurrentOptions"
-          placeholder="Please select Subdivision"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        />
-      </el-form-item>
-
-      <el-form-item label="House Number">
+      <el-form-item label="Email Address">
         <el-input
-          v-model="form.houseNumber"
+          v-model="form.email"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
       </el-form-item>
-
-      <el-form-item label="Street Name">
+      <el-form-item label="Last Name">
         <el-input
-          v-model="form.streetName"
+          v-model="form.lastName"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
       </el-form-item>
-
-      <el-form-item label="Block Number">
-        <el-select-v2
-          v-model="form.blockNumber"
-          :options="blockNumberRecurrentOptions"
-          placeholder="Please select Block Number"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        />
-      </el-form-item>
-
-      <el-form-item label="Lot Number">
+      <el-form-item label="Last Name">
         <el-input
-          v-model="form.lotNumber"
-          disabled
+          v-model="form.lastName"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
       </el-form-item>
-
-      <el-form-item label="Lot Area">
+      <el-form-item label="Last Name">
         <el-input
-          v-model="form.lotArea"
-          disabled
+          v-model="form.lastName"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
       </el-form-item>
-
-      <el-form-item label="Sales Agent">
-        <el-select-v2
-          v-model="form.agent"
-          :options="agentRecurrentOptions"
-          placeholder="Please select Agent"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        />
-      </el-form-item>
-            <el-form-item label="Sales Agent Contact Number">
+      <el-form-item label="First Name">
         <el-input
-          v-model="form.agentContact"
-          disabled
+          v-model="form.firstName"
+          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="Middle Name">
+        <el-input
+          v-model="form.middleName"
+          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="Contact Number">
+        <el-input
+          v-model="form.contactNumber"
+          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="Supervisor">
+        <el-input
+          v-model="form.visor"
           class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
         ></el-input>
       </el-form-item>
@@ -92,54 +77,18 @@ import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 
 const props = defineProps<{
-  addProperty: Boolean;
+  editAgent: Boolean;
 }>();
-
-const fileList = ref([{ name: "", url: "" }]);
-
 const emits = defineEmits(["closeModal"]);
 
 const form = reactive({
-  subdivisionName: "",
-  houseNumber: "",
-  streetName: "",
-  blockNumber: "",
-  lotNumber: "",
-  lotArea: "",
-  agent:'',
-  agentContact:''
+  email: "",
+  lastName: "",
+  firstName: [],
+  middleName: "",
+  contactNumber: "",
+  visor: "",
 });
-
-const blockNumberRecurrentInitials = ["None", "1", "2", "3"];
-
-const blockNumberRecurrentOptions = Array.from({
-  length: blockNumberRecurrentInitials.length,
-}).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${blockNumberRecurrentInitials[idx % 10]}`,
-}));
-
-const agentRecurrentInitials = ["Angelo Pangilinan"];
-
-const agentRecurrentOptions = Array.from({
-  length: agentRecurrentInitials.length,
-}).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${agentRecurrentInitials[idx % 10]}`,
-}));
-
-const subdivisionNameRecurrentInitials = [
-  "Bayu Peaks",
-  "Mont Kiarra Phase 1",
-  "Mont Kiarra Phase 1",
-];
-
-const subdivisionNameRecurrentOptions = Array.from({
-  length: subdivisionNameRecurrentInitials.length,
-}).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${subdivisionNameRecurrentInitials[idx % 10]}`,
-}));
 
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")

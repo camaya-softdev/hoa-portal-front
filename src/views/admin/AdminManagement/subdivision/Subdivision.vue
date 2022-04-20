@@ -9,7 +9,13 @@
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="subdivisionLoading"
+        v-loading.fullscreen.lock="subdivisionLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
@@ -17,6 +23,7 @@
         border
         style="width: 100%"
       >
+
         <el-table-column
           sortable
           v-for="header in tableHeader"
@@ -82,7 +89,7 @@
                   size="small"
                   type="success"
                   :icon="Edit"
-                  @click="editSubdivision = true"
+                  @click="editModal(scope.$index, scope.row)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -101,15 +108,47 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-center mt-5">
+        <nav
+          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
+          aria-label="Pagination"
+        >
+          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+          <a
+            v-for="(link, i) of tableData.links"
+            :key="i"
+            :disabled="!link.url"
+            href="#"
+            @click="getForPage($event, link)"
+            aria-current="page"
+            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
+            :class="[
+              link.active
+                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
+              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
+            ]"
+            v-html="link.label"
+          >
+          </a>
+        </nav>
+      </div>
     </template>
+
   </page-component>
   <add-subdivision
     :add-subdivision="addSubdivision"
+    :showEmail="showEmail"
     @closeModal="addSubdivision = false"
   ></add-subdivision>
   <edit-subdivision
+    v-if="editId !== 0"
     :edit-subdivision="editSubdivision"
+    :editId="editId"
+    :showEmail="showEmail"
     @closeModal="editSubdivision = false"
+    @editId="editId = 0"
   ></edit-subdivision>
 </template>
 <script setup>
@@ -119,64 +158,54 @@ import PageComponent from "../../../../components/PageComponent.vue";
 import AddSubdivision from "./Actions/AddSubdivision.vue";
 import EditSubdivision from "./Actions/EditSubdivision.vue";
 import { useRouter } from "vue-router";
+import store from "../../../../store";
 
 const router = useRouter();
 
-const addSubdivision = ref(false);
-const editSubdivision = ref(false);
+let addSubdivision = ref(false);
+let editSubdivision = ref(false);
+
 const tableHeader = [
-  { id: "0", name: "Subdivision ID", prop: "subdivisionid", width: "180" },
-  { id: "1", name: "Name", prop: "name", width: "180" },
-  { id: "2", name: "Area (SQM)", prop: "area", width: "180" },
+  { id: "0", name: "Subdivision ID", prop: "id", width: "180" },
+  { id: "1", name: "Name", prop: "hoa_subd_name", width: "180" },
+  { id: "2", name: "Area (SQM)", prop: "hoa_subd_area", width: "180" },
   {
     id: "3",
     name: "Total Block Number",
-    prop: "totalBlockNumber",
+    prop: "hoa_subd_blocks",
     width: "180",
   },
-  { id: "4", name: "Total Lot Number", prop: "totalLotNumber", width: "180" },
-  { id: "11", name: "Contact Person", prop: "contactPerson", width: "180" },
-  { id: "12", name: "Contact Number", prop: "contactNumber", width: "180" },
+  { id: "4", name: "Total Lot Number", prop: "hoa_subd_lots", width: "180" },
+  { id: "11", name: "Contact Person", prop: "hoa_subd_contact_person", width: "180" },
+  { id: "12", name: "Contact Number", prop: "hoa_subd_contact_number", width: "180" },
 ];
 
-const tableData = [
-  {
-    subdivisionid: "1",
-    name: "Bayu Peaks",
-    area: "30,000",
-    totalBlockNumber: "25",
-    totalLotNumber: "166",
-    contactPerson: "Francisco Felizardo",
-    contactNumber: "09171234567",
-  },
-  {
-    subdivisionid: "2",
-    name: "Mont Kiarra Phase 1",
-    area: "20,000",
-    totalBlockNumber: "18",
-    totalLotNumber: "111",
-    contactPerson: "Roldan Laguna",
-    contactNumber: "09171234567",
-  },
-  {
-    subdivisionid: "3",
-    name: "Menara Point North",
-    area: "50,000",
-    totalBlockNumber: "35",
-    totalLotNumber: "277",
-    contactPerson: "Juliet Guevara",
-    contactNumber: "09171234567",
-  },
-];
+store.dispatch("subdivision/getSubdivisions");
+store.dispatch("subdivision/getShowEmail");
+
+const subdivisionLoading = computed(
+  () => store.state.subdivision.subdivision.loading
+);
+let tableData = computed(() => store.state.subdivision.subdivision);
+const showEmail = computed(() => store.state.subdivision.subdivisionEmail.data);
 const search = ref("");
 
+
 const filterTableData = computed(() =>
-  tableData.filter(
+  tableData.value.data.filter(
     (data) =>
       !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
+      data.hoa_subd_name.toLowerCase().includes(search.value.toLowerCase())
   )
 );
+
+const editId = ref(0);
+
+function editModal(index, row) {
+  editId.value = row.id;
+
+  editSubdivision.value = true;
+}
 
 function boardofdirectors() {
   router.push({ name: "BoardOfDirectors" });
@@ -186,45 +215,36 @@ function fees() {
   router.push({ name: "Fees" });
 }
 
-function deleteSubdivision(survey) {
+
+async function deleteSubdivision(index, row) {
   if (
     confirm(
       `Are you sure you want to delete this data? Operation can't be undone`
     )
   ) {
+    try {
+      const res = await store.dispatch("subdivision/deleteSubdivision", row.id);
+      if (res.status === 204) {
+        await store.dispatch("subdivision/getSubdivisions");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The subdivision data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
-function disableSubdivision(survey) {
-  if (confirm(`Are you sure you want to disable this data?`)) {
+
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
   }
-}
-function closeModal() {
-  isOpen.value = false;
-}
-function openModal() {
-  isOpen.value = true;
+  await store.dispatch("subdivision/getSubdivisions", { url: link.url });
 }
 </script>
 <style scoped>
-.demo-date-picker {
-  display: flex;
-  width: 100%;
-  padding: 0;
-  flex-wrap: wrap;
-}
-.demo-date-picker .block {
-  padding: 30px 0;
-  text-align: center;
-  border-right: solid 1px var(--el-border-color-base);
-  flex: 1;
-}
-.demo-date-picker .block:last-child {
-  border-right: none;
-}
-.demo-date-picker .demonstration {
-  display: block;
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
-  margin-bottom: 20px;
-}
 </style>
