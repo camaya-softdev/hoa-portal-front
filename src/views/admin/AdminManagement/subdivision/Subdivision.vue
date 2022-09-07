@@ -1,10 +1,11 @@
 <template>
-  <page-component
-    navTitle="Admin Management"
-    navContent="Subdivision Management"
-  >
+  <page-component navTitle="Admin Management" navContent="Subdivision Management">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addSubdivision = true"
+      <el-button
+        v-if="auth != 2"
+        class="button"
+        type="text"
+        @click="addSubdivision = true"
         >Add Subdivision</el-button
       >
     </template>
@@ -19,24 +20,27 @@
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
+        :row-class-name="tableRowClassName"
       >
-
         <el-table-column
           sortable
           v-for="header in tableHeader"
+          :type="header.type"
           :key="header.id"
           :prop="header.prop"
           :label="header.name"
           :width="header.width"
         ></el-table-column>
-        <el-table-column align="right" width="180" fixed="right">
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
               size="small"
+              @keyup="searchSubdivision"
+              v-if="auth != 2"
               placeholder="Type to search"
             />
           </template>
@@ -50,41 +54,34 @@
               <template #reference>
                 <el-button round>Extension</el-button>
               </template>
-              <el-tooltip content="Fees" placement="bottom" effect="light">
+              <el-tooltip content="Dues" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="warning"
                   :icon="CreditCard"
-                  @click="fees"
+                  @click="dues(scope.row)"
                 ></el-button>
               </el-tooltip>
-              <el-tooltip
-                content="Board Of Directors"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Board Of Directors" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="primary"
                   :icon="Cellphone"
-                  @click="boardofdirectors"
+                  @click="boardofdirectors(scope.row)"
                 ></el-button>
               </el-tooltip>
             </el-popover>
             <el-popover
               placement="top-start"
               title="Action"
-              :width="100"
+              :width="200"
               trigger="hover"
+              v-if="auth != 2"
             >
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip
-                content="Edit Subdivision"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Edit Subdivision" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="success"
@@ -93,10 +90,32 @@
                 ></el-button>
               </el-tooltip>
               <el-tooltip
-                content="Delete Subdivision"
+                v-if="scope.row.hoa_subd_status === 1"
+                content="Disabled Subdivision"
                 placement="bottom"
                 effect="light"
               >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Lock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip
+                v-else
+                content="Enabled Subdivision"
+                placement="bottom"
+                effect="light"
+              >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Unlock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip content="Delete Subdivision" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="danger"
@@ -108,34 +127,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="flex justify-center mt-5">
-        <nav
-          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-        >
-          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
-          <a
-            v-for="(link, i) of tableData.links"
-            :key="i"
-            :disabled="!link.url"
-            href="#"
-            @click="getForPage($event, link)"
-            aria-current="page"
-            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
-            :class="[
-              link.active
-                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
-              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
-              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
-            ]"
-            v-html="link.label"
-          >
-          </a>
-        </nav>
-      </div>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
     </template>
-
   </page-component>
   <add-subdivision
     :add-subdivision="addSubdivision"
@@ -153,51 +146,89 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import { Edit, Delete, Cellphone, CreditCard } from "@element-plus/icons-vue";
+
+import {
+  Edit,
+  Delete,
+  Cellphone,
+  CreditCard,
+  Lock,
+  Unlock,
+} from "@element-plus/icons-vue";
 import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
 import AddSubdivision from "./Actions/AddSubdivision.vue";
 import EditSubdivision from "./Actions/EditSubdivision.vue";
 import { useRouter } from "vue-router";
 import store from "../../../../store";
+import _ from "lodash";
 
 const router = useRouter();
 
 let addSubdivision = ref(false);
 let editSubdivision = ref(false);
-
+const auth = store.state.auth.user.hoa_access_type;
 const tableHeader = [
-  { id: "0", name: "Subdivision ID", prop: "id", width: "180" },
-  { id: "1", name: "Name", prop: "hoa_subd_name", width: "180" },
-  { id: "2", name: "Area (SQM)", prop: "hoa_subd_area", width: "180" },
+  { id: "0", type: "index", prop: "id", name: "#" },
+  { id: "1", name: "Subdivision ID", prop: "subd_id" },
+  { id: "2", name: "Name", prop: "hoa_subd_name" },
+  { id: "3", name: "Area (SQM)", prop: "hoa_subd_area" },
   {
-    id: "3",
+    id: "4",
     name: "Total Block Number",
     prop: "hoa_subd_blocks",
-    width: "180",
   },
-  { id: "4", name: "Total Lot Number", prop: "hoa_subd_lots", width: "180" },
-  { id: "11", name: "Contact Person", prop: "hoa_subd_contact_person", width: "180" },
-  { id: "12", name: "Contact Number", prop: "hoa_subd_contact_number", width: "180" },
+
+  { id: "5", name: "Total Lot Number", prop: "hoa_subd_lots" },
+  {
+    id: "6",
+    name: "Cutoff Date",
+    prop: "hoa_subd_dues_cutoff_date",
+  },
+  {
+    id: "7",
+    name: "Payment Targets (Days)",
+    prop: "hoa_subd_dues_payment_target",
+  },
+  {
+    id: "8",
+    name: "Contact Person",
+    prop: "hoa_subd_contact_person",
+  },
+  {
+    id: "9",
+    name: "Contact Number",
+    prop: "hoa_subd_contact_number",
+  },
 ];
 
 store.dispatch("subdivision/getSubdivisions");
 store.dispatch("subdivision/getShowEmail");
 
-const subdivisionLoading = computed(
-  () => store.state.subdivision.subdivision.loading
-);
+const subdivisionLoading = computed(() => store.state.subdivision.subdivision.loading);
 let tableData = computed(() => store.state.subdivision.subdivision);
 const showEmail = computed(() => store.state.subdivision.subdivisionEmail.data);
 const search = ref("");
 
+const filterTableData = computed(() => tableData.value.data);
 
-const filterTableData = computed(() =>
-  tableData.value.data.filter(
-    (data) =>
-      !search.value ||
-      data.hoa_subd_name.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+let searchSubdivision = _.debounce(function () {
+  store
+    .dispatch("subdivision/getSearchSubdivision", {
+      data: search.value,
+      url: 1,
+    })
+    .then(() => (tableData = computed(() => store.state.subdivision.subdivision)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+const tableRowClassName = ({ row, rowIndex }) => {
+  //change table row to  red if the subdivision is disable
+  if (row.hoa_subd_status === 0) {
+    return "danger-row";
+  }
+  return "";
+};
 
 const editId = ref(0);
 
@@ -207,21 +238,40 @@ function editModal(index, row) {
   editSubdivision.value = true;
 }
 
-function boardofdirectors() {
-  router.push({ name: "BoardOfDirectors" });
+function boardofdirectors(row) {
+  router.push({
+    name: "BoardOfDirectors",
+    params: { id: row.id, name: row.hoa_subd_name },
+  });
 }
 
-function fees() {
-  router.push({ name: "Fees" });
+function dues(row) {
+  router.push({
+    name: "Fees",
+    params: { id: row.id, name: row.hoa_subd_name },
+  });
 }
 
+async function changeStatus(index, row) {
+  if (confirm(`Are you sure you want to update subdivision data status?`)) {
+    try {
+      const res = await store.dispatch("subdivision/changeStatus", row.id);
+      if (res.status === 204) {
+        await store.dispatch("subdivision/getSubdivisions");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The subdivision data status was successfully updated",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+}
 
 async function deleteSubdivision(index, row) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
     try {
       const res = await store.dispatch("subdivision/deleteSubdivision", row.id);
       if (res.status === 204) {
@@ -233,7 +283,13 @@ async function deleteSubdivision(index, row) {
         });
       }
     } catch (err) {
-      throw err;
+      await store.commit("alert/notify", {
+        title: "Error",
+        type: "error",
+        message:
+          "Since there are data connected to this subdivision.\n" +
+          "It will not be deleted!",
+      });
     }
   }
 }
@@ -243,8 +299,18 @@ async function getForPage(ev, link) {
   if (!link.url || link.active) {
     return;
   }
-  await store.dispatch("subdivision/getSubdivisions", { url: link.url });
+  if (search.value !== "") {
+    await store.dispatch("subdivision/getSearchSubdivision", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("subdivision/getSubdivisions", { url: link.label });
+  }
 }
 </script>
-<style scoped>
+<style>
+.el-table .danger-row {
+  --el-table-tr-bg-color: var(--el-color-danger-light-9);
+}
 </style>

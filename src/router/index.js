@@ -1,38 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store";
-//login routes
 import Login from "../views/Login.vue";
-//admin routes
-import Dashboard from "../views/admin/Dashboard.vue";
-import Subdivision from "../views/admin/AdminManagement/subdivision/Subdivision.vue";
-
+import ResetPassword from "../views/ResetPassword.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
-import BoardOfDirector from "../views/admin/AdminManagement/subdivision/directors.vue";
-import MemberRegistration from "../views/admin/HoaManagement/registration/MemberRegistration.vue";
-import MemberAddress from "../views/admin/HoaManagement/registration/MemberAddress.vue";
-import PaymentHistory from "../views/admin/HoaManagement/registration/PaymentHistory.vue";
-import UserManagement from "../views/admin/AdminManagement/usermanagement/UserManagement.vue";
-import RFID from "../views/admin/HoaManagement/rfid/RFID.vue";
-import Announcement from "../views/admin/HoaManagement/Announcement/Announcement.vue";
-import AnnouncementTemplate from "../views/admin/HoaManagement/Announcement/Template.vue";
-import MemberDues from "../views/admin/HoaManagement/Dues/MemberDues.vue";
-import MemberFees from "../views/admin/HoaManagement/Dues/MemberFees.vue";
-import Communication from "../views/admin/HoaManagement/Messages/Communication.vue";
-import Template from "../views/admin/HoaManagement/Messages/Template.vue";
-import Autogate from "../views/admin/HoaManagement/Autogate/Autogate.vue";
-import AutogateTemplate from "../views/admin/HoaManagement/Autogate/AutogateTemplate.vue";
-import MemberDocuments from "../views/admin/HoaManagement/registration/MemberDocuments.vue";
-import Priveleges from "../views/admin/HoaManagement/rfid/Priveleges.vue";
-import PrivilegeManagement from "../views/admin/AdminManagement/Privilege/PrivilegeManagement.vue";
-import FullStory from "../views/admin/HoaManagement/Announcement/FullStory.vue";
-import Fees from "../views/admin/AdminManagement/subdivision/Actions/Fees.vue";
-import Agent from "../views/admin/AdminManagement/Agent/Agent.vue";
-//member routes
 import MemberLayout from "../components/MemberLayout.vue";
 import Profile from "../views/member/profile/Profile.vue";
-import Index from "../views/member/Index.vue";
-import Billing from "../views/member/billing/Billing.vue";
-import Payment from "../views/member/billing/Payment.vue";
+
 const routes = [
   {
     path: "/dashboard",
@@ -42,87 +15,108 @@ const routes = [
     component: DefaultLayout,
 
     children: [
-      { path: "/dashboard", name: "Dashboard", component: Dashboard },
-      { path: "/subdivision", name: "Subdivision", component: Subdivision },
+      { path: "/dashboard", name: "Dashboard", component: ()=> import('../views/admin/Dashboard.vue') },
+      { path: "/subdivision", name: "Subdivision", component: ()=>import('../views/admin/AdminManagement/subdivision/Subdivision.vue')},
       {
-        path: "/board-of-directors",
+        path: "/board-of-director/:id/:name",
         name: "BoardOfDirectors",
-        component: BoardOfDirector,
+        component: ()=>import('../views/admin/AdminManagement/subdivision/Directors.vue'),
       },
       {
         path: "/member-registration",
         name: "MemberRegistration",
-        component: MemberRegistration,
+        component: ()=> import('../views/admin/HoaManagement/registration/MemberRegistration.vue'),
       },
       {
-        path: "/member-address",
+        path: "/member-address/:email/:id",
         name: "MemberAddress",
-        component: MemberAddress,
+        component:()=> import('../views/admin/HoaManagement/registration/MemberAddress.vue'),
       },
       {
-        path: "/member-payment-history",
+        path: "/member-payment-history/:email/:id",
         name: "MemberPaymentHistory",
-        component: PaymentHistory,
+        component:()=>import('../views/admin/HoaManagement/registration/PaymentHistory.vue'),
       },
       {
-        path: "/member-documents",
+        path: "/member-documents/:id",
         name: "MemberDocuments",
-        component: MemberDocuments,
+        component:()=> import('../views/admin/HoaManagement/registration/MemberDocuments.vue'),
+      },
+      {
+        path:"/add/member-documents/:documentEmail/:userId",
+        name:'AddMemberDocuments',
+        component:()=>import('../views/admin/HoaManagement/registration/Actions/AddMemberDocuments.vue')
+      },
+      {
+        path:"/edit/member-documents/:userId/:documentId",
+        name:'EditMemberDocuments',
+        component:()=>import('../views/admin/HoaManagement/registration/Actions/EditMemberDocuments.vue')
       },
       {
         path: "/user-management",
         name: "UserManagement",
-        component: UserManagement,
+        component:()=> import('../views/admin/AdminManagement/usermanagement/UserManagement.vue'),
       },
-      { path: "/rfid-registration", name: "RFIDRegistration", component: RFID },
-      { path: "/announcement", name: "Announcement", component: Announcement },
+      { path: "/rfid-registration", name: "RFIDRegistration", component:()=> import('../views/admin/HoaManagement/rfid/RFID.vue')},
+      { path: "/announcement", name: "Announcement", component:()=> import('../views/admin/HoaManagement/Announcement/Announcement.vue') },
       {
         path: "/preview/announcement-template",
         name: "AnnouncementTemplate",
-        component: AnnouncementTemplate,
+        component:()=> import('../views/admin/HoaManagement/Announcement/Template.vue'),
       },
-      { path: "/member-dues", name: "MemberDues", component: MemberDues },
-      { path: "/member-fees", name: "MemberFees", component: MemberFees },
-      { path: "/messages", name: "Messages", component: Communication },
+      { path: "/member-dues_fees", name: "MemberDues", component:()=> import('../views/admin/HoaManagement/Dues/MemberDues.vue') },
+      { path: "/member-fees/:id/:name/:address", name: "MemberFees", component:()=> import('../views/admin/HoaManagement/Dues/MemberFees.vue') },
+      { path: "/messages", name: "Messages", component:()=> import('../views/admin/HoaManagement/Messages/Communication.vue') },
       {
-        path: "/create-message-template",
+        path: "/create-template-template",
         name: "MessageTemplate",
-        component: Template,
+        component:()=> import('../views/admin/HoaManagement/Messages/Template.vue'),
       },
-      { path: "/autogate", name: "Autogate", component: Autogate },
+      { path: "/autogate", name: "Autogate", component:()=> import('../views/admin/HoaManagement/Autogate/Autogate.vue') },
       {
         path: "/create-autogate-template",
         name: "AutogateTemplate",
-        component: AutogateTemplate,
+        component:()=> import('../views/admin/HoaManagement/Autogate/AutogateTemplate.vue'),
       },
-      { path: "/billing", name: "Billing", component: Billing },
+
+      {
+        path:'/background-image',
+        name:'BackgroundImage',
+        component:()=>import('../views/admin/HoaManagement/background_image/BackgroundImage.vue')
+      },
+      {
+        path: '/autogate-template-message/:id',
+        name:'TemplateMessage',
+        component:()=>import('../views/admin/HoaManagement/template_message/TemplateMessage.vue')
+      },
+      { path: "/billing", name: "Billing", component:()=> import('../views/admin/HoaManagement/registration/MemberDocuments.vue') },
       {
         path: "/privilege/management",
         name: "PrivilegeManagement",
-        component: PrivilegeManagement,
+        component: ()=> import('../views/admin/AdminManagement/Privilege/PrivilegeManagement.vue'),
       },
-      { path: "/full-story", name: "FullStory", component: FullStory },
-      { path: "/privileges", name: "Priveleges", component: Priveleges },
-      { path: "/subdivision-fees", name: "Fees", component: Fees },
-      { path: "/sales-agent", name: "SalesAgent", component: Agent },
+      { path: "/full-story/:id", name: "FullStory", component:()=> import('../views/admin/HoaManagement/Announcement/FullStory.vue') },
+      { path: "/privileges/:id/:name", name: "Priveleges", component:()=> import('../views/admin/HoaManagement/rfid/Priveleges.vue') },
+      { path: "/subdivision-dues_fees/:id/:name", name: "Fees", component:()=> import('../views/admin/AdminManagement/subdivision/Dues.vue') },
+      { path: "/sales-agent", name: "SalesAgent", component:()=> import('../views/admin/AdminManagement/Agent/Agent.vue') },
     ],
   },
   {
     path: "/",
     redirect: "/home",
-    component: MemberLayout,
+    component:MemberLayout,
     meta: { requiresAuth: true },
     children: [
-      { path: "/home", name: "Home", component: Index },
-      { path: "/billing", name: "Billing", component: Billing },
-      { path: "/payment", name: "Payment", component: Payment },
+      { path: "/home", name: "Home", component:()=> import('../views/member/Index.vue') },
+      { path: "/billing", name: "Billing", component:()=> import('../views/member/billing/Billing.vue') },
+      { path: "/payment/:id", name: "Payment", component:()=> import('../views/member/billing/Payment.vue') },
     ],
   },
   {
     path: "/profile",
     meta: { requiresAuth: true },
     name: "Profile",
-    component: Profile,
+    component:()=> import("../views/member/profile/Profile.vue"),
 
   },
 
@@ -131,6 +125,12 @@ const routes = [
     meta: { isGuest: true },
     name: "Login",
     component: Login,
+  },
+
+  {
+    path: "/reset-password/:token",
+    name: "ResetPassword",
+    component: ResetPassword,
   },
 ];
 const router = createRouter({

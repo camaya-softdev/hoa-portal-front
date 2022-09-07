@@ -9,7 +9,7 @@
         <div class="mb-5"><Announcement></Announcement></div>
         <div><News></News></div>
         <div class="mb-5"></div>
-        <div class="mb-5"><Community></Community></div>
+<!--        <div class="mb-5"><Community></Community></div>-->
         <div class="mb-5"></div>
         <div class="mb-5"><BoardofDirectors></BoardofDirectors></div>
       </div>

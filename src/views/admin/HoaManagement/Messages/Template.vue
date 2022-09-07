@@ -1,56 +1,77 @@
 <template>
-  <page-component navTitle="Email Management" navContent="Message Template">
+  <page-component
+    navTitle="Member Management"
+    navContent="Email Management"
+    navLink="Messages"
+    navChildContent="Email Template"
+  >
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addTemplate = true"
-        >Add Message Template</el-button
+      <el-button class="button" type="text" @click="addMessage = true"
+        >Add Email Template</el-button
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="communicationLoading"
+        v-loading.fullscreen.lock="communicationLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
+        <el-table-column type="index" prop="id" label="#"></el-table-column>
         <el-table-column
           sortable
-          v-for="header in tableHeader"
-          :key="header.id"
-          :prop="header.prop"
-          :label="header.name"
-          :width="header.width"
+          label="Template Name"
+          prop="hoa_comm_template_name"
         ></el-table-column>
-        <el-table-column align="right" width="180" fixed="right">
+        <el-table-column
+          sortable
+          label="Template Title"
+          prop="hoa_comm_template_title"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Template Title"
+          prop="hoa_comm_template_subject"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Template Message"
+          prop="hoa_comm_template_message"
+        ></el-table-column>
+
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchCommunication"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="180"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="180" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Edit Message Template" placement="bottom" effect="light">
+              <el-tooltip content="Edit Email Template" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="primary"
                   :icon="Edit"
-                  @click="editTemplate = true"
+                  @click="editModal(scope.row)"
                 ></el-button>
               </el-tooltip>
 
               <el-tooltip
-                content="Delete Message Template"
+                content="Delete Email Template"
                 placement="bottom"
                 effect="light"
               >
@@ -58,13 +79,14 @@
                   size="small"
                   type="danger"
                   :icon="Delete"
-                  @click="deleteSubdivision"
+                  @click="deleteTemplate(scope.row)"
                 ></el-button
               ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
       <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
         <router-link
           :to="{ name: 'Messages' }"
@@ -75,69 +97,94 @@
       </div>
     </template>
   </page-component>
-  <add-message-template :add-template="addTemplate" @closeModal="addTemplate = false"></add-message-template>
-  <edit-message-template :edit-template="editTemplate" @closeModal="editTemplate = false"></edit-message-template>
+  <add-message-template
+    :add-message="addMessage"
+    @closeModal="addMessage = false"
+  ></add-message-template>
+  <edit-message-template
+    v-if="editId !== 0"
+    :edit-message="editMessage"
+    :edit-id="editId"
+    @editId="editId = 0"
+    @closeModal="editMessage = false"
+  ></edit-message-template>
 </template>
 <script setup>
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
-import {Edit,Delete} from "@element-plus/icons-vue";
-import AddMessageTemplate from "./Actions/AddMessageTemplate.vue"
-import EditMessageTemplate from "./Actions/EditMessageTemplate.vue"
+import Pagination from "../../../../components/Pagination.vue";
+import RichTextEditor from "../../../../components/RichTextEditor.vue";
+import { Edit, Delete } from "@element-plus/icons-vue";
+import AddMessageTemplate from "./Actions/AddMessageTemplate.vue";
+import EditMessageTemplate from "./Actions/EditMessageTemplate.vue";
+import store from "../../../../store";
+import _ from "lodash";
 
-const addTemplate = ref(false);
-const editTemplate = ref(false);
+let addMessage = ref(false);
+let editMessage = ref(false);
 
-const tableHeader = [
-  { id: "0", name: "Template Name",prop:'title',width:'180' },
-  { id: "1", name: "Statement Account",prop:'description',width:'240' },
-  { id: "2", name: "Message Subject",prop:'subdivision',width:'240' },
-  { id: "3", name: "Message Template",prop:'type',width:'240' },
-
-];
-
-const tableData = [
-  {
-    id: "0",
-    title: "SOA",
-    description: "Statement of Account",
-    subdivision: "Statement of Account",
-    type: "Billing",
-  },
-  {
-    id: "1",
-    title: "Birthday Greeting",
-    description: "HAPPY BIRTHDAY!!!",
-    subdivision: "It's YOUR Birthday!!!",
-    type: "We wish you a Happy Birthday!",
-  },
-  {
-    id: "3",
-    title: "Pawikan Hatchlings",
-    description: "Announcement: Release of Pawikan Hatchlings",
-    subdivision: "Camaya Coast Pawikan Hatchlings",
-    type: "Release of Pawikan Hatchlings",
-  },
-];
+let editId = ref(0);
+store.dispatch("communication/getCommunications");
+let tableData = computed(() => store.state.communication.communication);
+let communicationLoading = computed(
+  () => store.state.communication.communication.loading
+);
 
 const search = ref("");
 
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.title.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+const filterTableData = computed(() => tableData.value.data);
 
+let searchCommunication = _.debounce(function () {
+  store
+    .dispatch("communication/getSearchCommunications", search.value, {
+      url: null,
+    })
+    .then(() => (tableData = computed(() => store.state.communication.communication)))
+    .catch((err) => console.log(err));
+}, 1000);
 
-function deleteSubdivision() {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
-  }
+// function content(value){
+
+//   return JSON.parse(value)
+// }
+
+function editModal(row) {
+  editId.value = row.id;
+
+  editMessage.value = true;
 }
 
+async function deleteTemplate(row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("communication/deleteCommunication", row.id);
+      if (res.status === 204 || res.status === 200) {
+        await store.dispatch("template/getTemplates");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The email template data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+}
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("communication/getSearchCommunications", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("communication/getCommunications", {
+      url: link.label,
+    });
+  }
+}
 </script>

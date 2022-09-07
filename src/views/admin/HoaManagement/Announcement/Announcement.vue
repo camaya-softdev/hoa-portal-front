@@ -1,169 +1,186 @@
 <template>
-  <page-component navTitle="Member Management" navContent="Announcement">
+  <page-component navTitle="Member Management" navContent="Event">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addAnnouncement = true"
-        >Add Announcement</el-button
+        >Add Event</el-button
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="announcementLoading"
+        v-loading.fullscreen.lock="announcementLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
+
       <el-table
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        table-layout="auto"
       >
+        <el-table-column type="index" label="#" prop="id"></el-table-column>
         <el-table-column
           sortable
-          v-for="header in tableHeader"
-          :key="header.id"
-          :prop="header.prop"
-          :label="header.name"
-          :width="header.width"
+          label="Title"
+          prop="hoa_event_notices_title"
         ></el-table-column>
-        <el-table-column align="right" width="130" fixed="right">
+        <el-table-column
+          sortable
+          label="Description"
+          prop="hoa_event_notices_desc"
+        ></el-table-column>
+        <el-table-column sortable label="Subdivision">
+          <template #default="scope">
+            <el-tag
+              class="ml-2"
+              v-for="subdivisionData in scope.row.subdivision"
+              :key="subdivisionData.id"
+              >{{ subdivisionData.hoa_subd_name }}</el-tag
+            >
+          </template>
+        </el-table-column>
+        <el-table-column sortable label="Type" width="180">
+          <template #default="scope">
+            <el-tag disable-transitions>{{ scope.row.hoa_event_notices_type }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column sortable label="Date Added" prop="created_at"></el-table-column>
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchAnnouncement"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="200"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="200" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
 
-                <el-tooltip
-                content="Full Story"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Full Story" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="warning"
                   :icon="Document"
-                  @click="fullStory"
+                  @click="fullStory(scope.row)"
                 ></el-button
               ></el-tooltip>
 
-              <el-tooltip
-                content="Edit Announcement"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Edit Event" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="primary"
                   :icon="Edit"
-                  @click="editAnnouncement = true"
+                  @click="editModal(scope.row)"
                 ></el-button>
               </el-tooltip>
-              <el-tooltip
-                content="Delete Announcement"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Delete Event" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="danger"
                   :icon="Delete"
-                  @click="deleteAnnouncent"
+                  @click="deleteAnnouncent(scope.row)"
                 ></el-button
               ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
     </template>
   </page-component>
   <add-announcement
     :add-announcement="addAnnouncement"
+    :subdivisionData="subdivisionData"
     @closeModal="addAnnouncement = false"
   ></add-announcement>
   <edit-announcement
+    v-if="editId !== 0"
     :edit-announcement="editAnnouncement"
+    :subdivisionData="subdivisionData"
     @closeModal="editAnnouncement = false"
+    :edit-id="editId"
+    @editId="editId = 0"
   ></edit-announcement>
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import { Edit, Delete,Document } from "@element-plus/icons-vue";
+import { Edit, Delete, Document } from "@element-plus/icons-vue";
 import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
 import AddAnnouncement from "./Actions/AddAnnouncement.vue";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 import EditAnnouncement from "./Actions/EditAnnouncement.vue";
+import store from "../../../../store";
+import _ from "lodash";
 
-const router = useRouter()
-const addAnnouncement = ref(false);
-const editAnnouncement = ref(false);
-const tableHeader = [
-  { id: "0", name: "Title", prop: "title", width: "240" },
-  { id: "1", name: "Description", prop: "description", width: "240" },
-  { id: "2", name: "Subdivision", prop: "subdivision", width: "400" },
-  { id: "3", name: "Type", prop: "type", width: "180" },
-  { id: "4", name: "Date Added", prop: "dateAdded", width: "180" },
-];
+const router = useRouter();
+let addAnnouncement = ref(false);
+let editAnnouncement = ref(false);
+const editId = ref(0);
 
-const tableData = [
-  {
-    id: "0",
-    title: "Corregidor Day Tour",
-    description: "Corregidor Day Tour now available",
-    subdivision:
-      "Bayu Peak, Mont Kiarra Phase 1, Menara Point North, Taman Ridge",
-    type: "News",
-    dateAdded: "February 25, 2022",
-  },
-  {
-    id: "1",
-    title: "Valentines at Camaya",
-    description: "Valentines day promo",
-    subdivision:
-      "Bayu Peak, Mont Kiarra Phase 1, Menara Point North, Taman Ridge",
-    type: "Event",
-    dateAdded: "January 30, 2022",
-  },
-  {
-    id: "2",
-    title: "Vaccination",
-    description: "Vaccination Schedule",
-    subdivision: "Bayu Peak",
-    type: "Event",
-    dateAdded: "January 15, 2022",
-  },
-];
+store.dispatch("announcement/getAnnouncements");
+store.dispatch("user/getShowSubdivision");
 
+const subdivisionData = computed(() => store.state.user.user_subdivision);
+
+let tableData = computed(() => store.state.announcement.announcement);
+const announcementLoading = computed(() => store.state.announcement.announcement.loading);
 const search = ref("");
 
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.title.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.subdivision.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.description.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+const filterTableData = computed(() => tableData.value.data);
 
-function deleteAnnouncent() {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
+let searchAnnouncement = _.debounce(function () {
+  store
+    .dispatch("announcement/getSearchAnnouncements", {
+      data: search.value,
+      url: 1,
+    })
+    .then(() => (tableData = computed(() => store.state.announcement.announcement)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+function editModal(row) {
+  editId.value = row.id;
+  editAnnouncement.value = true;
+}
+
+async function deleteAnnouncent(row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("announcement/deleteAnnouncement", row.id);
+      if (res.status === 204 || res.status === 200) {
+        await store.dispatch("announcement/getAnnouncements");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The announcement data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
-
-function fullStory() {
-  router.push({name:'FullStory'})
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("announcement/getSearchAnnouncements", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("announcement/getAnnouncements", { url: link.label });
+  }
 }
-
+function fullStory(row) {
+  router.push({ name: "FullStory", params: { id: row.id } });
+}
 </script>

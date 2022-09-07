@@ -5,12 +5,13 @@
     width="30%"
     :before-close="handleClose"
   >
-    <span v-if="rand !==''">{{rand}}</span>
+    <span v-if="form.password !==''">New password is <strong>{{form.password}}</strong> <br />
+      Please coordinate accordingly</span>
     <el-button v-else type="info" class="flex justify-center" @click="random(8)">Generate Password</el-button>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModals">Cancel</el-button>
-        <el-button type="primary" @click="closeModals"
+        <el-button type="primary" @click="handleSubmit"
           >Save</el-button
         >
       </span>
@@ -21,19 +22,28 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import store from "../../../../../store";
 
 const props = defineProps({
-  resetDialog:Boolean
+  resetDialog:Boolean,
+  changePasswordId:Number
 })
-const emits = defineEmits(["closeModal"]);
+const emits = defineEmits(["closeModal","changePasswordId"]);
 
-const rand = ref('');
+const form = ref({
+  id:props.changePasswordId,
+  password:''
+})
+
+console.log(props.changePasswordId)
 const closeModals = () =>{
   emits('closeModal')
-  return rand.value = ''
+  emits('changePasswordId')
+  form.value.password = ''
+  form.value.id = ''
 }
 const random = (length = 8) => {
-    return rand.value = Math.random().toString(16).substr(2, length);
+    return form.value.password = Math.random().toString(16).substr(2, length);
 };
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm('Are you sure to close this dialog?')
@@ -44,6 +54,27 @@ const handleClose = (done: () => void) => {
     .catch(() => {
       // catch error
     })
+}
+
+async function handleSubmit(){
+  const res = await store.dispatch('generate_new_password/generateNewPassword',form.value)
+   try {
+      if (res.status === 200 || res.status === 201) {
+        await store.dispatch("user/getUsers");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "the user password was successfully updated",
+        });
+        closeModals();
+      }
+    } catch (err) {
+      await store.commit("alert/notify", {
+        title: "Error",
+        type: "danger",
+        message: err,
+      });
+    }
 }
 </script>
 <style scoped>

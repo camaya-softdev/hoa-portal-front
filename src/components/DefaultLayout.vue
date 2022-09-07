@@ -1,15 +1,22 @@
 <template>
-  <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div
+    v-if="navigationLoading"
+    v-loading.fullscreen.lock="navigationLoading"
+    element-loading-text="Fetching Data..."
+  ></div>
+  <div v-else class="min-h-full">
+    <Disclosure as="nav" class="bg-orange-900" v-slot="{ open }">
+      <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <img
-                class="h-8 w-8"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                alt="Workflow"
-              />
+              <router-link :to="{ name: 'Dashboard' }">
+                <img
+                  class="h-12 w-auto"
+                  src="/logo/camayacoastwhite.png"
+                  alt="Camaya Coast"
+                />
+              </router-link>
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
@@ -17,24 +24,24 @@
                   :to="{ name: 'Dashboard' }"
                   :class="[
                     navigation.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                      ? 'bg-orange-900 text-white'
+                      : 'text-gray-300 hover:bg-orange-600 hover:text-white',
                     'px-3 py-2 rounded-md text-sm font-medium',
                   ]"
                   :aria-current="navigation.current ? 'page' : undefined"
-                  >Dashboard</router-link
-                >
+                  >Dashboard
+                </router-link>
                 <Menu as="div" class="ml-3 relative">
                   <MenuButton
                     :class="[
                       navigation.current
                         ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        : 'text-gray-300 hover:bg-orange-600 hover:text-white',
                       'px-3 py-2 rounded-md text-sm font-medium',
                     ]"
                     :aria-current="navigation.current ? 'page' : undefined"
-                    >Admin Management</MenuButton
-                  >
+                    >Admin Management
+                  </MenuButton>
                   <transition
                     enter-active-class="transition ease-out duration-100"
                     enter-from-class="transform opacity-0 scale-95"
@@ -57,8 +64,8 @@
                             active ? 'bg-gray-100' : '',
                             'block px-4 py-2 text-sm text-gray-700',
                           ]"
-                          >{{ item.name }}</router-link
-                        >
+                          >{{ item.name }}
+                        </router-link>
                       </MenuItem>
                     </MenuItems>
                   </transition>
@@ -69,12 +76,12 @@
                     :class="[
                       navigation.current
                         ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        : 'text-gray-300 hover:bg-orange-600 hover:text-white',
                       'px-3 py-2 rounded-md text-sm font-medium',
                     ]"
                     :aria-current="navigation.current ? 'page' : undefined"
-                    >Member Management</MenuButton
-                  >
+                    >Member Management
+                  </MenuButton>
                   <transition
                     enter-active-class="transition ease-out duration-100"
                     enter-from-class="transform opacity-0 scale-95"
@@ -97,8 +104,8 @@
                             active ? 'bg-gray-100' : '',
                             'block px-4 py-2 text-sm text-gray-700',
                           ]"
-                          >{{ item.name }}</router-link
-                        >
+                          >{{ item.name }}
+                        </router-link>
                       </MenuItem>
                     </MenuItems>
                   </transition>
@@ -118,14 +125,33 @@
               <Menu as="div" class="ml-3 relative">
                 <div>
                   <MenuButton
-                    class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                    class="max-w-xs bg-orange-900 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-orange-800 focus:ring-white"
                   >
                     <span class="sr-only">Open user menu</span>
-                    <img
-                      class="h-8 w-8 rounded-full"
-                      :src="user.imageUrl"
-                      alt=""
-                    />
+                    <div class="mx-3">
+                      <div
+                        class="text-left text-base font-medium leading-none text-white"
+                      >
+                        {{ user.data.hoa_member_name }}
+                      </div>
+                      <div class="text-sm font-medium leading-none text-gray-400">
+                        {{ user.data.email }}
+                      </div>
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-8 w-8"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="white"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
                   </MenuButton>
                 </div>
                 <transition
@@ -139,19 +165,25 @@
                   <MenuItems
                     class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                   >
-                    <MenuItem
-                      v-for="item in userNavigation"
-                      @click="logout"
-                      :key="item.name"
-                      v-slot="{ active }"
-                    >
+                    <MenuItem @click="changePassword = true" v-slot="{ active }">
                       <a
-                        :href="item.href"
+                        href="#"
                         :class="[
                           active ? 'bg-gray-100' : '',
                           'block px-4 py-2 text-sm text-gray-700',
                         ]"
-                        >{{ item.name }}</a
+                        >Change Password</a
+                      >
+                    </MenuItem>
+
+                    <MenuItem @click="logout" v-slot="{ active }">
+                      <a
+                        href="#"
+                        :class="[
+                          active ? 'bg-gray-100' : '',
+                          'block px-4 py-2 text-sm text-gray-700',
+                        ]"
+                        >Sign Out</a
                       >
                     </MenuItem>
                   </MenuItems>
@@ -162,7 +194,7 @@
           <div class="-mr-2 flex md:hidden">
             <!-- Mobile menu button -->
             <DisclosureButton
-              class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              class="bg-orange-900 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-orange-900 focus:ring-white"
             >
               <span class="sr-only">Open main menu</span>
               <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
@@ -180,19 +212,19 @@
             :to="{ name: 'Dashboard' }"
             :class="[
               navigation.current
-                ? 'bg-gray-900 text-white'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                ? 'bg-orange-900 text-white'
+                : 'text-gray-300 hover:bg-orange-600 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
             ]"
             :aria-current="navigation.current ? 'page' : undefined"
-            >Dashboard</DisclosureButton
-          >
+            >Dashboard
+          </DisclosureButton>
           <DisclosureButton
             class="cursor-pointer"
             :class="[
               navigation.current
                 ? 'bg-gray-900 text-white'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                : 'text-gray-300 hover:bg-orange-600 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
             ]"
           >
@@ -201,12 +233,12 @@
                 :class="[
                   navigation.current
                     ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    : 'text-gray-300 hover:bg-orange-600 hover:text-white',
                   'px-3 py-2 rounded-md text-sm font-medium',
                 ]"
                 :aria-current="navigation.current ? 'page' : undefined"
-                >Admin Management</MenuButton
-              >
+                >Admin Management
+              </MenuButton>
               <transition
                 enter-active-class="transition ease-out duration-100"
                 enter-from-class="transform opacity-0 scale-95"
@@ -229,8 +261,8 @@
                         active ? 'bg-gray-100' : '',
                         'block px-4 py-2 text-sm text-gray-700',
                       ]"
-                      >{{ item.name }}</router-link
-                    >
+                      >{{ item.name }}
+                    </router-link>
                   </MenuItem>
                 </MenuItems>
               </transition>
@@ -241,7 +273,7 @@
             :class="[
               navigation.current
                 ? 'bg-gray-900 text-white'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                : 'text-gray-300 hover:bg-orange-600 hover:text-white',
               'block px-3 py-2 rounded-md text-base font-medium',
             ]"
           >
@@ -250,12 +282,12 @@
                 :class="[
                   navigation.current
                     ? 'bg-gray-900 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    : 'text-gray-300 hover:bg-orange-600 hover:text-white',
                   'px-3 py-2 rounded-md text-sm font-medium',
                 ]"
                 :aria-current="navigation.current ? 'page' : undefined"
-                >Member Management</MenuButton
-              >
+                >Member Management
+              </MenuButton>
               <transition
                 enter-active-class="transition ease-out duration-100"
                 enter-from-class="transform opacity-0 scale-95"
@@ -278,43 +310,66 @@
                         active ? 'bg-gray-100' : '',
                         'block px-4 py-2 text-sm text-gray-700',
                       ]"
-                      >{{ item.name }}</router-link
-                    >
+                      >{{ item.name }}
+                    </router-link>
                   </MenuItem>
                 </MenuItems>
               </transition>
             </Menu>
           </DisclosureButton>
         </div>
-        <div class="pt-4 pb-3 border-t border-gray-700">
+        <div class="pt-4 pb-3 border-t border-orange-600">
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
             </div>
             <div class="ml-3">
               <div class="text-base font-medium leading-none text-white">
-                {{ user.name }}
+                {{ user.data.hoa_member_name }}
               </div>
               <div class="text-sm font-medium leading-none text-gray-400">
-                {{ user.email }}
+                {{ user.data.email }}
               </div>
             </div>
           </div>
           <div class="mt-3 px-2 space-y-1">
             <DisclosureButton
-              v-for="item in userNavigation"
-              @click="logout"
-              :key="item.name"
+              @click="changePassword = true"
               as="a"
-              :href="item.href"
-              class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-              >{{ item.name }}</DisclosureButton
-            >
+              href="#"
+              class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-orange-700"
+              >Change Password
+            </DisclosureButton>
+
+            <DisclosureButton
+              @click="logout"
+              as="a"
+              href="#"
+              class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-orange-700"
+              >Sign Out
+            </DisclosureButton>
           </div>
         </div>
       </DisclosurePanel>
     </Disclosure>
     <router-view></router-view>
+    <change-password
+      :changePassword="changePassword"
+      @closeModal="changePassword = false"
+    ></change-password>
   </div>
 </template>
 
@@ -330,40 +385,20 @@ import {
 } from "@headlessui/vue";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import ChangePassword from "../views/admin/Dashboard/Profile/ChangePassword.vue";
 import { useRouter } from "vue-router";
 
-const user = {
-  name: "Adrian Ardais",
-  email: "adrian@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
+let user = "";
+let changePassword = ref(false);
+let navigationLoading = "";
+
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
   { name: "Admin Management", href: "#", current: false },
   { name: "Member Management", href: "#", current: false },
 ];
-const userNavigation = [
-  { name: "Profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
-const adminManagement = [
-  { name: "Subdivision Management", to: "Subdivision" },
-  { name: "User Management", to: "UserManagement" },
-  { name: "Privilege Management", to: "PrivilegeManagement" },
-  { name: "Sales Agent", to: "SalesAgent" },
-];
-
-const hoaManagement = [
-  { name: "Member Registration", to: "MemberRegistration" },
-  { name: "Dues & Fees", to: "MemberDues" },
-  { name: "RFID", to: "RFIDRegistration" },
-  { name: "Announcement", to: "Announcement" },
-  { name: "Email Management", to: "Messages" },
-  { name: "Autogate", to: "Autogate" },
-];
 export default {
   components: {
     Disclosure,
@@ -376,20 +411,49 @@ export default {
     BellIcon,
     MenuIcon,
     XIcon,
+    ChangePassword,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
+    store.dispatch("navigation/getUser");
+    let hoaManagement = [];
+    let adminManagement = [];
+
+    if (store.state.auth.user.hoa_access_type === "2") {
+      adminManagement = [
+        { name: "Subdivision Management", to: "Subdivision" },
+        { name: "User Management", to: "UserManagement" },
+        { name: "RFID", to: "RFIDRegistration" },
+      ];
+    } else {
+      adminManagement = [
+        { name: "Subdivision Management", to: "Subdivision" },
+        { name: "User Management", to: "UserManagement" },
+        { name: "RFID", to: "RFIDRegistration" },
+        { name: "Privilege Management", to: "PrivilegeManagement" },
+        { name: "Sales Agent", to: "SalesAgent" },
+      ];
+    }
+
+    hoaManagement = [
+      { name: "Member Registration", to: "MemberRegistration" },
+      { name: "Dues & Fees", to: "MemberDues" },
+      { name: "Event", to: "Announcement" },
+      { name: "Email Management", to: "Messages" },
+      { name: "Autogate", to: "Autogate" },
+    ];
     if (parseInt(store.state.auth.user.hoa_admin) !== 1) {
       store.commit("alert/notify", {
-        title: "Unathourized",
+        title: "Unauthorized",
         type: "error",
-        message: "You are Hoa Member and not registered as Hoa Admin",
+        message: "You are HOA Member and not registered as HOA Admin",
       });
       router.push({
-        name: "Profile",
+        name: "Home",
       });
     }
+
     function logout() {
       store.dispatch("auth/logout").then(() => {
         router.push({
@@ -397,12 +461,15 @@ export default {
         });
       });
     }
+
     return {
-      user,
+      changePassword,
+      ChangePassword,
+      user: computed(() => store.state.navigation.member.data),
+      navigationLoading: computed(() => store.state.navigation.member.loading),
       adminManagement,
       hoaManagement,
       navigation,
-      userNavigation,
       logout,
     };
   },

@@ -5,9 +5,9 @@
     <div class="max-w-md w-full space-y-8">
       <div>
         <img
-          class="mx-auto h-12 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-          alt="Workflow"
+          class="mx-auto h-20 w-auto"
+          src="/logo/camayacoast.png"
+          alt="Camaya Coast"
         />
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
@@ -125,18 +125,16 @@ let errorMsg = ref("");
 
 function login(ev) {
   ev.preventDefault();
-  console.log(user.admin);
   store
     .dispatch("auth/login", user)
     .then(() => {
       if (user.admin) {
        window.location.href = "/dashboard"
       } else {
-        window.location.href = "/profile"
+        window.location.href = "/home"
       }
     })
     .catch((err) => {
-      console.log(err);
       errorMsg.value = err.response.data.error || err.response.data.message;
     });
 }

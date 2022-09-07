@@ -13,7 +13,7 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="subdivision-name"
         >
-          Subdivision Name
+          Subdivision Name <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -42,7 +42,7 @@
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="subdivision-area"
-          type="text"
+          type="number"
           v-model="form.hoa_subd_area"
           :class="
             errorMsg['hoa_subd_area'] ? 'border-red-300' : 'border-gray-300'
@@ -61,12 +61,12 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="total-block-number"
         >
-          Total Block Number
+          Total Block Number <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="total-block-number"
-          type="text"
+          type="number"
           v-model="form.hoa_subd_blocks"
           :class="
             errorMsg['hoa_subd_blocks'] ? 'border-red-300' : 'border-gray-300'
@@ -85,12 +85,12 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="total-lot-number"
         >
-          Total Lot Number
+          Total Lot Number <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="total-lot-number"
-          type="text"
+          type="number"
           v-model="form.hoa_subd_lots"
           :class="
             errorMsg['hoa_subd_lots'] ? 'border-red-300' : 'border-gray-300'
@@ -107,8 +107,56 @@
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
+          for="subdivision-dues-cutoff-date"
         >
-          Contact Person
+          Subdivision Dues CutOff Date <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="subdivision-dues-cutoff-date"
+          type="date"
+          v-model="form.hoa_subd_dues_cutoff_date"
+          :class="
+            errorMsg['hoa_subd_dues_cutoff_date'] ? 'border-red-300' : 'border-gray-300'
+          "
+          placeholder="Subdivision Dues CutOff Date"
+        />
+        <span
+          v-if="errorMsg['hoa_subd_dues_cutoff_date']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["hoa_subd_dues_cutoff_date"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="subdivision-dues-payment-target"
+        >
+          Subdivision Dues Payment Target <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="subdivision-dues-payment-target"
+          type="number"
+          v-model="form.hoa_subd_dues_payment_target"
+          :class="
+            errorMsg['hoa_subd_dues_payment_target'] ? 'border-red-300' : 'border-gray-300'
+          "
+          placeholder="Subdivision Dues Payment Target"
+        />
+        <span
+          v-if="errorMsg['hoa_subd_dues_payment_target']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["hoa_subd_dues_payment_target"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
+          Contact Person <span class="text-red-300">*</span>
         </label>
 
         <Combobox
@@ -127,9 +175,10 @@
                 class="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900"
                 placeholde="Contact Person"
                 :displayValue="
-                  (person) => (person.email === undefined ? '' : person.email)
+                  (person) => (person.hoa_member_name === undefined ? '' : person.hoa_member_name)
                 "
                 @change="search = $event.target.value"
+                @keyup="searchPerson"
               />
               <ComboboxButton
                 class="absolute inset-y-0 right-0 flex items-center pr-2"
@@ -146,30 +195,38 @@
               leaveTo="opacity-0"
               @after-leave="search = ''"
             >
-              <ComboboxOptions
-                class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              <transition
+                enter-active-class="transition duration-100 ease-out"
+                enter-from-class="transform scale-95 opacity-0"
+                enter-to-class="transform scale-100 opacity-100"
+                leave-active-class="transition duration-75 ease-out"
+                leave-from-class="transform scale-100 opacity-100"
+                leave-to-class="transform scale-95 opacity-0"
               >
-                <div
-                  v-if="filteredPeople.length === 0 && search !== ''"
-                  class="cursor-default select-none relative py-2 px-4 text-gray-700"
+                <ComboboxOptions
+                  class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                 >
-                  Nothing found.
-                </div>
+                  <div
+                    v-if="showEmail.length === 0 && search !== ''"
+                    class="cursor-default select-none relative py-2 px-4 text-gray-700"
+                  >
+                    Nothing found.
+                  </div>
 
-                <ComboboxOption
-                  v-for="person in filteredPeople"
-                  as="template"
-                  :key="person.id"
-                  :value="person"
-                  v-slot="{ selected, active }"
-                >
-                  <li
-                    class="cursor-default select-none relative py-2 pl-10 pr-4"
-                    :class="{
+                  <ComboboxOption
+                    v-for="person in showEmail"
+                    as="template"
+                    :key="person.id"
+                    :value="person"
+                    v-slot="{ selected, active }"
+                  >
+                    <li
+                      class="cursor-default select-none relative py-2 pl-10 pr-4"
+                      :class="{
                       'text-white bg-teal-600': active,
                       'text-gray-900': !active,
                     }"
-                  >
+                    >
                     <span
                       class="block truncate"
                       :class="{
@@ -177,21 +234,22 @@
                         'font-normal': !selected,
                       }"
                     >
-                      {{ person.email }}
+                      {{ person.hoa_member_name }}
                     </span>
-                    <span
-                      v-if="selected"
-                      class="absolute inset-y-0 left-0 flex items-center pl-3"
-                      :class="{
+                      <span
+                        v-if="selected"
+                        class="absolute inset-y-0 left-0 flex items-center pl-3"
+                        :class="{
                         'text-white': active,
                         'text-teal-600': !active,
                       }"
-                    >
-                      <CheckIcon class="w-5 h-5" aria-hidden="true" />
+                      >
+                      <CheckIcon class="w-5 h-5" aria-hidden="true"/>
                     </span>
-                  </li>
-                </ComboboxOption>
-              </ComboboxOptions>
+                    </li>
+                  </ComboboxOption>
+                </ComboboxOptions>
+              </transition>
             </TransitionRoot>
           </div>
         </Combobox>
@@ -207,7 +265,7 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="subdivision-contact-number"
         >
-          Contact Number
+          Contact Number <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -251,6 +309,7 @@
   } from "@headlessui/vue";
   import { CheckIcon, SelectorIcon } from "@heroicons/vue/solid";
   import store from "../../../../../store";
+  import _ from "lodash";
 
   const props = defineProps<{
     editSubdivision: Boolean;
@@ -267,6 +326,8 @@
     hoa_subd_lots: "",
     hoa_subd_contact_person: "",
     hoa_subd_contact_number: "",
+    hoa_subd_dues_payment_target: "",
+    hoa_subd_dues_cutoff_date: "",
   });
 
   let emailData = ref({})
@@ -276,26 +337,30 @@
 
 
 
-  const filteredPeople = computed(() =>
-    props.showEmail.filter(
-      (data) =>
-        !search.value ||
-        data.email.toLowerCase().includes(search.value.toLowerCase())
-    )
-  );
+  // const filteredPeople = computed(() =>
+  //   props.showEmail.filter(
+  //     (data) =>
+  //       !search.value ||
+  //       data.hoa_member_name.toLowerCase().includes(search.value.toLowerCase())
+  //   )
+  // );
 
   const subdivisionLoading = computed(() => store.state.subdivision.currentSubdivision.loading);
 
+  let searchPerson = _.debounce(function () {
+    store.dispatch('subdivision/getSearchUser',search.value)
+      .then(()=>props.showEmail).catch((err)=>console.log(err))
+  },1000)
   watch(
     () => store.state.subdivision.currentSubdivision.data,
     (newVal, oldVal) => {
+      emailData.value.hoa_member_name = newVal.data.hoa_subd_contact_person
       form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
     }
   );
 
 
   if (props.editId !== 0) {
-    console.log(props.editId)
     store.dispatch("subdivision/getSubdivision", props.editId);
   }
 
@@ -314,7 +379,7 @@
   }
 
   async function handleSubmit() {
-    form.value.hoa_subd_contact_person = emailData.value.id
+    form.value.hoa_subd_contact_person = emailData.value.hoa_member_name
     const res = await store.dispatch("subdivision/editSubdivision", form.value);
     try {
       if (res.status === 200 || res.status === 201) {

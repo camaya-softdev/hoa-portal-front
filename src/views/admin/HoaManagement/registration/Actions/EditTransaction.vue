@@ -6,41 +6,57 @@
     :before-close="handleClose"
     center
   >
-    <el-form
-      label-position="top"
-      ref="formRef"
-      :model="form"
-      label-width="120px"
-    >
-      <el-form-item label="Bill Month">
-        <el-date-picker
-          v-model="form.billMonth"
+    <div v-if="currentPaymentHistoryLoading">Loading...</div>
+    <form v-else>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="date-paid"
+        >
+          Date Paid <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="date-paid"
           type="date"
-          placeholder="Pick a day"
+          v-model="form.hoa_billing_date_paid"
+          :class="
+            errorMsg['hoa_billing_date_paid'] ? 'border-red-300' : 'border-gray-300'
+          "
+          placeholder="Date Paid"
         />
-      </el-form-item>
-
-      <el-form-item label="Date Paid">
-        <el-date-picker
-          v-model="form.datePaid"
-          type="date"
-          placeholder="Pick a day"
-        />
-      </el-form-item>
-      <el-form-item label="Balance">
-        <el-select-v2
-          v-model="form.balance"
-          :options="balanceRecurrentOptions"
-          placeholder="Please select Status"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        />
-      </el-form-item>
-    </el-form>
+        <span
+          v-if="errorMsg['hoa_billing_date_paid']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["hoa_billing_date_paid"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2">Billing Status <span class="text-red-300">*</span></label>
+        <el-select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="form.hoa_billing_status" placeholder="Please Select Billing Status">
+          <el-option
+            v-for="item in options"
+            :key="item.label"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <span
+          v-if="errorMsg['subdivision_id']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["subdivision_id"][0] }}
+        </span>
+      </div>
+    </form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="emits('closeModal')">Cancel</el-button>
-        <el-button type="primary" @click="emits('closeModal')"
-          >Confirm</el-button
+        <el-button @click="closeModal">Cancel</el-button>
+        <el-button type="primary" @click="handleSubmit"
+        >Confirm</el-button
         >
       </span>
     </template>
@@ -48,43 +64,91 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
-import { ElMessageBox } from "element-plus";
+  import {ref, watch,computed} from "vue";
+  import {ElMessageBox} from "element-plus";
+  import store from "../../../../../store";
+  import {useRoute} from "vue-router";
 
-const props = defineProps<{
-  editTransaction: Boolean;
-}>();
+  const props = defineProps<{
+    editTransaction: Boolean;
+    editId: Number;
+  }>();
 
-const fileList = ref([{ name: "", url: "" }]);
+  const emits = defineEmits(["closeModal", "editId"]);
+  const route = useRoute();
+  const form = ref({
+    hoa_billing_status: "",
+    hoa_billing_date_paid: "",
+  });
 
-const emits = defineEmits(["closeModal"]);
+  const options = [
+    {
+      value: 'Paid',
+      label: 'Paid',
+    },
+    {
+      value: 'For Verification',
+      label: 'For Verification',
+    },
+    {
+      value: 'Unpaid',
+      label: 'Unpaid',
+    },
+  ]
+  const errorMsg = ref("");
 
-const form = reactive({
-  billMonth: "",
-  datePaid: "",
-  balance: "",
-});
+  if (props.editId !== 0) {
+    store.dispatch("paymentHistory/getCurrentPaymentHistory", props.editId);
+  }
+  const currentPaymentHistoryLoading = computed(()=>store.state.paymentHistory.currentPaymentHistory.loading)
+  watch(
+    () => store.state.paymentHistory.currentPaymentHistory.data,
+    (newVal, oldVal) => {
+      form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
+      console.log(form.value)
+    }
+  );
+  function closeModal(){
+    emits("editId");
+    emits("closeModal");
+  }
 
-const balanceRecurrentInitials = ["Paid", "For Verification", "Un Paid"];
 
-const balanceRecurrentOptions = Array.from({
-  length: balanceRecurrentInitials.length,
-}).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${balanceRecurrentInitials[idx % 10]}`,
-}));
+  const handleClose = (done: () => void) => {
+    ElMessageBox.confirm("Are you sure to close this dialog?")
+      .then(() => {
+        closeModal()
+        done();
+      })
+      .catch(() => {
+      });
+  };
 
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm("Are you sure to close this dialog?")
-    .then(() => {
-      emits("closeModal");
-      done();
-    })
-    .catch(() => {});
-};
+  async function handleSubmit() {
+    try {
+      const res = await store.dispatch("paymentHistory/editPaymentHistory", form.value);
+      if (res.status == 200) {
+        await store.dispatch("paymentHistory/getPaymentHistories",{id:route.params.id,url:1});
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The payment transaction was successfully updated",
+        });
+        closeModal();
+      } else {
+        errorMsg.value = res.response.data.errors;
+      }
+    } catch (err) {
+      await store.commit("alert/notify", {
+        title: "Error",
+        type: "error",
+        message: err.message,
+      });
+    }
+  }
 </script>
 <style scoped>
-.dialog-footer button:first-child {
-  margin-right: 10px;
-}
+  .dialog-footer button:first-child {
+    margin-right: 10px;
+  }
 </style>

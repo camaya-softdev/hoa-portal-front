@@ -6,86 +6,175 @@
     :before-close="handleClose"
     center
   >
-    <el-form
-      label-position="top"
-      ref="formRef"
-      :model="form"
-      label-width="120px"
-    >
-      <el-form-item label="Member Type">
-        <el-select-v2
-          v-model="form.memberType"
-          :options="memberTypeOptions"
-          placeholder="Please select Member Type"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          multiple
-        />
-      </el-form-item>
-      <el-form-item label="Access Type">
-        <el-select
-          v-model="form.accessType"
-          :options="memberTypeOptions"
-          placeholder="Please select Access Type"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+    <form>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="hoa-member-type"
         >
-          <el-option label="Full Admin" value="fullAdmin"></el-option>
+          HOA Member Type <span class="text-red-300">*</span>
+        </label>
+        <el-select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="memberType"  placeholder="HOA Member Type">
+          <el-option
+            v-for="data in optionstwo"
+            :label="data.label"
+            :value="data.value"
+          />
+        </el-select>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="hoa-access-type"
+        >
+          HOA Access Type <span class="text-red-300">*</span>
+        </label>
+        <el-select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="form.hoa_access_type"
+          v-if="memberType === 1"
+          placeholder="HOA Access Type">
+          <el-option
+            v-for="data in options"
+            :label="data.label"
+            :value="data.value"
+          />
+        </el-select>
+        <el-select
+          v-else
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="form.hoa_access_type"
+          placeholder="HOA Access Type">
           <el-option
             label="Subdivision Admin"
-            value="subdivisionAdmin"
-          ></el-option>
+            :value="2"
+          />
         </el-select>
-      </el-form-item>
-      <el-form-item label="Assigned Subdivision">
-        <el-select-v2
-          v-model="form.assignedSubdivision"
-          :options="assignedSubdivisionOptions"
-          placeholder="Please select Assigned Subdivision"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          multiple
-        />
-      </el-form-item>
-      <el-form-item label="Email Address">
-        <el-select-v2
-          v-model="form.emailAddress"
+        <span
+          v-if="errorMsg['hoa_access_type']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["hoa_access_type"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="subdivision"
+        >
+          Assigned Subdivision <span class="text-red-300">*</span>
+        </label>
+        <el-select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="form.subdivision_id"
+          v-if="form.hoa_access_type ===2 "
           filterable
-          :options="emailAddressOptions"
-          placeholder="Please select Email Address"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          multiple
+          collapse-tags
+          collapse-tags-tooltip
+          placeholder="Subdivision Name">
+          <el-option
+            v-for="item in subdivisionData"
+            :key="item.id"
+            :label="item.hoa_subd_name"
+            :value="item.id"
+          />
+        </el-select>
+        <input
+          v-if="form.hoa_access_type === 1"
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="subdivision"
+          type="text"
+          value="All"
+          disabled
+          placeholder="HOA Full Name"
         />
-      </el-form-item>
-      <el-form-item label="Last Name">
-        <el-input
-          v-model="form.lastName"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+<!--        <input-->
+<!--          v-if="member"-->
+<!--          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"-->
+<!--          id="subdivision"-->
+<!--          type="text"-->
+<!--          value="All"-->
+<!--          disabled-->
+<!--          placeholder="HOA Full Name"-->
+<!--        />-->
+        <span
+          v-if="errorMsg['subdivision_id']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["subdivision_id"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="user"
+        >
+          Email Address <span class="text-red-300">*</span>
+        </label>
+        <el-select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          v-model="users"
+          filterable
+          remote
+          :remote-method="searchEmail"
+          :change="onChange(users)"
+          placeholder="Email Address">
+          <el-option
+            v-for="item in userEmail"
+            :key="item.id"
+            :label="item.email"
+            :value="item.id"
+          />
+        </el-select>
+        <span
+          v-if="errorMsg['id']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["id"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label
+          for="hoa_full_name"
+          class="block text-gray-700 text-sm font-bold mb-2">
+          HOA Full Name <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="hoa_full_name"
+          type="text"
+          v-model="fullNameData"
           disabled
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="First Name">
-        <el-input
-          v-model="form.firstName"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+
+          placeholder="HOA Full Name"
+        />
+
+      </div>
+      <div class="mb-4">
+        <label
+          for="hoa_contact_number"
+          class="block text-gray-700 text-sm font-bold mb-2">
+          HOA Contact Number 
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="hoa_contact_number"
+          type="text"
+          v-model="contactNumberData"
           disabled
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="Middle Name">
-        <el-input
-          v-model="form.middleName"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          disabled
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="Contact Number">
-        <el-input
-          v-model="form.contactNumber"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          disabled
-        ></el-input>
-      </el-form-item>
-    </el-form>
+
+          placeholder="HOA Contact Number"
+        />
+
+      </div>
+    </form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="emits('closeModal')">Cancel</el-button>
-        <el-button type="primary" @click="emits('closeModal')"
+        <el-button @click="closeModal">Cancel</el-button>
+        <el-button type="primary" @click="handleSubmit"
           >Confirm</el-button
         >
       </span>
@@ -94,70 +183,111 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+  import {ref,computed} from "vue";
 import { ElMessageBox } from "element-plus";
+  import store from "../../../../../store";
 
 const props = defineProps<{
   addDialog: Boolean;
+  userEmail:Object;
+  subdivisionData:Object;
+  options:Object;
+  optionstwo:Object;
 }>();
-const emits = defineEmits(["closeModal"]);
+const emits = defineEmits(["closeModal","searchShowUser"]);
 
-const memberTypeInitials = ["HOA Admin", "HOA Member"];
-const assignedSubdivisionInitials = [
-  "Bayu Peaks",
-  "Mont Kiarra Phase 1",
-  "Menara Point North",
-];
-const emailAddressInitials = [
-  "ardaisadrian@gmail.com",
-  "ulijanjinky97@gmail.com",
-  "patrician@gmail.com",
-  "juandelacruz@gmail.com",
-];
 
-const memberTypeOptions = ref(
-  Array.from({ length: memberTypeInitials.length }).map((_, idx) => ({
-    value: `Option ${idx + 1}`,
-    label: `${memberTypeInitials[idx % 10]}`,
-  }))
-);
-
-const assignedSubdivisionOptions = ref(
-  Array.from({ length: assignedSubdivisionInitials.length }).map((_, idx) => ({
-    value: `Option ${idx + 1}`,
-    label: `${assignedSubdivisionInitials[idx % 10]}`,
-  }))
-);
-
-const emailAddressOptions = Array.from({
-  length: emailAddressInitials.length,
-}).map((_, idx) => ({
-  value: `Option ${idx + 1}`,
-  label: `${emailAddressInitials[idx % 10]}`,
-}));
-
+const errorMsg = ref('')
 const form = ref({
-  memberType: [],
-  accessType: "",
-  assignedSubdivision: [],
-  emailAddress: "",
-  lastName: "",
-  firstName: "",
-  middleName: "",
-  contactNumber: "",
+  hoa_admin:"",
+  hoa_member:"",
+  hoa_access_type:'',
+  subdivision_id:'',
+  id:''
 });
 
+let memberType = ref(1)
+const users = ref('')
+let fullName = ref({})
+let contactNumber = ref({})
+function onChange(event){
+  if(event){
+      fullName.value =  props.userEmail.find(users => users.id === event);
+      contactNumber.value = props.userEmail.find(users => users.id === event);
+  }
+}
+  const fullNameData = computed(()=>fullName.value !== undefined ? fullName.value.hoa_member_name : '')
+  const contactNumberData = computed(()=>contactNumber.value !== undefined ? contactNumber.value.contactNumber : '')
 
+  function searchEmail(users){
+   return emits('searchShowUser',users)
+  }
+  function closeModal() {
+  memberType.value= 1
+  form.value.hoa_admin=""
+  form.value.hoa_member=""
+  form.value.hoa_access_type=''
+  form.value.subdivision_id=''
+  form.value.id=''
+  users.value = ''
+  contactNumber.value = {}
+  fullName.value = {}
+  emits("closeModal");
+
+}
 
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")
     .then(() => {
-      console.log(form.value.memberType)
-      emits("closeModal");
+      closeModal();
       done();
     })
     .catch(() => {});
 };
+
+async function handleSubmit() {
+  form.value.id = users.value
+  if(memberType.value === 1){
+    form.value.hoa_admin = '1'
+    form.value.hoa_member = '0'
+  }
+  if(memberType.value === 2){
+    form.value.hoa_admin = '1'
+    form.value.hoa_member = '1'
+  }
+
+  if(form.value.subdivision_id.length === 0){
+    form.value.subdivision_id = '0'
+  }
+  const res = await store.dispatch("user/addUser", form.value);
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("user/getUsers");
+      await store.commit("alert/notify", {
+        title: "Success",
+        type: "success",
+        message: "The user data was successfully updated",
+      });
+      closeModal();
+    } else {
+      if(res.response.data.errors){
+        errorMsg.value = res.response.data.errors;
+      }
+      await store.commit("alert/notify", {
+        title: "Error",
+        type: "error",
+        message: 'This User has been already an Admin',
+      });
+
+    }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "error",
+      message: err,
+    });
+  }
+}
 </script>
 <style scoped>
 .dialog-footer button:first-child {

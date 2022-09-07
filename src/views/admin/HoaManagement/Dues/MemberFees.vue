@@ -1,43 +1,52 @@
 <template>
-  <page-component navTitle="Member Dues" navContent="Other Fees">
+  <page-component
+    navTitle="Member Management"
+    navContent="Dues & Fees"
+    navLink="MemberDues"
+    navChildContent="Other Fees"
+    :navName="feeName"
+    :navChildName="feeAddress"
+  >
     <template v-slot:buttons>
-      <span>1 = Felizardo Felizardo Cortez</span>
       <el-button class="button" type="text" @click="addFees = true"
         >Add Other Fees</el-button
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="feesLoading"
+        v-loading.fullscreen.lock="feesLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
         <el-table-column
           sortable
           v-for="header in tableHeader"
           :key="header.id"
+          :type="header.type"
           :prop="header.prop"
           :label="header.name"
           :width="header.width"
         ></el-table-column>
-        <el-table-column align="right" width="180" fixed="right">
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchFee"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="180"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="180" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
@@ -46,26 +55,49 @@
                   size="small"
                   type="primary"
                   :icon="Edit"
-                  @click="editFees = true"
+                  @click="editModal(scope.row)"
                 ></el-button>
               </el-tooltip>
 
-              <el-tooltip
-                content="Delete Fees"
-                placement="bottom"
-                effect="light"
-              >
-                <el-button
+              <el-tooltip content="Delete Fees" placement="bottom" effect="light">
+                <!-- <el-button
                   size="small"
                   type="danger"
                   :icon="Delete"
-                  @click="disableSubdivision"
+                  @click="deleteFee(scope.row)"
                 ></el-button
-              ></el-tooltip>
+              > -->
+              </el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-center mt-5">
+        <nav
+          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
+          aria-label="Pagination"
+        >
+          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+          <a
+            v-for="(link, i) of tableData.links"
+            :key="i"
+            :disabled="!link.url"
+            href="#"
+            @click="getForPage($event, link)"
+            aria-current="page"
+            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
+            :class="[
+              link.active
+                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
+              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
+            ]"
+            v-html="link.label"
+          >
+          </a>
+        </nav>
+      </div>
       <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
         <router-link
           :to="{ name: 'MemberDues' }"
@@ -76,51 +108,99 @@
       </div>
     </template>
   </page-component>
-<add-other-fees :add-fees="addFees" @closeModal="addFees=false"></add-other-fees>
-<edit-other-fees :edit-fees="editFees" @closeModal="editFees=false"></edit-other-fees>
+  <add-other-fees
+    :add-fees="addFees"
+    :showSchedule="showSchedule"
+    :lotId="lotId"
+    @closeModal="addFees = false"
+  ></add-other-fees>
+  <edit-other-fees
+    v-if="editId !== 0"
+    :showSchedule="showSchedule"
+    :editId="editId"
+    @editId="editId = 0"
+    :lotId="lotId"
+    :edit-fees="editFees"
+    @closeModal="editFees = false"
+  ></edit-other-fees>
 </template>
 <script setup>
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
-import AddOtherFees from "./Actions/AddOtherFees.vue"
-import EditOtherFees from "./Actions/EditOtherFees.vue"
-
+import AddOtherFees from "./Actions/AddOtherFees.vue";
+import EditOtherFees from "./Actions/EditOtherFees.vue";
+import { useRoute } from "vue-router";
+import store from "../../../../store";
+import _ from "lodash";
 
 const addFees = ref(false);
 const editFees = ref(false);
+const route = useRoute();
+let editId = ref(0);
+const lotId = route.params.id;
+const feeName = route.params.name;
+const feeAddress = route.params.address;
 
 const tableHeader = [
-  { id: "1", name: "Item", prop: "item", width: "300" },
-  { id: "2", name: "Cost", prop: "cost", width: "300" },
-  { id: "3", name: "Payment Schedule", prop: "paymentSchedule", width: "300" },
+  { id: "0", type: "index", name: "#", prop: "id" },
+  { id: "1", name: "Item", prop: "hoa_fees_item" },
+  { id: "2", name: "Cost", prop: "hoa_fees_cost" },
+  { id: "3", name: "Start Date", prop: "hoa_fees_start_date" },
+  { id: "4", name: "End Date", prop: "hoa_fees_end_date" },
+  { id: "5", name: "Payment Schedule", prop: "schedule" },
 ];
-
-const tableData = [
-  {id:'1',item:'Garbage Fees',cost:'300',paymentSchedule:'Monthly'}
-];
-
+store.dispatch("fee/getFees", lotId);
+store.dispatch("dues/getShowSchedule");
+let tableData = computed(() => store.state.fee.fee);
+const showSchedule = computed(() => store.state.dues.duesSchedule.data);
 const search = ref("");
 
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.subfee.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
-function deleteSubdivision(survey) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
-  }
+const filterTableData = computed(() => tableData.value.data);
+const feesLoading = computed(() => store.state.fee.fee.loading);
+
+function editModal(row) {
+  editId.value = row.id;
+  editFees.value = true;
 }
-function disableSubdivision() {
-  if (confirm(`Are you sure you want to disable this data?`)) {
+
+let searchFee = _.debounce(function () {
+  store
+    .dispatch("fee/getSearchFees", { data: search.value, url: 1 })
+    .then(() => (tableData = computed(() => store.state.fee.fee)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("fee/getSearchFees", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("fee/getFees", { data: lotId, url: link.label });
   }
 }
 
-
+async function deleteFee(row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("fee/deleteFee", row.id);
+      if (res.status === 204) {
+        await store.dispatch("fee/getFees", { data: lotId, url: 1 });
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The other fees data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+}
 </script>

@@ -2,47 +2,68 @@
   <page-component navTitle="Member Management" navContent="Autogate Management">
     <template v-slot:buttons>
       <el-button class="button" type="text" @click="addAutogate = true"
-        >Add Autogate</el-button
+        >Add Member to Autogate Display</el-button
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="autogateLoading"
+        v-loading.fullscreen.lock="autogateLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
+        <el-table-column type="index" prop="id" width="180"></el-table-column>
+        <el-table-column sortable label="Member ID" prop="member_id"></el-table-column>
         <el-table-column
           sortable
-          v-for="header in tableHeader"
-          :key="header.id"
-          :prop="header.prop"
-          :label="header.name"
-          :width="header.width"
+          label="Member Name"
+          prop="hoa_autogate_member_name"
         ></el-table-column>
-        <el-table-column align="right" width="130" fixed="right">
+        <el-table-column
+          sortable
+          label="Subdivision Name"
+          prop="hoa_autogate_subdivision_name"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Start Date"
+          prop="hoa_autogate_start"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="End Date"
+          prop="hoa_autogate_end"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Message Template"
+          prop="hoa_autogate_message"
+        ></el-table-column>
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchAutogate"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="100"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="100" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
 
               <el-tooltip
-                content="Edit Autogate"
+                content="Edit Member to Autogate Display"
                 placement="bottom"
                 effect="light"
               >
@@ -50,20 +71,26 @@
                   size="small"
                   type="primary"
                   :icon="Edit"
-                  @click="editAutogate = true"
+                  @click="editModal(scope.row)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
-                content="Delete Autogate"
+                content="Delete Member to Autogate Display"
                 placement="bottom"
                 effect="light"
               >
-                <el-button size="small" type="danger" :icon="Delete" @click="deleteSubdivision"></el-button
+                <el-button
+                  size="small"
+                  type="danger"
+                  :icon="Delete"
+                  @click="deleteAutogate(scope.row)"
+                ></el-button
               ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
       <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
         <router-link
           :to="{ name: 'AutogateTemplate' }"
@@ -74,92 +101,103 @@
       </div>
     </template>
   </page-component>
-  <add-autogate :add-autogate="addAutogate" @closeModal="addAutogate = false"></add-autogate>
-  <edit-autogate :edit-autogate="editAutogate" @closeModal="editAutogate = false"></edit-autogate>
+  <add-autogate
+    :add-autogate="addAutogate"
+    :userData="userData"
+    :autogateTemplate="autogateTemplate"
+    @closeModal="addAutogate = false"
+    @searchShowUser="searchShowUser"
+  ></add-autogate>
+  <edit-autogate
+    v-if="editId !== 0"
+    :edit-autogate="editAutogate"
+    :userData="userData"
+    :autogateTemplate="autogateTemplate"
+    :edit-id="editId"
+    @editId="editId = 0"
+    @closeModal="editAutogate = false"
+    @searchShowUser="searchShowUser"
+  ></edit-autogate>
 </template>
 <script setup>
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
-import AddAutogate from "./Actions/AddAutogate.vue"
-import EditAutogate from "./Actions/EditAutogate.vue"
+import AddAutogate from "./Actions/AddAutogate.vue";
+import EditAutogate from "./Actions/EditAutogate.vue";
+import store from "../../../../store";
+import _ from "lodash";
 
-const addAutogate = ref(false);
-const editAutogate = ref(false);
+let addAutogate = ref(false);
+let editAutogate = ref(false);
+let editId = ref(0);
 
-const tableHeader = [
-  { id: "0", name: "Member Id",prop:'memberId',width:'180' },
-  { id: "1", name: "Member Name",prop:'memberName',width:'180' },
-  { id: "2", name: "Email Address",prop:'emailAddress',width:'180' },
-  { id: "3", name: "Start Date",prop:'messageSchedule',width:'180' },
-  { id: "4", name: "End Date",prop:'messageRecurrent',width:'180' },
-  { id: "5", name: "Message",prop:'message',width:'180' },
+store.dispatch("autogate/getAutogates");
+store.dispatch("autogate/getUserSubdivision");
+store.dispatch("autogate/getAutogateTemplates");
 
-];
-
-const tableData = [
-  {
-    id: "0",
-    memberId: "1",
-    memberName: "Francisco Felizardo",
-    emailAddress: "franciscofelizardo123@gmail.com",
-    messageSchedule: "May 23, 2022",
-    messageRecurrent: "May 23, 2022",
-    message: "Birthday Greeting",
-  },
-  {
-    id: "2",
-    memberId: "1",
-    memberName: "Francisco Felizardo",
-    emailAddress: "franciscofelizardo123@gmail.com",
-    messageSchedule: "March 16, 2022",
-    messageRecurrent: "December 31, 2022",
-    message: "Privilege Load Balance",
-  },
-  {
-    id: "1",
-    memberId: "2",
-    memberName: "Roldan Laguna",
-    emailAddress: "LagunaRoldan321@yahoo.com",
-    messageSchedule: "March 16, 2022",
-    messageRecurrent: "December 31, 2022",
-    message: "Privilege Load Balance",
-  },
-  {
-    id: "1",
-    memberId: "2",
-    memberName: "Roldan Laguna",
-    emailAddress: "LagunaRoldan321@yahoo.com",
-    messageSchedule: "November 13, 2022",
-    messageRecurrent: "November 13, 2022",
-    message: "Birthday Greeting",
-  },
-];
+let tableData = computed(() => store.state.autogate.autogate);
+let autogateLoading = computed(() => store.state.autogate.autogate.loading);
+let autogateTemplate = computed(() => store.state.autogate.autogate_template.data);
+let userData = computed(() => store.state.autogate.user_subdivision.data);
 
 const search = ref("");
 
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.memberName.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.emailAddress.toLowerCase().includes(search.value.toLowerCase())
+const filterTableData = computed(() => tableData.value.data);
 
-  )
-);
-function deleteSubdivision(survey) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
+let searchAutogate = _.debounce(function () {
+  store
+    .dispatch("autogate/getSearchAutogates", { data: search.value, url: null })
+    .then(() => (tableData = computed(() => store.state.autogate.autogate)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+let searchShowUser = _.debounce(function (user) {
+  store
+    .dispatch("autogate/getSearchShowAutogates", user)
+    .then(
+      () => (userData.value = computed(() => store.state.autogate.user_subdivision.data))
     )
-  ) {
+    .catch((err) => console.log(err));
+}, 1000);
+
+async function deleteAutogate(row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("autogate/deleteAutogate", row.id);
+      if (res.status === 204) {
+        await store.dispatch("autogate/getAutogates");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The autogate data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
-function closeModal() {
-  isOpen.value = false;
+function editModal(row) {
+  editId.value = row.id;
+
+  editAutogate.value = true;
 }
-function openModal() {
-  isOpen.value = true;
+
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("autogate/getSearchAutogates", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("autogate/getAutogates", { url: link.label });
+  }
 }
 </script>

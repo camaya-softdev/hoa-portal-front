@@ -1,5 +1,10 @@
 <template>
-  <div class="overflow-hidden overflow-y-scroll" style="height: 30rem">
+  <div
+    v-if="billingLoading"
+    v-loading.fullscreen.lock="billingLoading"
+    element-loading-text="Fetching Data..."
+  ></div>
+  <div v-else class="overflow-hidden overflow-y-scroll" style="height: 50rem">
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <hr class="border-gray-500" />
       <div class="px-4 py-5 sm:px-6">
@@ -9,88 +14,64 @@
       </div>
       <div class="border-t border-gray-500">
         <dl>
-          <div
-            class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6"
-          >
-            <dt class="text-sm font-medium text-black-500">Bill To:</dt>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium font-bold text-gray-500">Bill To:</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
-              Menara Point North Blk 2, Lot 1
+              {{
+                billingData.subdivision_name +
+                "Blk " +
+                billingData.block_number +
+                ",Lot " +
+                billingData.lot_number
+              }}
             </dd>
-            <dt class="text-sm font-medium text-gray-500">Statement Date:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-medium text-gray-500">Statement #</dt>
+            <dt class="text-sm font-medium font-bold text-gray-500">Statement Date:</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
-              MPN-2022-001
+              {{ billingData.billing[0].statement_date }}
+            </dd>
+            <dt class="text-sm font-medium font-bold text-gray-500">Statement #</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
+              {{ billingData.billing[0].statement_number }}
+            </dd>
+            <dt class="text-sm font-medium font-bold text-gray-500">Member ID #</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
+              {{ billingData.member_id }}
             </dd>
           </div>
-          <div
-            class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-          >
-            <dt class="text-sm font-semibold text-gray-500"></dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-semibold text-gray-500">Account Summary</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
+          <hr class="border-gray-500" />
+          <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+              Account Summary
+            </h3>
           </div>
-          <div
-            class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6"
-          >
-            <dt class="text-sm font-medium text-gray-500">Bank:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-medium text-gray-500">Total Amount Due:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">26,200</dd>
-            <dt class="text-sm font-medium text-gray-500">Account Name:</dt>
+          <hr class="border-gray-500" />
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium font-bold text-gray-500">Total Amount Due:</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
-              Taman Ridge/Menara Point North Home Owners Association
+              ₱{{ billingData.billing[0].total_cost }}
             </dd>
-            <dt class="text-sm font-medium text-gray-500">Current Due:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-medium text-gray-500">Account Number:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-medium text-gray-500">Past Due:</dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
+            <dt class="text-sm font-medium font-bold text-gray-500">Current Due:</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
+              ₱{{ billingData.billing[0].current_due }}
+            </dd>
+            <dt class="text-sm font-medium font-bold text-gray-500">Past Due:</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
+              ₱{{ billingData.billing[0].past_due }}
+            </dd>
           </div>
-          <div
-            class="bg-white px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6"
-          >
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500"></dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-          </div>
-          <div
-            class="bg-white px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6"
-          >
-            <dt class="text-sm font-medium text-gray-500"></dt>
-            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2"></dd>
-            <dt class="text-sm font-medium text-gray-500">Payment Due Date</dt>
+            <dt class="text-sm font-medium font-bold text-gray-500">Payment Due Date</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-2">
-              30-Mar-22
-            </dd>
-          </div>
-          <div
-            class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-          >
-            <dt class="text-sm font-semibold text-gray-500">
-              For online payments:
-            </dt>
-            <dd class="mt-1 text-sm text-blue-500 sm:mt-0 sm:col-span-2">
-              <a href="https://payments.camayacoast.com"
-                >https://payments.camayacoast.com</a
-              >
-            </dd>
-            <dt class="text-sm font-semibold text-gray-500">
-              Or you can visit Head Office at:
-            </dt>
-            <dd class="mt-1 text-sm text-gray-500 sm:mt-0 sm:col-span-2">
-              Jacinta Bldg. 2, EDSA Guadalupe Nuevo, Makati City, 1212
-              Philippines
+              {{ billingData.billing[0].payment_due }}
             </dd>
           </div>
 
           <hr class="border-gray-500" />
           <div class="px-4 py-5 sm:px-6">
-            <h3
-              class="text-lg text-center leading-6 font-semibold text-gray-900"
-            >
-              Account Activity
+            <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+              Billing Summary
             </h3>
           </div>
           <hr class="border-gray-500" />
@@ -98,435 +79,176 @@
             <template v-slot:table>
               <thead class="border-gray-50 border-b-2">
                 <tr>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
                     Date
                   </th>
 
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Type
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Invoice
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
                     Description
                   </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Payment
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
                     Amount
                   </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Balance
-                  </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
-                <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center">02/28/2022</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    AD
+                <tr class="bg-gray-50" v-for="data in billingData.dues">
+                  <td class="text-sm text-gray-700 text-center">
+                    {{ billingData.billing[0].payment_due }}
+                  </td>
+
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    {{ data.due_name }}
                   </td>
                   <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
+                    v-if="data.unit_id === 1"
                     class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
                   >
-                    Association Dues
+                    ₱{{ data.due_cost * billingData.lot_area }}
                   </td>
                   <td
+                    v-if="data.unit_id === 3"
                     class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
                   >
-                    5,600.00
+                    ₱{{ data.due_cost }}
                   </td>
                   <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
+                    v-if="data.unit_id === 2"
                     class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
                   >
-                    5,600.00
+                    ₱{{ data.due_cost * billingData.designee + data.due_cost }}
                   </td>
                 </tr>
-                <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    Taman Ridge & Menara Point North
+              </tbody>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-gray-50" v-for="fee in billingData.fees">
+                  <td class="text-sm text-gray-700 text-center">
+                    {{ billingData.billing[0].payment_due }}
                   </td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                <tr>
-                  <td class="text-sm text-gray-700 text-center">02/28/2022</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    Association Dues
+
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    {{ fee.fee_name }}
                   </td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    5,600.00
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    ₱{{ fee.fee_cost }}
                   </td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    5,600.00
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    February 28, 2022
-                  </td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                <tr>
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    Taman Ridge & Menara Point North
-                  </td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                 <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center">02/28/2022</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >Facility Maintenance Fee</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >₱15,000</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >₱15,000</td>
-                </tr>
-                  <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >February 28, 2022</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                  <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >Menara Point North</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                       <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                </tr>
-                       <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >Current Balance</td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >26,200</td>
                 </tr>
               </tbody>
             </template>
           </Table>
-          <!-- <hr class="border-gray-500" />
-        <div class="px-4 py-5 sm:px-6">
-          <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
-            Downloadable Files
-          </h3>
-        </div>
-        <hr class="border-gray-500" />
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Attachments</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            <ul
-              role="list"
-              class="border border-gray-200 rounded-md divide-y divide-gray-200"
-            >
-              <li
-                class="pl-3 pr-4 py-3 flex items-center justify-between text-sm"
-              >
-                <div class="w-0 flex-1 flex items-center">
-                  <PaperClipIcon
-                    class="flex-shrink-0 h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <span class="ml-2 flex-1 w-0 truncate">
-                    Billing Statement.pdf
-                  </span>
-                </div>
-                <div class="ml-4 flex-shrink-0">
-                  <a
-                    href="#"
-                    class="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Download
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </dd>
-        </div> -->
+          <hr class="border-gray-500 mt-4" />
+          <div class="px-4 py-5 sm:px-6">
+            <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+              Downloadable Files
+            </h3>
+          </div>
           <hr class="border-gray-500" />
-          <Table class="mt-3">
-            <template v-slot:table>
-              <thead class="border-gray-50 border-b-2">
-                <tr>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Past Due 1-13 Days
-                  </th>
-
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Past Due 31-60 Days
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Past Due 61-90 Days
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Past Due Over 90 Days
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Current Due
-                  </th>
-                  <th
-                    class="p-3 text-sm font-semibold tracking-wide text-center"
-                  >
-                    Amount Due
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100">
-                <tr class="bg-gray-50">
-                  <td class="text-sm text-gray-700 text-center"></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  ></td>
-
-                  <td
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    ₱26,200
-                  </td>
-                </tr>
-              </tbody>
-            </template>
-          </Table>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Attachments</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <ul
+                role="list"
+                class="border border-gray-200 rounded-md divide-y divide-gray-200"
+              >
+                <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
+                  <div class="w-0 flex-1 flex items-center">
+                    <PaperClipIcon
+                      class="flex-shrink-0 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                    <span class="ml-2 flex-1 w-0 truncate"> Billing Statement.pdf </span>
+                  </div>
+                  <div class="ml-4 flex-shrink-0">
+                    <a
+                      href="#"
+                      @click="
+                        downloadPDF(
+                          billingData.memberId,
+                          billingData.billing[0].billingId
+                        )
+                      "
+                      class="font-medium text-indigo-600 hover:text-indigo-500"
+                    >
+                      Download
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </dd>
+          </div>
         </dl>
         <hr class="border-gray-500" />
       </div>
     </div>
   </div>
+  <div v-if="billingLoading"></div>
+  <div v-else class="bg-gray-100 px-4 py-3 text-right sm:px-6">
+    <button
+      type="button"
+      tag="button"
+      disabled
+      v-if="
+        billingData.billing[0].status === 'For Verification' ||
+        billingData.billing[0].status === 'Paid'
+      "
+      :to="{
+        name: 'Payment',
+        params: { id: billingData.billing[0].bilingId },
+      }"
+      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    >
+      {{
+        billingData.billing[0].status === "For Verification" ? "For Verification" : "Paid"
+      }}
+    </button>
+
+    <div v-if="billingData.billing[0].status === 'Unpaid'">
+      <router-link
+        type="button"
+        :to="{
+          name: 'Payment',
+          params: { id: billingData.billing[0].billingId },
+        }"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        Pay
+      </router-link>
+    </div>
+  </div>
 </template>
 
-<script>
+<script setup>
 import { PaperClipIcon } from "@heroicons/vue/solid";
 import Table from "../../../components/Table.vue";
-export default {
-  components: {
-    PaperClipIcon,
-    Table,
-  },
-};
+import { computed } from "vue";
+import store from "../../../store";
+import member from "../../../store/modules/admin/member";
+
+store.dispatch("billing/getBillings", 0);
+
+const billingData = computed(() => store.state.billing.billings.data);
+const billingLoading = computed(() => store.state.billing.billings.loading);
+
+async function downloadPDF(memberId, billingId) {
+  const res = await store.dispatch("billing/downloadPDF", {
+    userId: memberId,
+    billingId: billingId,
+  });
+
+  if (res.status === 200 || res.status === 201) {
+    // var printWindow = window.open(
+    //   `http://hoa-portal.test/invoice/${memberId}/${billingId}`
+    // );
+
+    var printWindow = window.open(
+      `https://apidevhoaportal.camayacoast.com/invoice/${memberId}/${billingId}/`
+    );
+    await store.dispatch("billing/getBillings", 0);
+    await store.commit("alert/notify", {
+      title: "Success",
+      type: "success",
+      message: "You are successfully download your Invoice",
+    });
+  }
+}
 </script>

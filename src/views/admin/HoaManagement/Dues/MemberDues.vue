@@ -1,19 +1,25 @@
 <template>
-<PageComponent navTitle="Member Management" navContent="Dues & Fees">
-
+  <PageComponent navTitle="Member Management" navContent="Dues & Fees">
     <template v-slot:content>
+      <div
+        v-if="dueFeeLoading"
+        v-loading.fullscreen.lock="dueFeeLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
         <el-table-column
           sortable
           v-for="header in tableHeader"
           :key="header.id"
+          :type="header.type"
           :prop="header.prop"
           :label="header.name"
           :width="header.width"
@@ -22,26 +28,22 @@
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchDueFee"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="80"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="80" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Show Fees" placement="bottom" effect="light">
+              <el-tooltip content="Show Dues & Fees" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="success"
                   :icon="Files"
-                  @click="showDialog = true"
+                  @click="showAllDue(scope.row)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -53,69 +55,87 @@
                 <el-button
                   size="small"
                   :icon="Document"
-                  @click="otherFees"
+                  @click="otherFees(scope.row)"
                 ></el-button>
               </el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
     </template>
   </PageComponent>
-<show-fees :show-dialog="showDialog" @closeModal="showDialog = false"></show-fees>
+  <show-fees
+    v-if="lotId !== 0"
+    :show-dialog="showDialog"
+    :lotId="lotId"
+    @closeModal="showDialog = false"
+    @lotId="lotId = 0"
+  ></show-fees>
 </template>
 <script setup>
 import { Files, Document } from "@element-plus/icons-vue";
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
 import ShowFees from "./Actions/ShowFees.vue";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
+import store from "../../../../store";
+import _ from "lodash";
 
-const router = useRouter()
+const router = useRouter();
 
-const showDialog = ref(false);
-
+let showDialog = ref(false);
+let lotId = ref(0);
 const tableHeader = [
-  { id: "0", name: "Member Id",prop:'id',width:'180' },
-  { id: "1", name: "Full Name",prop:'fullName',width:'180' },
-  { id: "2", name: "Subdivision",prop:'subdivision',width:'180' },
-  { id: "3", name: "Address",prop:'address',width:'500' }
+  { id: "0", type: "index", name: "#", prop: "id" },
+  { id: "1", name: "Full Name", prop: "fullName" },
+  { id: "2", name: "Subdivision", prop: "subdivisionName" },
+  { id: "3", name: "Address", prop: "address" },
 ];
 
-const tableData = [
-  {
-    id: "1",
-    fullName: "Francisco Felizardo",
-    subdivision: "Bayu Peak",
-    address: "Blk 1 Lot 5",
-  },
-  {
-    id: "2",
-    fullName: "Roldan Laguna",
-    subdivision: "Mont Kiarra Phase 1",
-    address: "Blk 7 Lot 15",
-  },
-  {
-    id: "3",
-    fullName: "Juliet Guevara",
-    subdivision: "Menara Point North",
-    address: "Blk 2 Lot 1",
-  },
-];
+store.dispatch("dues_fees/getDueFees");
+let tableData = computed(() => store.state.dues_fees.dues_fees);
+let dueFeeLoading = computed(() => store.state.dues_fees.dues_fees.loading);
 const search = ref("");
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.fullName.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.subdivision.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.address.toLowerCase().includes(search.value.toLowerCase())
+const filterTableData = computed(() => tableData.value.data);
+console.log(tableData.value.data);
 
-  )
-);
+let searchDueFee = _.debounce(function () {
+  store
+    .dispatch("dues_fees/getSearchDueFees", { data: search.value, label: 1 })
+    .then(() => (tableData = computed(() => store.state.dues_fees.dues_fees)))
+    .catch((err) => console.log(err));
+}, 1000);
 
-function otherFees(){
-  router.push({name:"MemberFees"})
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("dues_fees/getSearchDueFees", {
+      data: search.value,
+      label: Number(link.url),
+    });
+  } else {
+    await store.dispatch("dues_fees/getDueFees", { url: link.label });
+  }
 }
 
+function showAllDue(row) {
+  lotId.value = row.id;
+  showDialog.value = true;
+}
+
+function otherFees(row) {
+  router.push({
+    name: "MemberFees",
+    params: {
+      id: row.id,
+      name: row.fullName,
+      address: `${row.subdivisionName} ${row.address}`,
+    },
+  });
+}
 </script>

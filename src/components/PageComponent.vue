@@ -5,7 +5,7 @@
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
             <span
-              class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 "
             >
               <svg
                 class="mr-2 w-4 h-4"
@@ -34,9 +34,35 @@
                   clip-rule="evenodd"
                 ></path>
               </svg>
+              <router-link
+                v-if="navLink"
+                class="ml-1 text-sm font-medium text-black-400 hover:border-current md:ml-2 dark:text-gray-500"
+                :to="{name:navLink}">{{navContent}}
+              </router-link>
+              <span
+                v-else
+                class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500"
+              >{{navContent}}</span
+              >
+            </div>
+          </li>
+          <li v-if="navChildContent" aria-current="page">
+            <div class="flex items-center">
+              <svg
+                class="w-6 h-6 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
               <span
                 class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500"
-                >{{ navContent }}</span
+              >{{ navChildContent }}</span
               >
             </div>
           </li>
@@ -45,14 +71,30 @@
     </div>
   </header>
   <main>
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="max-w-10xl mx-auto py-8 sm:px-8 lg:px-10">
       <!-- Replace with your content -->
       <div class="px-4 py-6 sm:px-0">
         <!-- <add-button-search @openModal="openModal"></add-button-search> -->
         <el-card class="box-card">
           <template #header>
             <div class="flex justify-between align-centerr">
-              <span class="text-gray-500 font-semibold">{{navContent}}</span>
+              <span class="text-gray-500 font-semibold">
+                {{navChildContent}}
+                <p v-if="!navChildContent">{{navContent}}</p>
+                <span
+                  v-if="navName"
+                  class="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full"
+                >{{navName}}</span>
+
+                <span
+                  v-if="navChildName"
+                  class="text-xs inline-flex ml-2 items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full"
+                >{{navChildName}}</span>
+              </span>
+              
+            
+             
+
               <slot name="buttons"></slot>
             </div>
           </template>
@@ -63,8 +105,12 @@
   </main>
 </template>
 <script setup>
-const props = defineProps({
-  navTitle: String,
-  navContent: String,
-});
+  const props = defineProps({
+    navTitle: String,
+    navContent: String,
+    navName: String,
+    navChildContent: String,
+    navLink: String,
+    navChildName:String
+  });
 </script>

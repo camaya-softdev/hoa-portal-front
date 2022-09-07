@@ -1,58 +1,150 @@
 <template>
   <el-dialog
     v-model="editPrivilege"
-    title="Edit Privilege"
+    title="Edit Privilege Package"
     width="50%"
     :before-close="handleClose"
     center
   >
-    <el-form
-      label-position="top"
-      ref="formRef"
-      :model="form"
-      label-width="120px"
-    >
-      <el-form-item label="Package Name">
-        <el-input
-          v-model="form.package"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input
-          v-model="form.description"
-          type="textarea"
-          cols="5"
-          rows="5"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="Access Type">
-        <el-select
-          v-model="form.category"
-          placeholder="Please select Access Type"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+    <div v-if="privilegeLoading">Loading...</div>
+    <form v-else>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="privilege-name"
         >
-          <el-option label="Hotel Room" value="Hotel Room"></el-option>
-          <el-option label="AF Waterpark" value="Af Waterpark"></el-option>
-          <el-option label="DTT" value="DTT"></el-option>
-          <el-option label="Food Outlet" value="Food Outlet"></el-option>
-          <el-option label="Others" value="Others"></el-option>
-        </el-select>
-      </el-form-item>
+          Privilege Name <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="privilege-name"
+          :class="
+            errorMsg['hoa_privilege_package_name'] ? 'border-red-300' : 'border-gray-300'
+          "
+          type="text"
+          v-model="form.hoa_privilege_package_name"
 
-      <el-form-item label="Cost">
-        <el-input
-          v-model="form.cost"
-          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        ></el-input>
-      </el-form-item>
-    </el-form>
+          placeholder="Privilege Name"
+        />
+        <span
+          v-if="errorMsg['hoa_privilege_package_name']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+                  {{ errorMsg["hoa_privilege_package_name"][0] }}
+                </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="privilege-desc"
+        >
+          Privilege Description <span class="text-red-300">*</span>
+        </label>
+        <textarea
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="privilege-desc"
+          :class="
+            errorMsg['hoa_privilege_package_desc'] ? 'border-red-300' : 'border-gray-300'
+          "
+          cols="4"
+          rows="4"
+          v-model="form.hoa_privilege_package_desc"
+
+          placeholder="Privilege Desciption"
+        />
+        <span
+          v-if="errorMsg['hoa_privilege_package_desc']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+                  {{ errorMsg["hoa_privilege_package_desc"][0] }}
+                </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="privilege-category"
+        >
+          Privilege Category <span class="text-red-300">*</span>
+        </label>
+        <select
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="privilege-category"
+          :class="
+            errorMsg['hoa_privilege_package_category'] ? 'border-red-300' : 'border-gray-300'
+          "
+          v-model="form.hoa_privilege_package_category"
+          placeholder="Privilege Category"
+        >
+          <option value="Hotel Room">Hotel Room</option>
+          <option value="Hotel Room">Af Waterpark</option>
+          <option value="Hotel Room">DTT</option>
+          <option value="Hotel Room">Food Outlet</option>
+          <option value="Hotel Room">Others</option>
+        </select>
+        <span
+          v-if="errorMsg['hoa_privilege_package_category']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+                  {{ errorMsg["hoa_privilege_package_category"][0] }}
+                </span>
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="privilege-cost"
+        >
+          Privilege Cost <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="privilege-cost"
+          :class="
+            errorMsg['hoa_privilege_package_cost'] ? 'border-red-300' : 'border-gray-300'
+          "
+          type="number"
+          v-model="form.hoa_privilege_package_cost"
+
+          placeholder="Privilege Cost"
+        />
+        <span
+          v-if="errorMsg['hoa_privilege_package_cost']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+                  {{ errorMsg["hoa_privilege_package_cost"][0] }}
+                </span>
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="privilege-limit"
+        >
+          Privilege Limit <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="privilege-limit"
+           :class="
+            errorMsg['hoa_privilege_package_limit'] ? 'border-red-300' : 'border-gray-300'
+          "
+          type="number"
+          v-model="form.hoa_privilege_package_limit"
+
+          placeholder="Privilege Limit"
+        />
+                <span
+                  v-if="errorMsg['hoa_privilege_package_limit']"
+                  class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+                >
+                  {{ errorMsg["hoa_privilege_package_limit"][0] }}
+                </span>
+      </div>
+    </form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="emits('closeModal')">Cancel</el-button>
-        <el-button type="primary" @click="emits('closeModal')"
-          >Confirm</el-button
+        <el-button @click="closeModal()">Cancel</el-button>
+        <el-button type="primary" @click="handleSubmit"
+        >Confirm</el-button
         >
       </span>
     </template>
@@ -60,32 +152,78 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
-import { ElMessageBox } from "element-plus";
+  import {computed, ref, watch} from "vue";
+  import {ElMessageBox} from "element-plus";
+  import store from "../../../../../store";
+  const props = defineProps<{
+    editPrivilege: Boolean;
+    editId: Number;
+  }>();
+  const emits = defineEmits(['closeModal','editId']);
 
-const props = defineProps<{
-  editPrivilege: Boolean;
-}>();
-const emits = defineEmits(["closeModal"]);
+  const form = ref({
+    hoa_privilege_package_name: "",
+    hoa_privilege_package_desc: "",
+    hoa_privilege_package_category: "",
+    hoa_privilege_package_cost: "",
+    hoa_privilege_package_limit:''
+  });
 
-const form = reactive({
-  package: "",
-  description: "",
-  category: [],
-  cost: "",
-});
+  const errorMsg = ref("");
 
-const handleClose = (done: () => void) => {
-  ElMessageBox.confirm("Are you sure to close this dialog?")
-    .then(() => {
-      emits("closeModal");
-      done();
-    })
-    .catch(() => {});
-};
+  const privilegeLoading = computed(() => store.state.privilege.currentPrivilege.loading);
+
+  watch(
+    () => store.state.privilege.currentPrivilege.data,
+    (newVal, oldVal) => {
+      form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
+    }
+  );
+
+  if (props.editId !== 0) {
+    store.dispatch("privilege/getPrivilege", props.editId);
+  }
+
+  function closeModal() {
+    emits("editId");
+    emits("closeModal");
+  }
+
+  const handleClose = (done: () => void) => {
+    ElMessageBox.confirm("Are you sure to close this dialog?")
+      .then(() => {
+        closeModal()
+        done();
+      })
+      .catch(() => {
+      });
+  };
+
+  async function handleSubmit() {
+    const res = await store.dispatch("privilege/editPrivilege", form.value);
+    try {
+      if (res.status === 200 || res.status === 201) {
+        await store.dispatch("privilege/getPrivileges");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The privilege data was successfully updated",
+        });
+        closeModal();
+      } else {
+        errorMsg.value = res.response.data.errors;
+      }
+    } catch (err) {
+      await store.commit("alert/notify", {
+        title: "Error",
+        type: "danger",
+        message: err,
+      });
+    }
+  }
 </script>
 <style scoped>
-.dialog-footer button:first-child {
-  margin-right: 10px;
-}
+  .dialog-footer button:first-child {
+    margin-right: 10px;
+  }
 </style>

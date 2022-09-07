@@ -6,77 +6,125 @@
       >
     </template>
     <template v-slot:content>
+      <div
+        v-if="agentLoading"
+        v-loading.fullscreen.lock="agentLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
+        :row-class-name="tableRowClassName"
       >
         <el-table-column
           sortable
           v-for="header in tableHeader"
           :key="header.id"
+          :type="header.type"
           :prop="header.prop"
           :label="header.name"
           :width="header.width"
         ></el-table-column>
-        <el-table-column align="right" width="130" fixed="right">
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchAgent"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="50"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="200" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip
-                content="Edit Sales Agent"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Edit Sales Agent" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="success"
                   :icon="Edit"
-                  @click="editAgent = true"
+                  @click="editModal(scope.$index, scope.row)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
-                content="Delete Sales Agent"
+                v-if="scope.row.hoa_sales_agent_status === 1"
+                content="Disabled Agent"
                 placement="bottom"
                 effect="light"
               >
                 <el-button
                   size="small"
+                  type="warning"
+                  :icon="Lock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip
+                v-else
+                content="Enabled Agent"
+                placement="bottom"
+                effect="light"
+              >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Unlock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip content="Delete Sales Agent" placement="bottom" effect="light">
+                <el-button
+                  size="small"
                   type="danger"
                   :icon="Delete"
-                  @click="deleteSubdivision(scope.$index, scope.row)"
+                  @click="deleteAgent(scope.$index, scope.row)"
                 ></el-button>
               </el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <div class="flex justify-center mt-5">
+        <nav
+          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
+          aria-label="Pagination"
+        >
+          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+          <a
+            v-for="(link, i) of tableData.links"
+            :key="i"
+            :disabled="!link.url"
+            href="#"
+            @click="getForPage($event, link)"
+            aria-current="page"
+            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
+            :class="[
+              link.active
+                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
+              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
+            ]"
+            v-html="link.label"
+          >
+          </a>
+        </nav>
+      </div>
     </template>
   </page-component>
-  <add-agent
-    :add-agent="addAgent"
-    @close-modal="addAgent = false"
-  ></add-agent>
+  <add-agent :add-agent="addAgent" @close-modal="addAgent = false"></add-agent>
   <edit-agent
+    v-if="editId !== 0"
+    :editId="editId"
     :edit-agent="editAgent"
     @close-modal="editAgent = false"
+    @editId="editId = 0"
   ></edit-agent>
 </template>
 <script setup>
@@ -84,62 +132,113 @@ import { ref, computed } from "vue";
 import AddAgent from "./Actions/AddAgent.vue";
 import EditAgent from "./Actions/EditAgent.vue";
 import PageComponent from "../../../../components/PageComponent.vue";
-import { Edit, Delete } from "@element-plus/icons-vue";
+import { Edit, Delete, Lock, Unlock } from "@element-plus/icons-vue";
+import store from "../../../../store";
+import _ from "lodash";
 
-const addAgent = ref(false);
-const editAgent = ref(false);
+let addAgent = ref(false);
+let editAgent = ref(false);
+
 const tableHeader = [
-  { id: "0", name: "Sales Agent ID", prop: "id", width: "180" },
-  { id: "1", name: "Email Address", prop: "email", width: "180" },
-  { id: "2", name: "Last Name", prop: "lastName", width: "180" },
-  { id: "3", name: "First Name", prop: "firstName", width: "180" },
-  { id: "4", name: "Middle Name", prop: "middleName", width: "180" },
-  { id: "5", name: "Contact Number", prop: "number", width: "180" },
-  { id: "6", name: "Supervisor", prop: "visor", width: "180" },
-];
-
-const tableData = [
+  { id: "0", type: "index", name: "#", prop: "id" },
   {
-    id: "0",
-    email: "angelopangilinan@gmail.com",
-    lastName: "Pangilinan",
-    firstName: "Angelo",
-    middleName: "",
-    number:'09123876541',
-    visor: "",
+    id: "1",
+    name: "Email Address",
+    prop: "hoa_sales_agent_email",
+  },
+  { id: "2", name: "Last Name", prop: "hoa_sales_agent_lname" },
+  { id: "3", name: "First Name", prop: "hoa_sales_agent_fname" },
+  { id: "4", name: "Middle Name", prop: "hoa_sales_agent_mname" },
+  { id: "5", name: "Suffix", prop: "hoa_sales_agent_suffix" },
+  {
+    id: "6",
+    name: "Contact Number",
+    prop: "hoa_sales_agent_contact_number",
+  },
+  {
+    id: "7",
+    name: "Supervisor",
+    prop: "hoa_sales_agent_supervisor",
   },
 ];
+
+store.dispatch("agent/getAgents");
+const agentLoading = computed(() => store.state.agent.agent.loading);
+let tableData = computed(() => store.state.agent.agent);
+
 const search = ref("");
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.category.toLowerCase().includes(search.value.toLowerCase()) ||
-      data.pacakge.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
-function deleteSubdivision(survey) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
+const filterTableData = computed(() => tableData.value.data);
+
+let searchAgent = _.debounce(function () {
+  store
+    .dispatch("agent/getSearchAgents", { data: search.value, url: 1 })
+    .then(() => (tableData = computed(() => store.state.agent.agent)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+const tableRowClassName = ({ row, rowIndex }) => {
+  //change table row to  red if the agent is disable
+  if (row.hoa_sales_agent_status === 0) {
+    return "danger-row";
+  }
+  return "";
+};
+
+const editId = ref(0);
+
+function editModal(index, row) {
+  editId.value = row.id;
+  console.log(editId.value);
+  editAgent.value = true;
+}
+
+async function changeStatus(index, row) {
+  if (confirm(`Are you sure you want to update agents data status?`)) {
+    try {
+      const res = await store.dispatch("agent/changeStatus", row.id);
+      if (res.status === 204) {
+        await store.dispatch("agent/getAgents");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The agent data status was successfully updated",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
-function disableSubdivision(survey) {
-  if (confirm(`Are you sure you want to disable this data?`)) {
+
+async function deleteAgent(index, row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("agent/deleteAgent", row.id);
+      if (res.status === 204) {
+        await store.dispatch("agent/getAgents");
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The privilege data was successfully deleted",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
-function closeModal() {
-  isOpen.value = false;
-}
-function openModal() {
-  isOpen.value = true;
-}
-function closeModal2() {
-  isOpen2.value = false;
-}
-function openModal2() {
-  isOpen2.value = true;
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+  if (search.value !== "") {
+    await store.dispatch("member/getSearchAgents", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("agent/getAgents", { url: link.label });
+  }
 }
 </script>

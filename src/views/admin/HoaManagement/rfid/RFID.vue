@@ -1,133 +1,178 @@
 <template>
   <page-component navTitle="Member Management" navContent="RFID Registration">
-     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addRFID = true"
-        >Add RFID</el-button
-      >
+    <template v-slot:buttons>
+      <el-button class="button" type="text" @click="addRFID = true">Add RFID</el-button>
     </template>
-       <template v-slot:content>
+    <template v-slot:content>
+      <div
+        v-if="rfidLoading"
+        v-loading.fullscreen.lock="rfidLoading"
+        element-loading-text="Fetching Data..."
+      ></div>
       <el-table
+        v-else
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
+        <el-table-column type="index" label="#" prop="id"></el-table-column>
         <el-table-column
           sortable
-          v-for="header in tableHeader"
-          :key="header.id"
-          :prop="header.prop"
-          :label="header.name"
-          :width="header.width"
+          label="Registration Date"
+          prop="created_at"
         ></el-table-column>
-        <el-table-column align="right" width="130" fixed="right">
+        <el-table-column
+          sortable
+          label="RFID NO"
+          prop="hoa_rfid_num"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Semnox NO"
+          prop="hoa_rfid_semnox_num"
+        ></el-table-column>
+        <el-table-column sortable label="Member ID" prop="member_id"></el-table-column>
+        <el-table-column sortable label="Member Name" prop="full_name"></el-table-column>
+        <el-table-column sortable label="Status">
+          <template #default="scope">
+            <el-tag type="success" v-if="scope.row.hoa_rfid_reg_status === 1"
+              >Enable</el-tag
+            >
+            <el-tag v-else type="danger">Disable</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          sortable
+          label="Privilege Load"
+          prop="hoa_rfid_reg_privilege_load"
+        ></el-table-column>
+        <el-table-column align="right" fixed="right">
           <template #header>
             <el-input
               v-model="search"
+              @keyup="searchAgent"
               size="small"
               placeholder="Type to search"
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="100"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="100" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip
-                content="Edit RFID"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Edit RFID" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="primary"
                   :icon="Edit"
-                   @click="editRFID = true"
+                  @click="editModal(scope.row)"
                 ></el-button>
               </el-tooltip>
-              <el-tooltip
-                content="Show Privilege"
-                placement="bottom"
-                effect="light"
-              >
+              <el-tooltip content="Show Privilege" placement="bottom" effect="light">
                 <el-button
                   size="small"
                   type="success"
                   :icon="CreditCard"
-                  @click="showPrivilege"
+                  @click="showPrivilege(scope.row)"
                 ></el-button
               ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
       </el-table>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
     </template>
   </page-component>
 
-  <addRFID :addRFID="addRFID" @closeModal="addRFID=false"></addRFID>
-  <editRFID :editRFID="editRFID" @closeModal="editRFID=false"></editRFID>
+  <addRFID
+    :addRFID="addRFID"
+    @searchShowUser="searchShowUser"
+    :userEmail="userEmail"
+    @closeModal="addRFID = false"
+  ></addRFID>
+  <editRFID
+    v-if="editId !== 0"
+    :editRFID="editRFID"
+    @searchShowUser="searchShowUser"
+    :userEmail="userEmail"
+    @closeModal="editRFID = false"
+    :edit-id="editId"
+    @editId="editId = 0"
+  ></editRFID>
 </template>
 <script setup>
-import { ref,computed } from "vue";
+import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
 import { Edit, CreditCard } from "@element-plus/icons-vue";
-import {useRouter} from "vue-router"
-import AddRFID from "./Actions/AddRFID.vue"
-import EditRFID from "./Actions/EditRFID.vue"
+import { useRouter } from "vue-router";
+import store from "../../../../store";
+import AddRFID from "./Actions/AddRFID.vue";
+import EditRFID from "./Actions/EditRFID.vue";
+import _ from "lodash";
 
-const router = useRouter()
-const addRFID = ref(false);
-const editRFID = ref(false);
-
-const tableHeader = [
-  {id:'0',name:'Registration Date',prop:'registration',width:'180'},
-  {id:'1',name:'RFID NO.',prop:'rfid',width:'180'},
-  {id:'2',name:'Semnox NO.',prop:'semnox',width:'180'},
-  {id:'3',name:'Member ID',prop:"memberID",width:'180'},
-  {id:'4',name:'Member Name',prop:'memberName',width:'180'},
-  {id:'5',name:'Status',prop:'status',width:'180'},
-  {id:'6',name:'Privilege Load',prop:'privilegeLoad',width:'180'},
-
-]
-
-const tableData = [
-  {id:'0',registration:'March 15, 2022',rfid:'2999720368',semnox:'B019CCB2',memberID:'1',memberName:'Francisco Felizardo',status:'Active',privilegeLoad:'132'},
-  {id:'1',registration:'March 15, 2022',rfid:'2041219302',semnox:'E688AA79',memberID:'2',memberName:'Roldan Laguna',status:'Active',privilegeLoad:'133'},
-  {id:'2',registration:'March 15, 2022',rfid:'2041386134',semnox:'9614AD79',memberID:'3',memberName:'Juliet Guevara',status:'Active',privilegeLoad:'130'},
-]
-
+const router = useRouter();
+let addRFID = ref(false);
+let editRFID = ref(false);
+let editId = ref(0);
+store.dispatch("rfid/getRFIDs");
+store.dispatch("show_member_user/getShowMemberUsers");
+let tableData = computed(() => store.state.rfid.rfid);
+const rfidLoading = computed(() => store.state.rfid.rfid.loading);
 const search = ref("");
 
-const filterTableData = computed(() =>
-  tableData.filter(
-    (data) =>
-      !search.value ||
-      data.memberName.toLowerCase().includes(search.value.toLowerCase())||
-       data.semnox.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
-function showPrivilege() {
-  router.push({name:'Priveleges'})
+const filterTableData = computed(() => tableData.value.data);
+const userData = computed(() => store.state.rfid.cardEmail);
+let userEmail = computed(() => store.state.show_member_user.showMemberUser.data);
+
+let searchShowUser = _.debounce(function (user) {
+  store
+    .dispatch("show_member_user/getSearchShowMemberUsers", user)
+    .then(
+      () =>
+        (userEmail.value = computed(
+          () => store.state.show_member_user.showMemberUser.data
+        ))
+    )
+    .catch((err) => console.log(err));
+}, 1000);
+
+let searchAgent = _.debounce(function () {
+  store
+    .dispatch("rfid/getSearchRFIDs", { data: search.value, url: null })
+    .then(() => (tableData = computed(() => store.state.rfid.rfid)))
+    .catch((err) => console.log(err));
+}, 1000);
+
+function showPrivilege(row) {
+  router.push({
+    name: "Priveleges",
+    params: { id: row.id, name: row.full_name },
+  });
 }
 
-function closeModal() {
-  isOpen.value = false;
-}
-function openModal() {
-  isOpen.value = true;
+function editModal(row) {
+  editId.value = row.id;
+  editRFID.value = true;
 }
 
-function closeModal2() {
-  isOpen2.value = false;
-}
-function openModal2() {
-  isOpen2.value = true;
+async function getForPage(ev, link) {
+  ev.preventDefault();
+  if (!link.url || link.active) {
+    return;
+  }
+
+  if (search.value !== "") {
+    await store.dispatch("rfid/getSearchRFIDs", {
+      data: search.value,
+      label: Number(link.label),
+    });
+  } else {
+    await store.dispatch("rfid/getRFIDs", { url: link.label });
+  }
 }
 </script>

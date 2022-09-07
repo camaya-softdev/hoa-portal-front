@@ -13,7 +13,7 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="username"
         >
-          Email Address
+          Email Address <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -36,7 +36,7 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="hoa_member_lname"
         >
-          Last Name
+          Last Name <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -61,7 +61,7 @@
           class="block text-gray-700 text-sm font-bold mb-2"
           for="hoa_member_fname"
         >
-          First Name
+          First Name <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
