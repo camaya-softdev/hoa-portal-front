@@ -20,7 +20,7 @@
         :flexible="true"
         table-layout="auto"
       >
-        <el-table-column type="index" prop="id" width="180"></el-table-column>
+        <el-table-column type="index" prop="id" label="#" width="80"></el-table-column>
         <el-table-column sortable label="Member ID" prop="member_id"></el-table-column>
         <el-table-column
           sortable

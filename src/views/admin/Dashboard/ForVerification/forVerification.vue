@@ -57,7 +57,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <h3 class="text-center">Payment Documents and Files</h3>
+            <h3 class="text-center mt-4">Payment Documents and Files</h3>
             <el-table
               :data="props.row.document"
               style="width: 100%; overflow-x: auto"
@@ -65,38 +65,22 @@
               table-layout="auto"
             >
               <el-table-column type="index" label="#" prop="id" width="50" />
-              <el-table-column
-                label="Document Name"
-                prop="hoa_document_name"
-                width="180"
-              />
-              <el-table-column
-                label="Document Description"
-                prop="hoa_document_desc"
-                width="180"
-              />
-              <el-table-column sortable label="Document Tag" width="180">
+              <el-table-column label="Document Name" prop="hoa_document_name" />
+              <el-table-column label="Document Description" prop="hoa_document_desc" />
+              <el-table-column sortable label="Document Tag">
                 <template #default="scope">
                   <el-tag disable-transitions>{{ scope.row.hoa_document_tag }}</el-tag>
                 </template>
               </el-table-column>
               <el-table-column sortable label="Document Files" width="180">
                 <template #default="scope">
-                  <el-image
-                    v-for="file in scope.row.files"
-                    :key="file.id"
-                    :src="scope.row.files[0].url"
-                    lazy
+                  <button
+                    href="#"
+                    class="text-blue-500"
+                    @click="showDocumentFile(scope.row)"
                   >
-                    <template #error>
-                      <a
-                        href="#"
-                        class="text-blue-500 underline"
-                        @click="downloadPDF(file.url)"
-                        >Download a PDF File</a
-                      >
-                    </template>
-                  </el-image>
+                    Show Files
+                  </button>
                 </template>
               </el-table-column>
             </el-table>
@@ -116,12 +100,19 @@
     @closeModal="editForVerification = false"
     @editId="editId = 0"
   ></edit-for-verification>
+  <show-files
+    v-if="documentID !== 0"
+    :files="files"
+    :showDocument="showDocument"
+    @closeModal="showDocument = false"
+  ></show-files>
 </template>
 <script setup>
 import store from "../../../../store";
 import { computed, ref } from "vue";
 import { Edit } from "@element-plus/icons-vue";
 import EditForVerification from "./actions/EditForVerification.vue";
+import ShowFiles from "./actions/ShowFiles.vue";
 import Pagination from "../../../../components/Pagination.vue";
 
 store.dispatch("forVerification/getForVerifications");
@@ -130,14 +121,19 @@ let tableData = computed(() => store.state.forVerification.forVerification);
 let filterTableData = computed(() => tableData.value.data);
 let editId = ref(0);
 let editForVerification = ref(false);
+let files = ref("");
+let documentID = ref(0);
+let showDocument = ref(false);
 
 function editModal(row) {
   editId.value = row.id;
   editForVerification.value = true;
 }
 
-function downloadPDF(url) {
-  return window.open(url);
+function showDocumentFile(row) {
+  files.value = row.files;
+  showDocument.value = true;
+  documentID.value = 1;
 }
 
 async function getForPage(ev, link) {

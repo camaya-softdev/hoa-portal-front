@@ -22,7 +22,6 @@
         table-layout="auto"
       >
         <el-table-column
-          sortable
           v-for="header in tableHeader"
           :type="header.type"
           :key="header.id"
@@ -30,7 +29,7 @@
           :label="header.name"
           :width="header.width"
         ></el-table-column>
-        <el-table-column align="right" fixed="right">
+        <el-table-column align="right" width="180" fixed="right">
           <template #header>
             <el-input
               v-model="search"

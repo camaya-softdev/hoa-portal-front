@@ -18,7 +18,7 @@
         :flexible="true"
         table-layout="auto"
       >
-        <el-table-column type="index" label="#" prop="id" width="180"></el-table-column>
+        <el-table-column type="index" label="#" prop="id"></el-table-column>
         <el-table-column sortable label="Member ID" prop="member_id"></el-table-column>
         <el-table-column sortable label="Member Name" prop="fullName"></el-table-column>
         <el-table-column sortable label="Member Email" prop="email"></el-table-column>

@@ -5,7 +5,7 @@
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
             <span
-              class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 "
+              class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400"
             >
               <svg
                 class="mr-2 w-4 h-4"
@@ -37,12 +37,13 @@
               <router-link
                 v-if="navLink"
                 class="ml-1 text-sm font-medium text-black-400 hover:border-current md:ml-2 dark:text-gray-500"
-                :to="{name:navLink}">{{navContent}}
+                :to="{ name: navLink }"
+                >{{ navContent }}
               </router-link>
               <span
                 v-else
                 class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500"
-              >{{navContent}}</span
+                >{{ navContent }}</span
               >
             </div>
           </li>
@@ -62,7 +63,7 @@
               </svg>
               <span
                 class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500"
-              >{{ navChildContent }}</span
+                >{{ navChildContent }}</span
               >
             </div>
           </li>
@@ -79,38 +80,39 @@
           <template #header>
             <div class="flex justify-between align-centerr">
               <span class="text-gray-500 font-semibold">
-                {{navChildContent}}
-                <p v-if="!navChildContent">{{navContent}}</p>
+                {{ navChildContent }}
+                <p v-if="!navChildContent">{{ navContent }}</p>
                 <span
                   v-if="navName"
                   class="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full"
-                >{{navName}}</span>
+                  >{{ navName }}</span
+                >
 
                 <span
                   v-if="navChildName"
                   class="text-xs inline-flex ml-2 items-center font-bold leading-sm uppercase px-3 py-1 bg-green-200 text-green-700 rounded-full"
-                >{{navChildName}}</span>
+                  >{{ navChildName }}</span
+                >
               </span>
-              
-            
-             
 
               <slot name="buttons"></slot>
             </div>
           </template>
-          <slot name="content"></slot>
+          <div style="max-width: 99%">
+            <slot name="content"></slot>
+          </div>
         </el-card>
       </div>
     </div>
   </main>
 </template>
 <script setup>
-  const props = defineProps({
-    navTitle: String,
-    navContent: String,
-    navName: String,
-    navChildContent: String,
-    navLink: String,
-    navChildName:String
-  });
+const props = defineProps({
+  navTitle: String,
+  navContent: String,
+  navName: String,
+  navChildContent: String,
+  navLink: String,
+  navChildName: String,
+});
 </script>

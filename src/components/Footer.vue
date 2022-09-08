@@ -3,7 +3,7 @@
     <div class="footer">
       <div class="footerContent">
         <p>&copy; {{ new Date().getFullYear() }} Camaya Coast All rights reserved</p>
-        <p classs="text-center">System Version: v1.0.2</p>
+        <p classs="text-center">System Version: v1.0.0</p>
       </div>
     </div>
   </div>

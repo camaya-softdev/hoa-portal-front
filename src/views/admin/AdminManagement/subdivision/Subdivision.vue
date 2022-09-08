@@ -23,10 +23,10 @@
         style="width: 100%; overflow-x: auto"
         :flexible="true"
         table-layout="auto"
+        :scrollbar-always-on="true"
         :row-class-name="tableRowClassName"
       >
         <el-table-column
-          sortable
           v-for="header in tableHeader"
           :type="header.type"
           :key="header.id"
@@ -34,7 +34,7 @@
           :label="header.name"
           :width="header.width"
         ></el-table-column>
-        <el-table-column align="right" fixed="right">
+        <el-table-column align="right" width="180" fixed="right">
           <template #header>
             <el-input
               v-model="search"
@@ -169,36 +169,41 @@ let addSubdivision = ref(false);
 let editSubdivision = ref(false);
 const auth = store.state.auth.user.hoa_access_type;
 const tableHeader = [
-  { id: "0", type: "index", prop: "id", name: "#" },
-  { id: "1", name: "Subdivision ID", prop: "subd_id" },
-  { id: "2", name: "Name", prop: "hoa_subd_name" },
-  { id: "3", name: "Area (SQM)", prop: "hoa_subd_area" },
+  { id: "0", type: "index", prop: "id", name: "#", width: "80" },
+  { id: "1", name: "Subdivision ID", prop: "subd_id", width: "180" },
+  { id: "2", name: "Name", prop: "hoa_subd_name", width: "180" },
+  { id: "3", name: "Area (SQM)", prop: "hoa_subd_area", width: "180" },
   {
     id: "4",
     name: "Total Block Number",
     prop: "hoa_subd_blocks",
+    width: "180",
   },
 
-  { id: "5", name: "Total Lot Number", prop: "hoa_subd_lots" },
+  { id: "5", name: "Total Lot Number", prop: "hoa_subd_lots", width: "180" },
   {
     id: "6",
     name: "Cutoff Date",
     prop: "hoa_subd_dues_cutoff_date",
+    width: "180",
   },
   {
     id: "7",
     name: "Payment Targets (Days)",
     prop: "hoa_subd_dues_payment_target",
+    width: "180",
   },
   {
     id: "8",
     name: "Contact Person",
     prop: "hoa_subd_contact_person",
+    width: "180",
   },
   {
     id: "9",
     name: "Contact Number",
     prop: "hoa_subd_contact_number",
+    width: "180",
   },
 ];
 

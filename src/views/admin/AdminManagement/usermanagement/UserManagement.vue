@@ -20,41 +20,56 @@
         :flexible="true"
         table-layout="auto"
       >
-        <el-table-column type="index" label="#" prop="id"></el-table-column>
-        <el-table-column sortable label="Member ID" prop="admin_id"></el-table-column>
-        <el-table-column sortable label="Email Address" prop="email"></el-table-column>
+        <el-table-column type="index" label="#" prop="id" width="80"></el-table-column>
+        <el-table-column
+          sortable
+          label="Member ID"
+          prop="admin_id"
+          width="180"
+        ></el-table-column>
+        <el-table-column
+          sortable
+          label="Email Address"
+          prop="email"
+          width="180"
+        ></el-table-column>
         <el-table-column
           sortable
           label="Last Name"
           prop="hoa_member_lname"
+          width="180"
         ></el-table-column>
         <el-table-column
           sortable
           label="First Name"
           prop="hoa_member_fname"
+          width="180"
         ></el-table-column>
         <el-table-column
           sortable
           label="Middle Name"
           prop="hoa_member_mname"
+          width="180"
         ></el-table-column>
         <el-table-column
           sortable
           label="Suffix"
           prop="hoa_member_suffix"
+          width="180"
         ></el-table-column>
         <el-table-column
           sortable
           label="Contact Number"
           prop="hoa_phone_num"
+          width="180"
         ></el-table-column>
-        <el-table-column sortable label="Member Type">
+        <el-table-column sortable label="Member Type" width="180">
           <template #default="scope">
             <el-tag v-if="scope.row.hoa_admin === 1" class="ml-2">HOA Admin</el-tag>
             <el-tag v-if="scope.row.hoa_member === 1" class="ml-2">HOA Member</el-tag>
           </template>
         </el-table-column>
-        <el-table-column sortable label="Assigned">
+        <el-table-column sortable label="Assigned" width="180">
           <template #default="scope">
             <el-tag
               v-if="scope.row.hoa_access_type === 2"
@@ -66,7 +81,7 @@
             <el-tag v-else disable-transitions>All</el-tag>
           </template>
         </el-table-column>
-        <el-table-column sortable label="Access Type">
+        <el-table-column sortable label="Access Type" width="180">
           <template #default="scope">
             <el-tag v-if="scope.row.hoa_access_type === 2" class="ml-2"
               >Subdivision Admin</el-tag
@@ -76,7 +91,7 @@
             >
           </template>
         </el-table-column>
-        <el-table-column align="right" fixed="right">
+        <el-table-column align="right" width="180" fixed="right">
           <template #header>
             <el-input
               v-model="search"

@@ -21,15 +21,11 @@
         align="center"
         header-align="center"
         :data="filterTableData"
-        stripe
-        border
-        style="width: 100%"
+        style="width: 100%; overflow-x: auto"
+        :flexible="true"
+        table-layout="auto"
       >
-        <el-table-column
-         type="index"
-          prop="id"
-          width="180"
-        ></el-table-column>
+        <el-table-column type="index" prop="id" label="#" width="80"></el-table-column>
         <el-table-column
           sortable
           label="Template Name"
@@ -47,7 +43,7 @@
             </div>
           </template>
         </el-table-column>
-           <el-table-column sortable label="Background Image" width="300">
+        <el-table-column sortable label="Background Image" width="300">
           <template #default="scope">
             <div>
               <img
@@ -77,20 +73,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          sortable
-          label="Template Footer Second Page"
-          width="180"
-        >
+        <el-table-column sortable label="Template Footer Second Page" width="180">
           <template #default="scope">
             <div>
               <RichTextEditor
                 class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="hoa-autogate-template-message"
                 theme="bubble"
-                :content="
-                  content(scope.row.hoa_autogate_template_footer_second_page)
-                "
+                :content="content(scope.row.hoa_autogate_template_footer_second_page)"
                 :readOnly="true"
               />
             </div>
@@ -118,12 +108,7 @@
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="180"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="180" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
@@ -212,9 +197,7 @@ store.dispatch("template/getTemplates", 1);
 store.dispatch("background_image/getBackgroundImages");
 let tableData = computed(() => store.state.template.template);
 let templateLoading = computed(() => store.state.template.template.loading);
-let backgroundData = computed(
-  () => store.state.background_image.backgroundImage.data
-);
+let backgroundData = computed(() => store.state.background_image.backgroundImage.data);
 const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
@@ -255,11 +238,7 @@ function addMessage(row) {
 }
 
 async function deleteTemplate(row) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
     try {
       const res = await store.dispatch("template/deleteTemplate", row.id);
       if (res.status === 204 || res.status === 200) {
