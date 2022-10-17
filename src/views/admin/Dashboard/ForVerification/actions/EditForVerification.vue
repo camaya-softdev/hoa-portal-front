@@ -3,6 +3,7 @@
     v-model="editForVerification"
     title="Edit Member Transaction"
     width="30%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -40,6 +41,7 @@
         >
           <el-option
             v-for="item in options"
+            @click="selectOptions(form.hoa_billing_status)"
             :key="item.label"
             :label="item.label"
             :value="item.value"
@@ -50,6 +52,27 @@
           class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
         >
           {{ errorMsg["subdivision_id"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="amount-paid">
+          Amount Paid <span class="text-red-300">*</span>
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="amount-paid"
+          type="text"
+          v-model="form.hoa_billing_amount_paid"
+          :class="
+            errorMsg['hoa_billing_amount_paid'] ? 'border-red-300' : 'border-gray-300'
+          "
+          placeholder="Amount Paid"
+        />
+        <span
+          v-if="errorMsg['hoa_billing_amount_paid']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["hoa_billing_amount_paid"][0] }}
         </span>
       </div>
     </form>
@@ -78,12 +101,20 @@ const route = useRoute();
 const form = ref({
   hoa_billing_status: "",
   hoa_billing_date_paid: "",
+  hoa_billing_total_cost: "",
+  hoa_billing_amount_paid: 0,
+  hoa_billing_past_due: "",
+  hoa_billing_total_balance: "",
 });
 
 const options = [
   {
     value: "Paid",
     label: "Paid",
+  },
+  {
+    value: "Partial Payment",
+    label: "Partial Payment",
   },
   {
     value: "For Verification",
@@ -94,18 +125,28 @@ const options = [
     label: "Unpaid",
   },
 ];
+
+function selectOptions(data) {
+  if (data === "Unpaid") {
+    form.value.hoa_billing_amount_paid = 0.0;
+  } else {
+    form.value.hoa_billing_amount_paid = amount_paid;
+  }
+}
 const errorMsg = ref("");
 
 if (props.editId !== 0) {
-  store.dispatch("paymentHistory/getCurrentPaymentHistory", props.editId);
+  store.dispatch("forVerification/getForVerification", props.editId);
 }
 const currentPaymentHistoryLoading = computed(
-  () => store.state.paymentHistory.currentPaymentHistory.loading
+  () => store.state.forVerification.currentforVerification.loading
 );
+let amount_paid = 0;
 watch(
-  () => store.state.paymentHistory.currentPaymentHistory.data,
+  () => store.state.forVerification.currentforVerification.data,
   (newVal, oldVal) => {
     form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
+    amount_paid = newVal.data.hoa_billing_amount_paid;
   }
 );
 function closeModal() {

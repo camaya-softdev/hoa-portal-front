@@ -3,14 +3,13 @@
     v-model="addFees"
     title="Add Other Fees"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
     <form>
       <div class="mb-4">
-        <label
-          for="item"
-          class="block text-gray-700 text-sm font-bold mb-2">
+        <label for="item" class="block text-gray-700 text-sm font-bold mb-2">
           Item <span class="text-red-300">*</span>
         </label>
         <input
@@ -18,9 +17,7 @@
           id="item"
           type="text"
           v-model="form.hoa_fees_item"
-          :class="
-            errorMsg['hoa_fees_item'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_fees_item'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Item"
         />
         <span
@@ -31,9 +28,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          for="cost"
-          class="block text-gray-700 text-sm font-bold mb-2">
+        <label for="cost" class="block text-gray-700 text-sm font-bold mb-2">
           Cost
         </label>
         <input
@@ -41,9 +36,7 @@
           id="cost"
           type="number"
           v-model="form.hoa_fees_cost"
-          :class="
-            errorMsg['hoa_fees_item'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_fees_item'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Cost"
         />
         <span
@@ -55,10 +48,7 @@
       </div>
 
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="start-date"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="start-date">
           Start Date <span class="text-red-300">*</span>
         </label>
         <input
@@ -66,9 +56,7 @@
           id="start-date"
           type="date"
           v-model="form.hoa_fees_start_date"
-          :class="
-            errorMsg['hoa_fees_start_date'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_fees_start_date'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Start Date"
         />
         <span
@@ -79,10 +67,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="end-date"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="end-date">
           End Date <span class="text-red-300">*</span>
         </label>
         <input
@@ -90,9 +75,7 @@
           id="end-date"
           type="date"
           v-model="form.hoa_fees_end_date"
-          :class="
-            errorMsg['hoa_fees_end_date'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_fees_end_date'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="End Date"
         />
         <span
@@ -114,14 +97,11 @@
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="subdivision-fees-reccurrent"
           v-model="form.schedule_id"
-          :class="
-            errorMsg['schedule_id'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['schedule_id'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Subdivision Fees CutOff Date"
         >
-          <option v-for="(data,index) in showSchedule"
-                  :key="index"
-                  v-bind:value="data">{{data.hoa_schedule_name}}
+          <option v-for="(data, index) in showSchedule" :key="index" v-bind:value="data">
+            {{ data.hoa_schedule_name }}
           </option>
         </select>
         <span
@@ -135,9 +115,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit"
-          >Confirm</el-button
-        >
+        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -150,12 +128,12 @@ import store from "../../../../../store";
 
 const props = defineProps<{
   addFees: Boolean;
-  showSchedule:Object;
-  lotId:Number;
+  showSchedule: Object;
+  lotId: Number;
 }>();
 
 const emits = defineEmits(["closeModal"]);
-const errorMsg = ref('');
+const errorMsg = ref("");
 const form = ref({
   schedule_id: "",
   lot_id: 0,
@@ -165,13 +143,13 @@ const form = ref({
 });
 
 function closeModal() {
-  form.value.hoa_fees_item = ''
-  form.value.schedule_id = ''
-  form.value.lot_id = 0
-  form.value.hoa_fees_desc = ''
-  form.value.hoa_fees_cost = ''
-  errorMsg.value = ''
-  emits('closeModal')
+  form.value.hoa_fees_item = "";
+  form.value.schedule_id = "";
+  form.value.lot_id = 0;
+  form.value.hoa_fees_desc = "";
+  form.value.hoa_fees_cost = "";
+  errorMsg.value = "";
+  emits("closeModal");
 }
 
 const handleClose = (done: () => void) => {
@@ -183,12 +161,12 @@ const handleClose = (done: () => void) => {
     .catch(() => {});
 };
 async function handleSubmit() {
-  form.value.lot_id = props.lotId
-  form.value.schedule_id = form.value.schedule_id.schedule_id
+  form.value.lot_id = props.lotId;
+  form.value.schedule_id = form.value.schedule_id.schedule_id;
   const res = await store.dispatch("fee/addFee", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("fee/getFees",props.lotId);
+      await store.dispatch("fee/getFees", props.lotId);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",
@@ -211,5 +189,4 @@ async function handleSubmit() {
 .dialog-footer button:first-child {
   margin-right: 10px;
 }
-
 </style>

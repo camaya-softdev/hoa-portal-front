@@ -2,7 +2,7 @@
   <el-dialog
     v-model="eventDialog"
     title="Event/Announcements"
-    width="50%"
+    width="80%"
     :before-close="handleClose"
     center
   >
@@ -52,7 +52,7 @@
   import store from "../../../../store";
   import {computed} from "vue"
   import RichTextEditor from "../../../../components/RichTextEditor.vue";
-  
+
   const props = defineProps<{
     eventDialog: Boolean;
     eventId:Number;

@@ -6,9 +6,12 @@
     navChildContent="Autogate Template"
   >
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addTemplate = true"
-        >Add Autogate Template</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addTemplate = true"
       >
+        Add Autogate Template
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -25,78 +28,26 @@
         :flexible="true"
         table-layout="auto"
       >
-        <el-table-column type="index" prop="id" label="#" width="80"></el-table-column>
+        <el-table-column type="index" prop="id" label="#"></el-table-column>
         <el-table-column
           sortable
           label="Template Name"
           prop="hoa_autogate_template_name"
-          width="180"
         ></el-table-column>
-        <el-table-column sortable label="Template Image" width="300">
-          <template #default="scope">
-            <div>
-              <img
-                :src="scope.row.hoa_autogate_template_picture"
-                :alt="scope.row.hoa_autogate_template_name"
-                class="w-64 h-48 object-cover"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column sortable label="Background Image" width="300">
-          <template #default="scope">
-            <div>
-              <img
-                :src="scope.row.hoa_background_image"
-                :alt="scope.row.hoa_background_image"
-                class="w-64 h-48 object-cover"
-              />
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column
           sortable
-          label="Template Footer First Page"
-          prop="hoa_autogate_template_footer"
-          width="180"
+          label="Bacgkround Image Name"
+          prop="background_image_name"
         ></el-table-column>
-        <el-table-column sortable label="Template Second Page" width="180">
-          <template #default="scope">
-            <div>
-              <RichTextEditor
-                class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="hoa-autogate-template-message"
-                theme="bubble"
-                :content="content(scope.row.hoa_autogate_template_second_page)"
-                :readOnly="true"
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column sortable label="Template Footer Second Page" width="180">
-          <template #default="scope">
-            <div>
-              <RichTextEditor
-                class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="hoa-autogate-template-message"
-                theme="bubble"
-                :content="content(scope.row.hoa_autogate_template_footer_second_page)"
-                :readOnly="true"
-              />
-            </div>
-          </template>
-        </el-table-column>
         <el-table-column
           sortable
           label="Template Third Page"
           prop="hoa_autogate_template_third_page"
-          width="180"
         ></el-table-column>
         <el-table-column
           sortable
           label="Template Footer Third Page"
           prop="hoa_autogate_template_footer_third_page"
-          width="180"
         ></el-table-column>
         <el-table-column align="right" width="180" fixed="right">
           <template #header>
@@ -151,7 +102,7 @@
         </el-table-column>
       </el-table>
       <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
-      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6 opacity-80">
         <router-link
           :to="{ name: 'Autogate' }"
           class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -181,8 +132,7 @@
 import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
 import Pagination from "../../../../components/Pagination.vue";
-import RichTextEditor from "../../../../components/RichTextEditor.vue";
-import { Edit, Delete, ChatDotSquare } from "@element-plus/icons-vue";
+import { Edit, Delete } from "@element-plus/icons-vue";
 import AddAutogateTemplate from "./Actions/AddAutogateTemplate.vue";
 import EditAutogateTemplate from "./Actions/EditAutogateTemplate.vue";
 import store from "../../../../store";

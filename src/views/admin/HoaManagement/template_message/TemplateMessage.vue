@@ -3,11 +3,15 @@
     navTitle="Member Management"
     navContent="Autogate Template"
     navLink="AutogateTemplate"
-    navChildContent="Autogate Template Message">
+    navChildContent="Autogate Template Message"
+  >
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addMessage = true"
-      >Add Autogate Template Message</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addMessage = true"
       >
+        Add Autogate Template Message
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -41,22 +45,18 @@
 
         <el-table-column align="right" width="180" fixed="right">
           <template #header>
-            <el-input
-              size="small"
-              placeholder="Type to search"
-            />
+            <el-input size="small" placeholder="Type to search" />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="180"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="180" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Edit Autogate Template Message" placement="bottom" effect="light">
+              <el-tooltip
+                content="Edit Autogate Template Message"
+                placement="bottom"
+                effect="light"
+              >
                 <el-button
                   size="small"
                   type="primary"
@@ -76,7 +76,7 @@
                   :icon="Delete"
                   @click="deleteMessage(scope.row)"
                 ></el-button
-                ></el-tooltip>
+              ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
@@ -93,62 +93,61 @@
   </page-component>
   <create :add-message="addMessage" @closeModal="addMessage = false"></create>
   <edit
-    v-if="editId!== 0"
+    v-if="editId !== 0"
     :edit-message="editMessage"
     :edit-id="editId"
     @editId="editId = 0"
-    @closeModal="editMessage = false"></edit>
+    @closeModal="editMessage = false"
+  ></edit>
 </template>
 <script setup>
-  import { ref,computed } from "vue";
-  import PageComponent from "../../../../components/PageComponent.vue";
-  import Pagination from "../../../../components/Pagination.vue";
-  import RichTextEditor from "../../../../components/RichTextEditor.vue";
-  import {Edit,Delete} from "@element-plus/icons-vue";
-  import create from "./Actions/create.vue"
-  import edit from "./Actions/edit.vue"
-  import store from "../../../../store";
-  import _ from "lodash";
-  import { useRouter,useRoute } from "vue-router";
+import { ref, computed } from "vue";
+import PageComponent from "../../../../components/PageComponent.vue";
+import Pagination from "../../../../components/Pagination.vue";
+import RichTextEditor from "../../../../components/RichTextEditor.vue";
+import { Edit, Delete } from "@element-plus/icons-vue";
+import create from "./Actions/create.vue";
+import edit from "./Actions/edit.vue";
+import store from "../../../../store";
+import _ from "lodash";
+import { useRouter, useRoute } from "vue-router";
 
-  const router = useRouter();
-  const route = useRoute()
-  let addMessage = ref(false);
-  let editMessage = ref(false);
-  let editId = ref(0)
-  store.dispatch('temp_msg/getMessages',route.params.id);
+const router = useRouter();
+const route = useRoute();
+let addMessage = ref(false);
+let editMessage = ref(false);
+let editId = ref(0);
+store.dispatch("temp_msg/getMessages", route.params.id);
 
-  let tableData = computed(()=>store.state.temp_msg.message);
-  let templateLoading = computed(()=>store.state.temp_msg.message.loading);
-  const filterTableData = computed(() => tableData.value.data);
+let tableData = computed(() => store.state.temp_msg.message);
+let templateLoading = computed(() => store.state.temp_msg.message.loading);
+const filterTableData = computed(() => tableData.value.data);
 
-  function content(value){
-    return JSON.parse(value)
-  }
+function content(value) {
+  return JSON.parse(value);
+}
 
-  function editModal(row){
-    console.log(row.id)
-    editId.value = row.id;
-    editMessage.value = true;
-  }
+function editModal(row) {
+  console.log(row.id);
+  editId.value = row.id;
+  editMessage.value = true;
+}
 
-  async function deleteMessage(row) {
-    if (
-      confirm(`Are you sure you want to delete this data? Operation can't be undone`)
-    ) {
-      try {
-        const res = await store.dispatch("temp_msg/deleteMessage", row.id);
-        if (res.status === 204 || res.status === 200) {
-          await store.dispatch("temp_msg/getMessages",route.params.id);
-          await store.commit("alert/notify", {
-            title: "Success",
-            type: "success",
-            message: "The autogate template message data was successfully deleted",
-          });
-        }
-      } catch (err) {
-        throw err;
+async function deleteMessage(row) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+    try {
+      const res = await store.dispatch("temp_msg/deleteMessage", row.id);
+      if (res.status === 204 || res.status === 200) {
+        await store.dispatch("temp_msg/getMessages", route.params.id);
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The autogate template message data was successfully deleted",
+        });
       }
+    } catch (err) {
+      throw err;
     }
   }
+}
 </script>

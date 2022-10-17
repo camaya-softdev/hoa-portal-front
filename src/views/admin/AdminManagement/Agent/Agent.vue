@@ -1,9 +1,12 @@
 <template>
   <page-component navTitle="Admin Management" navContent="Sales Agent">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addAgent = true"
-        >Add Sales Agent</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addAgent = true"
       >
+        Add Sales Agent
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -157,7 +160,7 @@ const tableHeader = [
   },
   {
     id: "7",
-    name: "Supervisor",
+    name: "Sales Director",
     prop: "hoa_sales_agent_supervisor",
   },
 ];

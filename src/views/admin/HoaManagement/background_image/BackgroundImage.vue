@@ -12,8 +12,8 @@
     </template>
     <template v-slot:content>
       <div
-        v-if="backgroundImageLoading "
-        v-loading.fullscreen.lock="backgroundImageLoading "
+        v-if="backgroundImageLoading"
+        v-loading.fullscreen.lock="backgroundImageLoading"
         element-loading-text="Fetching Data..."
       ></div>
       <el-table
@@ -25,12 +25,7 @@
         border
         style="width: 100%"
       >
-        <el-table-column
-          sortable
-          label="ID"
-          prop="id"
-          width="180"
-        ></el-table-column>
+        <el-table-column sortable label="ID" prop="id" width="180"></el-table-column>
         <el-table-column
           sortable
           label="Background Image Name"
@@ -59,12 +54,7 @@
             />
           </template>
           <template #default="scope">
-            <el-popover
-              placement="top-start"
-              title="Action"
-              :width="180"
-              trigger="hover"
-            >
+            <el-popover placement="top-start" title="Action" :width="180" trigger="hover">
               <template #reference>
                 <el-button round>...</el-button>
               </template>
@@ -138,7 +128,9 @@ let editBackground = ref(false);
 let editId = ref(0);
 store.dispatch("background_image/getBackgroundImages");
 let tableData = computed(() => store.state.background_image.backgroundImage);
-let backgroundImageLoading = computed(() => store.state.background_image.backgroundImage.loading);
+let backgroundImageLoading = computed(
+  () => store.state.background_image.backgroundImage.loading
+);
 
 const search = ref("");
 
@@ -146,11 +138,13 @@ const filterTableData = computed(() => tableData.value.data);
 
 let searchBackground = _.debounce(function () {
   store
-    .dispatch("background_image/getSearchBackgroundImages", { data: search.value, url: 1 })
+    .dispatch("background_image/getSearchBackgroundImages", {
+      data: search.value,
+      url: 1,
+    })
     .then(() => (tableData = computed(() => store.state.template.template)))
     .catch((err) => console.log(err));
 }, 1000);
-
 
 function editModal(row) {
   editId.value = row.id;
@@ -162,11 +156,7 @@ function editModal(row) {
 // }
 
 async function deleteBackground(row) {
-  if (
-    confirm(
-      `Are you sure you want to delete this data? Operation can't be undone`
-    )
-  ) {
+  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
     try {
       const res = await store.dispatch("background_image/deleteBackgroundImage", row.id);
       if (res.status === 204 || res.status === 200) {
@@ -193,7 +183,9 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
-    await store.dispatch("background_image/getBackgroundImages", { url: link.label });
+    await store.dispatch("background_image/getBackgroundImages", {
+      url: Number(link.label),
+    });
   }
 }
 </script>

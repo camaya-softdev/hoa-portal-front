@@ -1,7 +1,12 @@
 <template>
-  <header class="bg-white shadow">
-    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold text-gray-900 text-center">Dashboard</h1>
+  <header class="flex justify-content-center">
+    <div class="max-w-7xl mx-auto">
+      <!-- <h1 class="text-3xl font-bold text-gray-900 text-center">Dashboard</h1> -->
+      <img
+        src="/logo/camayacoast.webp"
+        class="text-center object-cover h-48 w-86"
+        alt=""
+      />
     </div>
   </header>
   <main>
@@ -13,10 +18,10 @@
     <div v-else class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <!-- Replace with your content -->
       <div class="px-4 py-6 sm:px-0">
-        <div class="w-full min-h-screen bg-blue-50">
+        <div class="w-full min-h-screen">
           <div class="flex flex-wrap justify-center">
             <div
-              class="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
+              class="flex flex-col bg-white opacity-90 rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
             >
               <UserIcon class="h-20 m-6 fill-yellow-500 stroke-yellow-500"></UserIcon>
 
@@ -26,7 +31,7 @@
               >
             </div>
             <div
-              class="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
+              class="flex flex-col bg-white opacity-90 rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
             >
               <TrendingUpIcon
                 class="h-20 m-6 fill-yellow-500 stroke-yellow-500"
@@ -40,7 +45,7 @@
               >
             </div>
             <div
-              class="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
+              class="flex flex-col bg-white opacity-90 rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
             >
               <CreditCardIcon class="h-20 m-6 stroke-yellow-500"></CreditCardIcon>
 
@@ -50,7 +55,7 @@
               >
             </div>
             <div
-              class="flex flex-col bg-white rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
+              class="flex flex-col bg-white opacity-90 rounded-lg shadow-md w-full m-6 overflow-hidden sm:w-52"
             >
               <ClipboardListIcon class="h-20 m-6 stroke-yellow-500"></ClipboardListIcon>
 
@@ -64,17 +69,17 @@
           </div>
 
           <div class="px-4 py-6">
-            <h1
+            <!-- <h1
               class="text-2xl md:text-3xl font-semibold text-center text-gray-700 mb-5 mt-5"
             >
               Reports
-            </h1>
-            <Table class="mt-3">
+            </h1> -->
+            <Table class="mt-3 opacity-90">
               <template v-slot:table>
                 <thead class="border-gray-50 border-b-2">
                   <tr>
                     <th class="p-3 text-sm font-semibold tracking-wide text-center">
-                      RFID
+                      Issued RFID Cards
                     </th>
 
                     <th class="p-3 text-sm font-semibold tracking-wide text-center">
@@ -86,10 +91,10 @@
                     <!--                      Member Dues and Fees-->
                     <!--                    </th>-->
                     <th class="p-3 text-sm font-semibold tracking-wide text-center">
-                      Payment Transaction
+                      Payment Transactions
                     </th>
                     <th class="p-3 text-sm font-semibold tracking-wide text-center">
-                      Member Privileges
+                      Privilege Transactions
                     </th>
                   </tr>
                 </thead>

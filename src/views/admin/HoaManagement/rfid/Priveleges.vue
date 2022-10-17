@@ -5,6 +5,7 @@
     navLink="RFIDRegistration"
     navChildContent="Privilege Transaction"
     :navName="privilegeName"
+    :navChildName="totalLoad"
   >
     <template v-slot:buttons>
       <!--      <span>Felizardo Felizardo Cortez = 132</span>-->
@@ -62,7 +63,7 @@
         </el-table-column>
       </el-table>
       <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
-      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6 opacity-80">
         <router-link
           :to="{ name: 'RFIDRegistration' }"
           class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -90,6 +91,7 @@
     :add-privilege="addPrivilege"
     :cardID="cardID"
     :privilegeData="privilegeData"
+    @load-amount="loadAmount"
     @closeModal="addPrivilege = false"
   ></add-privilege>
   <add-load :add-load="addLoad" :cardID="cardID" @closeModal="addLoad = false"></add-load>
@@ -110,6 +112,7 @@ let addLoad = ref(false);
 const route = useRoute();
 let cardID = route.params.id;
 const privilegeName = route.params.name;
+let totalLoad = route.params.load;
 
 const tableHeader = [
   { id: "0", type: "index", name: "#", prop: "id", width: "180" },
@@ -151,7 +154,10 @@ const tableHeader = [
   },
   { id: "7", name: "Timestamp", prop: "created_at", width: "180" },
 ];
-store.dispatch("payment_transaction/getPaymentTransactions", { id: cardID });
+store.dispatch("payment_transaction/getPaymentTransactions", {
+  id: cardID,
+  url: 1,
+});
 store.dispatch("privilege/getPrivileges");
 const privilegeData = computed(() => store.state.privilege.privilege.data);
 let tableData = computed(() => store.state.payment_transaction.paymentTransaction);
@@ -162,6 +168,11 @@ const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
 
+function loadAmount(load) {
+  console.log(load);
+  totalLoad = parseInt(totalLoad) - parseInt(load);
+  console.log(totalLoad);
+}
 let searchTransaction = _.debounce(function () {
   store
     .dispatch("payment_transaction/getSearchPaymentTransactions", {
@@ -209,7 +220,7 @@ async function getForPage(ev, link) {
     });
   } else {
     await store.dispatch("payment_transaction/getPaymentTransactions", {
-      url: link.label,
+      url: Number(link.label),
       id: route.params.id,
     });
   }

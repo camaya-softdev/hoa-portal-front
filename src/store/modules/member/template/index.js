@@ -38,7 +38,7 @@ export default {
         });
     },
 
-    getTemplates({ commit }, url) {
+    getTemplates({ commit }, { url = 1 } = {}) {
       commit("setTemplatesLoading", true);
       url = `/api/admin/template/?page=${Number(url)}`
       return axiosClient.get(url).then((res) => {

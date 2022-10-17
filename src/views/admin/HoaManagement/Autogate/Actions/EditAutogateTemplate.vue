@@ -3,6 +3,7 @@
     v-model="editTemplate"
     title="Edit Autogate Template"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -22,9 +23,7 @@
           type="text"
           v-model="form.hoa_autogate_template_name"
           :class="
-            errorMsg['hoa_autogate_template_name']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_autogate_template_name'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="HOA Autogate Template Name"
         />
@@ -81,7 +80,9 @@
             Change
           </button>
         </div>
-          <p class="text-gray-500 text-[10px]">The width should be 500 px and height 500 px files with less than 100 kb each </p>
+        <p class="text-gray-500 text-[10px]">
+          The width should be 500 px and height 500 px files with less than 100 kb each
+        </p>
       </div>
       <div class="mb-4">
         <label
@@ -266,9 +267,7 @@ const emits = defineEmits(["closeModal", "editId", "searchBackground"]);
 if (props.editId !== 0) {
   store.dispatch("template/getTemplate", props.editId);
 }
-const templateLoading = computed(
-  () => store.state.template.currentTemplate.loading
-);
+const templateLoading = computed(() => store.state.template.currentTemplate.loading);
 const form = ref({
   hoa_autogate_template_name: "",
   hoa_autogate_template_picture: "",
@@ -305,7 +304,16 @@ function onChange(event) {
 }
 function onImageChoose(ev) {
   const file = ev.target.files[0];
-  console.log(ev.target.files[0]);
+  const fsize = Math.round(file.size / 1024);
+  if (fsize > 2048) {
+    return store.commit("alert/notify", {
+      title: "Error",
+      type: "error",
+      message:
+        "The background image  should be atleast 2mb each. Please delete it Imediately or else it will not be saved!",
+    });
+  }
+
   const reader = new FileReader();
   reader.onload = () => {
     // The field to send on backend and apply validations

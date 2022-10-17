@@ -1,6 +1,5 @@
 import axiosClient from "../../../../axios";
 
-
 export default {
   namespaced: true,
   state: {
@@ -13,13 +12,12 @@ export default {
       loading: false,
       data: {},
     },
-
   },
 
   actions: {
     addPaymentTransaction({}, payment_transaction) {
       return axiosClient
-        .post("/api/admin/transaction/",payment_transaction)
+        .post("/api/admin/transaction/", payment_transaction)
         .then((res) => {
           return res;
         })
@@ -27,9 +25,9 @@ export default {
           return err;
         });
     },
-    getPaymentTransactions({ commit }, {id = null} = {}) {
+    getPaymentTransactions({ commit }, link) {
       commit("setCurrentPaymentTransactionsLoading", true);
-      let url = `/api/admin/transaction/${id}/rfid/`
+      let url = `/api/admin/transaction/${link.id}/rfid/?page=${link.url}`;
       return axiosClient.get(url).then((res) => {
         commit("setCurrentPaymentTransactionsLoading", false);
         commit("setCurrentPaymentTransactions", res.data);
@@ -37,9 +35,9 @@ export default {
       });
     },
 
-    getSearchPaymentTransactions({commit},link){
-      let url = ''
-      url = `/api/admin/transaction/search/data/${link.id}/?find=${link.data}&page=${link.label}`
+    getSearchPaymentTransactions({ commit }, link) {
+      let url = "";
+      url = `/api/admin/transaction/search/data/${link.id}/?find=${link.data}&page=${link.label}`;
       return axiosClient.get(url).then((res) => {
         commit("setCurrentPaymentTransactions", res.data);
         return res;
@@ -65,27 +63,29 @@ export default {
       return axiosClient.delete(`/api/admin/privilege/transaction/${id}/`);
     },
 
-    exportPaymentTransaction({}){
-      return axiosClient.get('/api/admin/transaction/export/data/', {
-        responseType: 'blob'
-      }).then(response => {
-        let fileUrl = window.URL.createObjectURL(response.data);
-        let fileLink = document.createElement('a');
+    exportPaymentTransaction({}) {
+      return axiosClient
+        .get("/api/admin/transaction/export/data/", {
+          responseType: "blob",
+        })
+        .then((response) => {
+          let fileUrl = window.URL.createObjectURL(response.data);
+          let fileLink = document.createElement("a");
 
-        fileLink.href = fileUrl;
-        fileLink.setAttribute('download', 'member_privilege.xlsx');
-        document.body.appendChild(fileLink)
+          fileLink.href = fileUrl;
+          fileLink.setAttribute("download", "member_privilege.xlsx");
+          document.body.appendChild(fileLink);
 
-        fileLink.click();
-      }).catch(error => {
-        console.log(error.response.data)
-      })
-    }
+          fileLink.click();
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
+    },
   },
   mutations: {
     setCurrentPaymentTransaction: (state, paymentTransactionData) => {
       state.currentPaymentTransaction.data = rfidData;
-
     },
 
     setCurrentPaymentTransactionLoading: (state, loading) => {
@@ -100,6 +100,5 @@ export default {
     setCurrentPaymentTransactionsLoading: (state, loading) => {
       state.paymentTransaction.loading = loading;
     },
-
   },
 };

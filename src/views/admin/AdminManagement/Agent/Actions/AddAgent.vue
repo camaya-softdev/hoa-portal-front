@@ -3,15 +3,13 @@
     v-model="addAgent"
     title="Add Sales Agent"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
     <form>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="sales-agent-email"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="sales-agent-email">
           Sales Agent Email <span class="text-red-300">*</span>
         </label>
         <input
@@ -20,9 +18,7 @@
           type="text"
           v-model="form.hoa_sales_agent_email"
           :class="
-            errorMsg['hoa_sales_agent_email']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_sales_agent_email'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Sales Agent Email"
         />
@@ -46,9 +42,7 @@
           type="text"
           v-model="form.hoa_sales_agent_lname"
           :class="
-            errorMsg['hoa_sales_agent_lname']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_sales_agent_lname'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Sales Agent Last Name"
         />
@@ -72,9 +66,7 @@
           type="text"
           v-model="form.hoa_sales_agent_fname"
           :class="
-            errorMsg['hoa_sales_agent_fname']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_sales_agent_fname'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Sales Agent First Name"
         />
@@ -142,10 +134,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision-name"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision-name">
           Sales Agent Supervisor <span class="text-red-300">*</span>
         </label>
         <input
@@ -154,9 +143,7 @@
           type="text"
           v-model="form.hoa_sales_agent_supervisor"
           :class="
-            errorMsg['hoa_sales_agent_supervisor']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_sales_agent_supervisor'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Sales Agent Supervisor"
         />

@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center mt-5">
     <nav
-      class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
+      class="opacity-90 relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px bg-yellow-600"
       aria-label="Pagination"
     >
       <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
@@ -12,10 +12,10 @@
         :href="link.url"
         @click="handleClick($event, link)"
         aria-current="page"
-        class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
+        class="bg-yellow-600 relative text-black inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
         :class="[
           link.active
-            ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+            ? 'z-10 bg-indigo-50 border-indigo-500 text-yellow-800'
             : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
           i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
           i === tableData.links.length - 1 ? 'rounded-r-md' : '',

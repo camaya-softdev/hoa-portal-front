@@ -3,6 +3,7 @@
     v-model="editMessage"
     title="Edit Autogate Template Message"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -11,7 +12,8 @@
       <div class="mb-4">
         <label
           for="hoa-autogate-template-message"
-          class="block text-gray-700 text-sm font-bold mb-2">
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
           HOA Autogate Template Message
         </label>
 
@@ -32,97 +34,92 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit"
-        >Confirm</el-button
-        >
+        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-  import {ref, reactive, watch, computed} from "vue";
-  import RichTextEditor from "../../../../../components/RichTextEditor.vue";
-  import { ElMessageBox } from "element-plus";
-  import store from "../../../../../store";
-  import {useRoute} from "vue-router"
+import { ref, reactive, watch, computed } from "vue";
+import RichTextEditor from "../../../../../components/RichTextEditor.vue";
+import { ElMessageBox } from "element-plus";
+import store from "../../../../../store";
+import { useRoute } from "vue-router";
 
+const props = defineProps<{
+  editMessage: Boolean;
+  editId: Number;
+}>();
 
-  const props = defineProps<{
-    editMessage: Boolean;
-    editId:Number;
-  }>();
+if (props.editId !== 0) {
+  store.dispatch("temp_msg/getMessage", props.editId);
+}
+const templateLoading = computed(() => store.state.temp_msg.currentMessage.loading);
+const emits = defineEmits(["closeModal", "editId"]);
+const route = useRoute();
+const form = ref({
+  hoa_autogate_template_message: "",
+  template_id: 0,
+});
 
-  if (props.editId !== 0) {
-
-    store.dispatch("temp_msg/getMessage", props.editId);
-  }
-  const templateLoading = computed(
-    () => store.state.temp_msg.currentMessage.loading
+const errorMsg = ref("");
+function closeModal() {
+  form.value.hoa_autogate_template_message = JSON.stringify(
+    (form.value.hoa_autogate_template_message = "")
   );
-  const emits = defineEmits(["closeModal",'editId']);
-  const route = useRoute();
-  const form = ref({
-    hoa_autogate_template_message:'',
-    template_id:0,
-  });
+  emits("editId");
+  errorMsg.value = "";
+  emits("closeModal");
+}
 
-  const errorMsg = ref('')
-  function closeModal() {
-    form.value.hoa_autogate_template_message = JSON.stringify(form.value.hoa_autogate_template_message = '');
-    emits('editId')
-    errorMsg.value = ''
-    emits('closeModal');
+watch(
+  () => store.state.temp_msg.currentMessage.data,
+  (newVal, oldVal) => {
+    form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
+
+    content(newVal.data.hoa_autogate_template_message);
   }
+);
 
-  watch(
-    () => store.state.temp_msg.currentMessage.data,
-    (newVal, oldVal) => {
+function content(value) {
+  return (form.value.hoa_autogate_template_message = JSON.parse(value));
+}
 
-      form.value = {...JSON.parse(JSON.stringify(newVal.data))};
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
-      content(newVal.data.hoa_autogate_template_message)
-    }
-  )
-
-  function content(value){
-    return form.value.hoa_autogate_template_message = JSON.parse(value)
-  }
-
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal()
-        done();
-      })
-      .catch(() => {});
-  };
-
-  async function handleSubmit() {
-    form.value.hoa_autogate_template_message = JSON.stringify(form.value.hoa_autogate_template_message);
-    form.value.template_id = parseInt(<string>route.params.id)
-    const res = await store.dispatch("temp_msg/editMessage", form.value);
-    try {
-      if (res.status === 200 || res.status === 201) {
-        await store.dispatch("temp_msg/getMessages",route.params.id);
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The autogate template message data was successfully created",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
+async function handleSubmit() {
+  form.value.hoa_autogate_template_message = JSON.stringify(
+    form.value.hoa_autogate_template_message
+  );
+  form.value.template_id = parseInt(<string>route.params.id);
+  const res = await store.dispatch("temp_msg/editMessage", form.value);
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("temp_msg/getMessages", route.params.id);
       await store.commit("alert/notify", {
-        title: "Error",
-        type: "danger",
-        message: err,
+        title: "Success",
+        type: "success",
+        message: "The autogate template message data was successfully created",
       });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "danger",
+      message: err,
+    });
   }
+}
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

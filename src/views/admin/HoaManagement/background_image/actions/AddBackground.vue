@@ -19,11 +19,7 @@
           id="hoa-background-name"
           type="text"
           v-model="form.hoa_background_name"
-          :class="
-            errorMsg['hoa_bacground_name']
-              ? 'border-red-300'
-              : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_bacground_name'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="HOA Background Name"
         />
         <span
@@ -43,9 +39,7 @@
             v-if="form.hoa_background_image"
             :src="form.hoa_background_image"
             :class="
-              errorMsg['hoa_background_image']
-                ? 'border-red-300'
-                : 'border-gray-300'
+              errorMsg['hoa_background_image'] ? 'border-red-300' : 'border-gray-300'
             "
             :alt="form.hoa_background_name"
             class="w-64 h-48 object-cover"
@@ -79,6 +73,9 @@
             Change
           </button>
         </div>
+        <p class="text-gray-500 text-[10px]">
+          The width should be 1366 px and height 768 px files with less than 100 kb each
+        </p>
       </div>
     </form>
     <template #footer>
@@ -119,6 +116,15 @@ function closeModal() {
 
 function onImageChoose(ev) {
   const file = ev.target.files[0];
+  const fsize = Math.round(file.size / 1024);
+  if (fsize > 2048) {
+    return store.commit("alert/notify", {
+      title: "Error",
+      type: "error",
+      message:
+        "The background image  should be atleast 2mb each. Please delete it Imediately or else it will not be saved!",
+    });
+  }
   const reader = new FileReader();
   reader.onload = () => {
     // The field to send on backend and apply validations
@@ -139,10 +145,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function handleSubmit() {
-  const res = await store.dispatch(
-    "background_image/addBackgroundImage",
-    form.value
-  );
+  const res = await store.dispatch("background_image/addBackgroundImage", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
       await store.dispatch("background_image/getBackgroundImages");

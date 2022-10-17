@@ -3,16 +3,13 @@
     v-model="addSubdivision"
     title="Add Subdivision"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
-
     <form>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision-name"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision-name">
           Subdivision Name <span class="text-red-300">*</span>
         </label>
         <input
@@ -20,9 +17,7 @@
           id="subdivision-name"
           type="text"
           v-model="form.hoa_subd_name"
-          :class="
-            errorMsg['hoa_subd_name'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_name'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Subdivision Name"
         />
         <span
@@ -33,10 +28,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision-area"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision-area">
           Area (SQM)
         </label>
         <input
@@ -44,9 +36,7 @@
           id="subdivision-area"
           type="number"
           v-model="form.hoa_subd_area"
-          :class="
-            errorMsg['hoa_subd_area'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_area'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Area (SQM)"
         />
         <span
@@ -68,9 +58,7 @@
           id="total-block-number"
           type="number"
           v-model="form.hoa_subd_blocks"
-          :class="
-            errorMsg['hoa_subd_blocks'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_blocks'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Total Block Number"
         />
         <span
@@ -81,10 +69,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="total-lot-number"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="total-lot-number">
           Total Lot Number <span class="text-red-300">*</span>
         </label>
         <input
@@ -92,9 +77,7 @@
           id="total-lot-number"
           type="number"
           v-model="form.hoa_subd_lots"
-          :class="
-            errorMsg['hoa_subd_lots'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_lots'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Total Lot Number"
         />
         <span
@@ -141,7 +124,9 @@
           type="number"
           v-model="form.hoa_subd_dues_payment_target"
           :class="
-            errorMsg['hoa_subd_dues_payment_target'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_subd_dues_payment_target']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           placeholder="Subdivision Dues Payment Target"
         />
@@ -153,18 +138,14 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2">
           Contact Person <span class="text-red-300">*</span>
         </label>
 
         <Combobox
           v-model="emailData"
           :class="
-            errorMsg['hoa_subd_contact_person']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_subd_contact_person'] ? 'border-red-300' : 'border-gray-300'
           "
         >
           <div class="relative mt-1">
@@ -175,18 +156,14 @@
                 class="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900"
                 placeholde="Contact Person"
                 :displayValue="
-                  (person) => (person.hoa_member_name === undefined ? '' : person.hoa_member_name)
+                  (person) =>
+                    person.hoa_member_name === undefined ? '' : person.hoa_member_name
                 "
                 @change="search = $event.target.value"
                 @keyup="searchPerson"
               />
-              <ComboboxButton
-                class="absolute inset-y-0 right-0 flex items-center pr-2"
-              >
-                <SelectorIcon
-                  class="w-5 h-5 text-gray-400"
-                  aria-hidden="true"
-                />
+              <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+                <SelectorIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
               </ComboboxButton>
             </div>
             <TransitionRoot
@@ -223,29 +200,29 @@
                     <li
                       class="cursor-default select-none relative py-2 pl-10 pr-4"
                       :class="{
-                      'text-white bg-teal-600': active,
-                      'text-gray-900': !active,
-                    }"
-                    >
-                    <span
-                      class="block truncate"
-                      :class="{
-                        'font-medium': selected,
-                        'font-normal': !selected,
+                        'text-white bg-teal-600': active,
+                        'text-gray-900': !active,
                       }"
                     >
-                      {{ person.hoa_member_name }}
-                    </span>
+                      <span
+                        class="block truncate"
+                        :class="{
+                          'font-medium': selected,
+                          'font-normal': !selected,
+                        }"
+                      >
+                        {{ person.hoa_member_name }}
+                      </span>
                       <span
                         v-if="selected"
                         class="absolute inset-y-0 left-0 flex items-center pl-3"
                         :class="{
-                        'text-white': active,
-                        'text-teal-600': !active,
-                      }"
+                          'text-white': active,
+                          'text-teal-600': !active,
+                        }"
                       >
-                      <CheckIcon class="w-5 h-5" aria-hidden="true"/>
-                    </span>
+                        <CheckIcon class="w-5 h-5" aria-hidden="true" />
+                      </span>
                     </li>
                   </ComboboxOption>
                 </ComboboxOptions>
@@ -273,9 +250,7 @@
           type="text"
           v-model="form.hoa_subd_contact_number"
           :class="
-            errorMsg['hoa_subd_contact_number']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_subd_contact_number'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Contact Number"
         />
@@ -289,7 +264,7 @@
     </form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="closeModal();">Cancel</el-button>
+        <el-button @click="closeModal()">Cancel</el-button>
         <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
@@ -297,123 +272,122 @@
 </template>
 
 <script lang="ts" setup>
-  import _ from "lodash"
-  import {ref, computed} from "vue";
-  import {ElMessageBox} from "element-plus";
-  import {
-    Combobox,
-    ComboboxInput,
-    ComboboxButton,
-    ComboboxOptions,
-    ComboboxOption,
-    TransitionRoot,
-  } from "@headlessui/vue";
-  import {CheckIcon, SelectorIcon} from "@heroicons/vue/solid";
-  import store from "../../../../../store";
+import _ from "lodash";
+import { ref, computed } from "vue";
+import { ElMessageBox } from "element-plus";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxButton,
+  ComboboxOptions,
+  ComboboxOption,
+  TransitionRoot,
+} from "@headlessui/vue";
+import { CheckIcon, SelectorIcon } from "@heroicons/vue/solid";
+import store from "../../../../../store";
 
-  const props = defineProps<{
-    addSubdivision: Boolean;
-    showEmail: Object;
-  }>();
-  const emits = defineEmits(["closeModal"]);
+const props = defineProps<{
+  addSubdivision: Boolean;
+  showEmail: Object;
+}>();
+const emits = defineEmits(["closeModal"]);
 
-  const form = ref({
-    hoa_subd_name: "",
-    hoa_subd_area: "",
-    hoa_subd_blocks: "",
-    hoa_subd_lots: "",
-    hoa_subd_contact_person: "",
-    hoa_subd_contact_number: "",
-    hoa_subd_dues_payment_target: "",
-    hoa_subd_dues_cutoff_date: "",
-  });
+const form = ref({
+  hoa_subd_name: "",
+  hoa_subd_area: "",
+  hoa_subd_blocks: "",
+  hoa_subd_lots: "",
+  hoa_subd_contact_person: "",
+  hoa_subd_contact_number: "",
+  hoa_subd_dues_payment_target: "",
+  hoa_subd_dues_cutoff_date: "",
+});
 
-  let emailData = ref({})
-  const search = ref("");
-  const errorMsg = ref("");
+let emailData = ref({});
+const search = ref("");
+const errorMsg = ref("");
 
+let searchPerson = _.debounce(function () {
+  store
+    .dispatch("subdivision/getSearchUser", search.value)
+    .then(() => props.showEmail)
+    .catch((err) => console.log(err));
+}, 1000);
 
-  let searchPerson = _.debounce(function () {
-    store.dispatch('subdivision/getSearchUser', search.value)
-      .then(() => props.showEmail).catch((err) => console.log(err))
-  }, 1000)
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
+function closeModal() {
+  emailData.value = [];
+  form.value.hoa_subd_name = "";
+  form.value.hoa_subd_area = "";
+  form.value.hoa_subd_blocks = "";
+  form.value.hoa_subd_lots = "";
+  form.value.hoa_subd_contact_person = "";
+  form.value.hoa_subd_contact_number = "";
+  form.value.hoa_subd_dues_payment_target = "";
+  form.value.hoa_subd_dues_cutoff_date = "";
+  errorMsg.value = "";
+  emits("closeModal");
+}
 
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal();
-        done();
-      })
-      .catch(() => {
-      });
-  };
-
-  function closeModal() {
-    emailData.value = []
-    form.value.hoa_subd_name = ""
-    form.value.hoa_subd_area = ""
-    form.value.hoa_subd_blocks = ""
-    form.value.hoa_subd_lots = ""
-    form.value.hoa_subd_contact_person = ""
-    form.value.hoa_subd_contact_number = ""
-    form.value.hoa_subd_dues_payment_target = ""
-    form.value.hoa_subd_dues_cutoff_date = ""
-    errorMsg.value = ""
-    emits("closeModal");
-  }
-
-  async function handleSubmit() {
-    form.value.hoa_subd_contact_person = emailData.value.hoa_member_name
-    const res = await store.dispatch("subdivision/addSubdivision", form.value);
-    try {
-      if (res.status === 200 || res.status === 201) {
-        await store.dispatch("subdivision/getSubdivisions");
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The subdivision data was successfully created",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
+async function handleSubmit() {
+  form.value.hoa_subd_contact_person = emailData.value.hoa_member_name;
+  const res = await store.dispatch("subdivision/addSubdivision", form.value);
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("subdivision/getSubdivisions");
       await store.commit("alert/notify", {
-        title: "Error",
-        type: "danger",
-        message: err,
+        title: "Success",
+        type: "success",
+        message: "The subdivision data was successfully created",
       });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "danger",
+      message: err,
+    });
   }
+}
 </script>
 <style scoped>
-  .dialog-footer button:first-child {
-    margin-right: 10px;
-  }
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 
-  .demo-date-picker {
-    display: flex;
-    width: 100%;
-    padding: 0;
-    flex-wrap: wrap;
-  }
+.demo-date-picker {
+  display: flex;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+}
 
-  .demo-date-picker .block {
-    padding: 30px 0;
-    text-align: center;
-    border-right: solid 1px var(--el-border-color-base);
-    flex: 1;
-  }
+.demo-date-picker .block {
+  padding: 30px 0;
+  text-align: center;
+  border-right: solid 1px var(--el-border-color-base);
+  flex: 1;
+}
 
-  .demo-date-picker .block:last-child {
-    border-right: none;
-  }
+.demo-date-picker .block:last-child {
+  border-right: none;
+}
 
-  .demo-date-picker .demonstration {
-    display: block;
-    color: var(--el-text-color-secondary);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
+.demo-date-picker .demonstration {
+  display: block;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
 </style>

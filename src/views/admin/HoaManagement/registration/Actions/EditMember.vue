@@ -3,16 +3,14 @@
     v-model="editMember"
     title="Edit Member"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
     <div v-if="memberLoading">Loading...</div>
     <form v-else>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="username"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
           Email Address <span class="text-red-300">*</span>
         </label>
         <input
@@ -32,19 +30,14 @@
       </div>
 
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="hoa_member_lname"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_lname">
           Last Name <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="hoa_member_lname"
           type="text"
-          :class="
-            errorMsg['hoa_member_lname'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_member_lname'] ? 'border-red-300' : 'border-gray-300'"
           v-model="form.hoa_member_lname"
           placeholder="Last Name"
         />
@@ -57,19 +50,14 @@
       </div>
 
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="hoa_member_fname"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_fname">
           First Name <span class="text-red-300">*</span>
         </label>
         <input
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="hoa_member_fname"
           type="text"
-          :class="
-            errorMsg['hoa_member_fname'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_member_fname'] ? 'border-red-300' : 'border-gray-300'"
           v-model="form.hoa_member_fname"
           placeholder="First Name"
         />
@@ -82,10 +70,7 @@
       </div>
 
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="hoa_member_mname"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_mname">
           Middle Name
         </label>
         <input
@@ -97,10 +82,7 @@
         />
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="hoa_member_suffix"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_suffix">
           Suffix
         </label>
         <input
@@ -113,24 +95,11 @@
       </div>
 
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="hoa_member_suffix"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_suffix">
           Notification
         </label>
-        <el-checkbox
-          value="1"
-          v-model="form.hoa_member_ebill"
-          label="E-Bill"
-          border
-        />
-        <el-checkbox
-          value="1"
-          v-model="form.hoa_member_sms"
-          label="Sms"
-          border
-        />
+        <el-checkbox value="1" v-model="form.hoa_member_ebill" label="E-Bill" border />
+        <el-checkbox value="1" v-model="form.hoa_member_sms" label="Sms" border />
       </div>
     </form>
     <template #footer>
@@ -177,7 +146,6 @@ watch(
 );
 
 if (props.editId !== 0) {
-
   store.dispatch("member/getMember", props.editId);
 }
 

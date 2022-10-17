@@ -3,6 +3,7 @@
     v-model="editAnnouncement"
     title="Edit Event"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -20,9 +21,7 @@
           type="text"
           v-model="form.hoa_event_notices_title"
           :class="
-            errorMsg['hoa_event_notices_title']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_event_notices_title'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Title"
         />
@@ -45,9 +44,7 @@
             v-if="form.hoa_event_notices_photo"
             :src="form.hoa_event_notices_photo"
             :class="
-              errorMsg['hoa_event_notices_photo']
-                ? 'border-red-300'
-                : 'border-gray-300'
+              errorMsg['hoa_event_notices_photo'] ? 'border-red-300' : 'border-gray-300'
             "
             class="w-64 h-48 object-cover"
           />
@@ -79,11 +76,12 @@
             />
             Change
           </button>
-     
         </div>
-              <div>
-             <p class="text-gray-500 text-[10px]">The width should be 1200 px and height 675 px files with less than 2mb each </p>
-          </div>
+        <div>
+          <p class="text-gray-500 text-[10px]">
+            The width should be 1200 px and height 675 px files with less than 2mb each
+          </p>
+        </div>
         <span
           v-if="errorMsg['hoa_event_notices_photo']"
           class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
@@ -105,9 +103,7 @@
           rows="5"
           v-model="form.hoa_event_notices_desc"
           :class="
-            errorMsg['hoa_event_notices_desc']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_event_notices_desc'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Subdivision Lot Street Name"
         />
@@ -119,10 +115,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision">
           Subdivision <span class="text-red-300">*</span>
         </label>
         <el-select
@@ -161,9 +154,7 @@
           id="hoa_event_notices_type"
           v-model="form.hoa_event_notices_type"
           :class="
-            errorMsg['hoa_event_notices_type']
-              ? 'border-red-300'
-              : 'border-gray-300'
+            errorMsg['hoa_event_notices_type'] ? 'border-red-300' : 'border-gray-300'
           "
           placeholder="Type"
         >
@@ -236,10 +227,6 @@ function onImageChoose(ev) {
 
   const reader = new FileReader();
   reader.onload = () => {
-    // The field to send on backend and apply validations
-    // form.value.hoa_event_notices_photo = reader.result;
-
-    // The field to display here
     form.value.hoa_event_notices_photo = reader.result;
     ev.target.value = "";
   };

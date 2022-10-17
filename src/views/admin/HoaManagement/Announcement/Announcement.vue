@@ -1,9 +1,12 @@
 <template>
   <page-component navTitle="Member Management" navContent="Event">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addAnnouncement = true"
-        >Add Event</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addAnnouncement = true"
       >
+        Add Event
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -33,20 +36,28 @@
         <el-table-column sortable label="Subdivision">
           <template #default="scope">
             <el-tag
-              class="ml-2"
+              class="ml-2 mb-2"
+              effect="dark"
               v-for="subdivisionData in scope.row.subdivision"
               :key="subdivisionData.id"
               >{{ subdivisionData.hoa_subd_name }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column sortable label="Type" width="180">
+        <el-table-column sortable label="Type">
           <template #default="scope">
-            <el-tag disable-transitions>{{ scope.row.hoa_event_notices_type }}</el-tag>
+            <el-tag effect="dark" disable-transitions>{{
+              scope.row.hoa_event_notices_type
+            }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column sortable label="Date Added" prop="created_at"></el-table-column>
-        <el-table-column align="right" fixed="right">
+        <el-table-column
+          sortable
+          label="Date Added"
+          prop="created_at"
+          width="180"
+        ></el-table-column>
+        <el-table-column align="right" width="180" fixed="right">
           <template #header>
             <el-input
               v-model="search"

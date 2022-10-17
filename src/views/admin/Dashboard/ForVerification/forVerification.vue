@@ -1,11 +1,11 @@
 <template>
-  <div class="px-4 py-6">
-    <h1 class="text-2xl md:text-3xl font-semibold text-center text-gray-700 mb-5 mt-5">
+  <div class="px-4 py-6 mt-5">
+    <!-- <h1 class="text-2xl md:text-3xl font-semibold text-center text-gray-700 mb-5 mt-5">
       For Verification
-    </h1>
+    </h1> -->
     <el-table
       :data="filterTableData"
-      style="width: 100%; overflow-x: auto"
+      style="width: 100%; overflow-x: auto; opacity: 0.9"
       :flexible="true"
       table-layout="auto"
     >
@@ -23,9 +23,10 @@
               <el-table-column label="Statement Number" prop="statement_number" />
               <el-table-column label="Bill Month" prop="bill_month" />
               <el-table-column label="Date Paid" prop="hoa_billing_date_paid" />
-              <el-table-column label="Past Due" prop="past_due" />
-              <el-table-column label="Total Cost" prop="total_cost" />
-              <el-table-column label="Amount Paid" prop="amount_paid" />
+              <el-table-column label="Current Bill" prop="hoa_billing_total_cost" />
+              <el-table-column label="Past Due" prop="hoa_billing_past_due" />
+              <el-table-column label="Amount Paid" prop="hoa_billing_amount_paid" />
+              <el-table-column label="Total Balances" prop="hoa_billing_total_balance" />
               <el-table-column label="Payment Status" prop="hoa_billing_status" />
               <el-table-column align="right" fixed="right">
                 <template #header>

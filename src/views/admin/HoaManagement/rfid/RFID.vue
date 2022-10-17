@@ -1,7 +1,12 @@
 <template>
   <page-component navTitle="Member Management" navContent="RFID Registration">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addRFID = true">Add RFID</el-button>
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addRFID = true"
+      >
+        Add RFID
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -151,7 +156,11 @@ let searchAgent = _.debounce(function () {
 function showPrivilege(row) {
   router.push({
     name: "Priveleges",
-    params: { id: row.id, name: row.full_name },
+    params: {
+      id: row.id,
+      name: row.full_name,
+      load: row.hoa_rfid_reg_privilege_load,
+    },
   });
 }
 

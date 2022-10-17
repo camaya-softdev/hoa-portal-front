@@ -1,13 +1,13 @@
 <template>
   <page-component navTitle="Admin Management" navContent="Subdivision Management">
     <template v-slot:buttons>
-      <el-button
+      <button
         v-if="auth != 2"
-        class="button"
-        type="text"
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
         @click="addSubdivision = true"
-        >Add Subdivision</el-button
       >
+        Add Subdivision
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -171,7 +171,7 @@ const auth = store.state.auth.user.hoa_access_type;
 const tableHeader = [
   { id: "0", type: "index", prop: "id", name: "#", width: "80" },
   { id: "1", name: "Subdivision ID", prop: "subd_id", width: "180" },
-  { id: "2", name: "Name", prop: "hoa_subd_name", width: "180" },
+  { id: "2", name: "Subdivision Name", prop: "hoa_subd_name", width: "180" },
   { id: "3", name: "Area (SQM)", prop: "hoa_subd_area", width: "180" },
   {
     id: "4",

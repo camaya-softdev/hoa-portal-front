@@ -1,7 +1,12 @@
 <template>
   <PageComponent navTitle="Admin Management" navContent="User Management">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addDialog = true">Add User</el-button>
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addDialog = true"
+      >
+        Add User
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -60,33 +65,41 @@
         <el-table-column
           sortable
           label="Contact Number"
-          prop="hoa_phone_num"
+          prop="hoa_member_phone_num"
           width="180"
         ></el-table-column>
         <el-table-column sortable label="Member Type" width="180">
           <template #default="scope">
-            <el-tag v-if="scope.row.hoa_admin === 1" class="ml-2">HOA Admin</el-tag>
-            <el-tag v-if="scope.row.hoa_member === 1" class="ml-2">HOA Member</el-tag>
+            <el-tag effect="dark" v-if="scope.row.hoa_admin === 1" class="ml-2 mb-2"
+              >HOA Admin</el-tag
+            >
+            <el-tag effect="dark" v-if="scope.row.hoa_member === 1" class="ml-2 mb-2"
+              >HOA Member</el-tag
+            >
           </template>
         </el-table-column>
         <el-table-column sortable label="Assigned" width="180">
           <template #default="scope">
             <el-tag
+              effect="dark"
               v-if="scope.row.hoa_access_type === 2"
-              class="ml-2"
+              class="ml-2 mb-2"
               v-for="subdivisionData in scope.row.subdivision"
               :key="subdivisionData.id"
               >{{ subdivisionData.hoa_subd_name }}</el-tag
             >
-            <el-tag v-else disable-transitions>All</el-tag>
+            <el-tag v-else effect="dark" disable-transitions>All</el-tag>
           </template>
         </el-table-column>
         <el-table-column sortable label="Access Type" width="180">
           <template #default="scope">
-            <el-tag v-if="scope.row.hoa_access_type === 2" class="ml-2"
+            <el-tag v-if="scope.row.hoa_access_type === 2" effect="dark" class="ml-2"
               >Subdivision Admin</el-tag
             >
-            <el-tag v-if="scope.row.hoa_access_type === 1" disable-transitions
+            <el-tag
+              v-if="scope.row.hoa_access_type === 1"
+              effect="dark"
+              disable-transitions
               >Full Admin</el-tag
             >
           </template>

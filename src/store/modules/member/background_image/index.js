@@ -39,9 +39,9 @@ export default {
         });
     },
 
-    getBackgroundImages({ commit }) {
+    getBackgroundImages({ commit }, { url = 1 } = {}) {
       commit("setBackgroundImagesLoading", true);
-      let url = `/api/admin/background-image/`;
+      url = `/api/admin/background-image/?page=${Number(url)}`;
       return axiosClient.get(url).then((res) => {
         commit("setBackgroundImagesLoading", false);
         commit("setBackgroundImages", res.data);
@@ -87,6 +87,7 @@ export default {
     },
 
     setBackgroundImages: (state, backgroundImageData) => {
+      state.backgroundImage.links = backgroundImageData.meta.links;
       state.backgroundImage.data = backgroundImageData.data;
     },
 

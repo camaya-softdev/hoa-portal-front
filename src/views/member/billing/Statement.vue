@@ -4,7 +4,7 @@
     v-loading.fullscreen.lock="billingLoading"
     element-loading-text="Fetching Data..."
   ></div>
-  <div v-else class="overflow-hidden overflow-y-scroll" style="height: 50rem">
+  <div v-else class="overflow-hidden overflow-y-scroll" style="height: 40rem">
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <hr class="border-gray-500" />
       <div class="px-4 py-5 sm:px-6">
@@ -107,13 +107,13 @@
                     ₱{{ data.due_cost * billingData.lot_area }}
                   </td>
                   <td
-                    v-if="data.unit_id === 3"
+                    v-if="data.unit_id === 2"
                     class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
                   >
                     ₱{{ data.due_cost }}
                   </td>
                   <td
-                    v-if="data.unit_id === 2"
+                    v-if="data.unit_id === 3"
                     class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
                   >
                     ₱{{ data.due_cost * billingData.designee + data.due_cost }}
@@ -130,19 +130,32 @@
                     {{ fee.fee_name }}
                   </td>
                   <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    ₱{{ fee.fee_cost }}
+                    ₱ {{ fee.fee_cost }}
                   </td>
                 </tr>
               </tbody>
+              <!-- <tbody class="divide-y divide-gray-100">
+                <tr class="bg-gray-50" v-if="billingData.billing[0].total_balance > 0">
+                  <td class="text-sm text-gray-700 text-center">
+                    {{ billingData.billing[0].statement_date }}
+                  </td>
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    Outstanding Balance
+                  </td>
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    ₱ {{ billingData.billing[0].total_balance }}
+                  </td>
+                </tr>
+              </tbody> -->
             </template>
           </Table>
-          <hr class="border-gray-500 mt-4" />
+          <!-- <hr class="border-gray-500 mt-4" />
           <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
               Downloadable Files
             </h3>
-          </div>
-          <hr class="border-gray-500" />
+          </div> -->
+          <!-- <hr class="border-gray-500" />
           <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-500">Attachments</dt>
             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -175,7 +188,7 @@
                 </li>
               </ul>
             </dd>
-          </div>
+          </div> -->
         </dl>
         <hr class="border-gray-500" />
       </div>
@@ -183,24 +196,40 @@
   </div>
   <div v-if="billingLoading"></div>
   <div v-else class="bg-gray-100 px-4 py-3 text-right sm:px-6">
-    <button
+    <div
+      v-if="
+        billingData.billing[0].status === 'For Verification' ||
+        billingData.billing[0].status === 'Paid' ||
+        billingData.billing[0].status === 'Partial Payment' ||
+        billingData.billing[0].status === 'Past Due'
+      "
+      class="flex justify-center"
+    >
+      <p class="text-sm font-bold text-blue-500">
+        <span class="text-green-500">status: </span>
+        <span v-if="billingData.billing[0].status === 'For Verification'">
+          For Verification
+        </span>
+        <span v-if="billingData.billing[0].status === 'Paid'"> Paid </span>
+        <span v-if="billingData.billing[0].status === 'Partial Payment'">
+          Partial Payment
+        </span>
+        <span v-if="billingData.billing[0].status === 'Past Due'"> Past Due</span>
+      </p>
+    </div>
+    <!-- <button
       type="button"
       tag="button"
       disabled
-      v-if="
-        billingData.billing[0].status === 'For Verification' ||
-        billingData.billing[0].status === 'Paid'
-      "
+
       :to="{
         name: 'Payment',
         params: { id: billingData.billing[0].bilingId },
       }"
       class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     >
-      {{
-        billingData.billing[0].status === "For Verification" ? "For Verification" : "Paid"
-      }}
-    </button>
+
+    </button> -->
 
     <div v-if="billingData.billing[0].status === 'Unpaid'">
       <router-link
@@ -217,38 +246,23 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { PaperClipIcon } from "@heroicons/vue/solid";
 import Table from "../../../components/Table.vue";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import store from "../../../store";
 import member from "../../../store/modules/admin/member";
 
-store.dispatch("billing/getBillings", 0);
-
-const billingData = computed(() => store.state.billing.billings.data);
-const billingLoading = computed(() => store.state.billing.billings.loading);
-
-async function downloadPDF(memberId, billingId) {
-  const res = await store.dispatch("billing/downloadPDF", {
-    userId: memberId,
-    billingId: billingId,
-  });
-
-  if (res.status === 200 || res.status === 201) {
-    // var printWindow = window.open(
-    //   `http://hoa-portal.test/invoice/${memberId}/${billingId}`
-    // );
-
-    var printWindow = window.open(
-      `https://apidevhoaportal.camayacoast.com/invoice/${memberId}/${billingId}/`
-    );
-    await store.dispatch("billing/getBillings", 0);
-    await store.commit("alert/notify", {
-      title: "Success",
-      type: "success",
-      message: "You are successfully download your Invoice",
-    });
-  }
+const props = defineProps<{
+  statementID: Number;
+}>();
+let billingData = "";
+if (props.statementID !== 0) {
+  console.log(props.statementID);
+  store.dispatch("billing/getBillings", props.statementID);
+  billingData = computed(() => store.state.billing.billings.data);
 }
+
+// watch(()=>)
+const billingLoading = computed(() => store.state.billing.billings.loading);
 </script>

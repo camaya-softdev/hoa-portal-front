@@ -3,16 +3,14 @@
     v-model="editAgent"
     title="Edit Sales Agent"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
     <div v-if="agentLoading">Loading...</div>
     <form v-else>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="sales-agent-email"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="sales-agent-email">
           Sales Agent Email <span class="text-red-300">*</span>
         </label>
         <input
@@ -141,7 +139,9 @@
           type="text"
           v-model="form.hoa_sales_agent_contact_number"
           :class="
-            errorMsg['hoa_sales_agent_contact_number'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_sales_agent_contact_number']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           placeholder="Sales Agent Contact Number"
         />
@@ -153,10 +153,7 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision-name"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision-name">
           Sales Agent Supervisor <span class="text-red-300">*</span>
         </label>
         <input
@@ -187,79 +184,77 @@
 </template>
 
 <script lang="ts" setup>
-  import {computed, ref, watch} from "vue";
-  import {ElMessageBox} from "element-plus";
-  import store from "../../../../../store";
+import { computed, ref, watch } from "vue";
+import { ElMessageBox } from "element-plus";
+import store from "../../../../../store";
 
-  const props = defineProps<{
-    editAgent: Boolean;
-    editId: Number;
-  }>();
-  const emits = defineEmits(["closeModal", "editId"]);
+const props = defineProps<{
+  editAgent: Boolean;
+  editId: Number;
+}>();
+const emits = defineEmits(["closeModal", "editId"]);
 
-  const form = ref({
-    hoa_sales_agent_email: "",
-    hoa_sales_agent_lname: "",
-    hoa_sales_agent_fname: '',
-    hoa_sales_agent_mname: "",
-    hoa_sales_agent_suffix: '',
-    hoa_sales_agent_contact_number: "",
-    hoa_sales_agent_supervisor: ''
-  });
+const form = ref({
+  hoa_sales_agent_email: "",
+  hoa_sales_agent_lname: "",
+  hoa_sales_agent_fname: "",
+  hoa_sales_agent_mname: "",
+  hoa_sales_agent_suffix: "",
+  hoa_sales_agent_contact_number: "",
+  hoa_sales_agent_supervisor: "",
+});
 
-
-  let errorMsg = ref('');
-  function closeModal() {
-    emits("editId");
-    emits("closeModal");
+let errorMsg = ref("");
+function closeModal() {
+  emits("editId");
+  emits("closeModal");
+}
+const agentLoading = computed(() => store.state.agent.currentAgent.loading);
+watch(
+  () => store.state.agent.currentAgent.data,
+  (newVal, oldVal) => {
+    form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
   }
-  const agentLoading = computed(() => store.state.agent.currentAgent.loading);
-  watch(
-    () => store.state.agent.currentAgent.data,
-    (newVal, oldVal) => {
-      form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
-    }
-  );
+);
 
-  if (props.editId !== 0) {
-    store.dispatch("agent/getAgent", props.editId);
-  }
+if (props.editId !== 0) {
+  store.dispatch("agent/getAgent", props.editId);
+}
 
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal();
-        done();
-      })
-      .catch(() => {
-      });
-  };
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
-  async function handleSubmit() {
-    const res = await store.dispatch("agent/editAgent", form.value);
-    try {
-      if (res.status === 200 || res.status === 201) {
-        await store.dispatch("agent/getAgents");
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The sales agent data was successfully updated",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
+async function handleSubmit() {
+  const res = await store.dispatch("agent/editAgent", form.value);
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("agent/getAgents");
       await store.commit("alert/notify", {
-        title: "Error",
-        type: "danger",
-        message: err,
+        title: "Success",
+        type: "success",
+        message: "The sales agent data was successfully updated",
       });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "danger",
+      message: err,
+    });
   }
+}
 </script>
 <style scoped>
-  .dialog-footer button:first-child {
-    margin-right: 10px;
-  }
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 </style>

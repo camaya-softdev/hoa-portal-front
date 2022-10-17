@@ -3,6 +3,7 @@
     v-model="addLoad"
     title="Add Load"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -20,7 +21,9 @@
           type="text"
           v-model="form.hoa_privilege_transaction_name"
           :class="
-            errorMsg['hoa_privilege_transaction_type'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_privilege_transaction_type']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           placeholder="HOA Load Transaction Name"
         />
@@ -45,7 +48,9 @@
           cols="5"
           v-model="form.hoa_privilege_transaction_desc"
           :class="
-            errorMsg['hoa_privilege_transaction_desc'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_privilege_transaction_desc']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           placeholder="HOA Load Transaction Description"
         />
@@ -69,7 +74,9 @@
           type="text"
           v-model="form.hoa_privilege_transaction_type"
           :class="
-            errorMsg['hoa_privilege_transaction_type'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_privilege_transaction_type']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           disabled
           placeholder="HOA Privilege Transaction Type"
@@ -119,7 +126,9 @@
           type="number"
           v-model="form.hoa_privilege_transaction_amount"
           :class="
-            errorMsg['hoa_privilege_transaction_amount'] ? 'border-red-300' : 'border-gray-300'
+            errorMsg['hoa_privilege_transaction_amount']
+              ? 'border-red-300'
+              : 'border-gray-300'
           "
           placeholder="  HOA Load Transaction Amount"
         />
@@ -130,93 +139,94 @@
           {{ errorMsg["hoa_privilege_transaction_amount"][0] }}
         </span>
       </div>
-      
     </form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit"
-        >Confirm</el-button
-        >
+        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-  import { ref } from "vue";
-  import { ElMessageBox } from "element-plus";
-  import store from "../../../../../store";
+import { ref } from "vue";
+import { ElMessageBox } from "element-plus";
+import store from "../../../../../store";
 
-  const props = defineProps<{
-    addLoad: Boolean;
-    cardID:Number
-  }>();
+const props = defineProps<{
+  addLoad: Boolean;
+  cardID: Number;
+}>();
 
-  const emits = defineEmits(["closeModal"]);
+const emits = defineEmits(["closeModal"]);
 
-  const form = ref({
-    hoa_privilege_transaction_name: "",
-    hoa_privilege_transaction_desc: "",
-    hoa_privilege_transaction_type: "LOAD",
-    hoa_privilege_transaction_qty:0,
-    hoa_privilege_transaction_amount:"",
-    card_id: 0,
-    hoa_privilege_booking_num: "LOAD",
-    hoa_transaction:0,
-  });
+const form = ref({
+  hoa_privilege_transaction_name: "",
+  hoa_privilege_transaction_desc: "",
+  hoa_privilege_transaction_type: "LOAD",
+  hoa_privilege_transaction_qty: 0,
+  hoa_privilege_transaction_amount: "",
+  card_id: 0,
+  hoa_privilege_booking_num: "LOAD",
+  hoa_transaction: 0,
+});
 
-  let errorMsg = ref("")
+let errorMsg = ref("");
 
-  function closeModal(){
-    form.value.hoa_privilege_transaction_name= ""
-    form.value.hoa_privilege_transaction_desc= ""
-    form.value.hoa_privilege_transaction_amount= ""
-    form.value.hoa_privilege_booking_num= ""
-    form.value.card_id=0
-    form.value.hoa_transaction=0
-    errorMsg.value = '';
+function closeModal() {
+  form.value.hoa_privilege_transaction_name = "";
+  form.value.hoa_privilege_transaction_desc = "";
+  form.value.hoa_privilege_transaction_amount = "";
+  form.value.hoa_privilege_booking_num = "";
+  form.value.card_id = 0;
+  form.value.hoa_transaction = 0;
+  errorMsg.value = "";
 
-    emits("closeModal");
-  }
+  emits("closeModal");
+}
 
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal();
-        done();
-      })
-      .catch(() => {});
-  };
-
-  async function handleSubmit() {
-    form.value.card_id = props.cardID;
-    form.value.hoa_transaction = 2
-    const res = await store.dispatch('payment_transaction/addPaymentTransaction',form.value)
-    try {
-      if (res.status === 200 || res.status === 201) {
-        await store.dispatch('payment_transaction/getPaymentTransactions',{id:props.cardID});
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The payment transaction data was successfully created",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
-      await store.commit("alert/notify", {
-        title: "Error",
-        type: "error",
-        message: err,
+async function handleSubmit() {
+  form.value.card_id = props.cardID;
+  form.value.hoa_transaction = 2;
+  const res = await store.dispatch(
+    "payment_transaction/addPaymentTransaction",
+    form.value
+  );
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("payment_transaction/getPaymentTransactions", {
+        id: props.cardID,
       });
+      await store.commit("alert/notify", {
+        title: "Success",
+        type: "success",
+        message: "The payment transaction data was successfully created",
+      });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "error",
+      message: err,
+    });
   }
+}
 </script>
 <style scoped>
-  .dialog-footer button:first-child {
-    margin-right: 10px;
-  }
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 </style>

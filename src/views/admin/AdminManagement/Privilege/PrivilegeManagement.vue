@@ -1,9 +1,12 @@
 <template>
   <page-component navTitle="Admin Management" navContent="Privilege Package Management">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addPrivilege = true"
-        >Add Privilege Package</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addPrivilege = true"
       >
+        Add Privilege Package
+      </button>
     </template>
     <template v-slot:content>
       <div

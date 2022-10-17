@@ -7,9 +7,12 @@
     :navName="duesName"
   >
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addFees = true"
-        >Add Subdivision Dues</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addFees = true"
       >
+        Add Subdivision Dues
+      </button>
     </template>
     <template v-slot:content>
       <div
@@ -75,7 +78,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6 opacity-80">
         <router-link
           :to="{ name: 'Subdivision' }"
           class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"

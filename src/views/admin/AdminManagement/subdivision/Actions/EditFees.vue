@@ -3,6 +3,7 @@
     v-model="editFees"
     title="Edit Subdivision Dues"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
@@ -20,9 +21,7 @@
           id="subdivision-dues-name"
           type="text"
           v-model="form.hoa_subd_dues_name"
-          :class="
-            errorMsg['hoa_subd_dues_name'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_dues_name'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Subdivision Dues Name"
         />
         <span
@@ -44,9 +43,7 @@
           id="subdivision-dues-cost"
           type="number"
           v-model="form.hoa_subd_dues_cost"
-          :class="
-            errorMsg['hoa_subd_dues_cost'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['hoa_subd_dues_cost'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Subdivision Dues Cost"
         />
         <span
@@ -57,22 +54,19 @@
         </span>
       </div>
       <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="unit-id"
-        >
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="unit-id">
           Subdivision Dues Unit <span class="text-red-300">*</span>
         </label>
         <el-select
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           v-model="form.unit_id"
-          placeholder="Please Subdivision Dues Unit">
+          placeholder="Please Subdivision Dues Unit"
+        >
           <el-option
             v-for="item in unitData"
             :key="item.id"
             :label="item.name"
             :value="item.id"
-
           />
         </el-select>
         <span
@@ -142,14 +136,11 @@
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="subdivision-dues-reccurrent"
           v-model="form.schedule_id"
-          :class="
-            errorMsg['schedule_id'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg['schedule_id'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="Subdivision Dues CutOff Date"
         >
-          <option v-for="(data,index) in showSchedule"
-                  :key="index"
-                  v-bind:value="data">{{data.hoa_schedule_name}}
+          <option v-for="(data, index) in showSchedule" :key="index" v-bind:value="data">
+            {{ data.hoa_schedule_name }}
           </option>
         </select>
         <span
@@ -163,100 +154,95 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit"
-        >Confirm</el-button
-        >
+        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-  import {computed, ref, watch} from "vue";
-  import {ElMessageBox} from "element-plus";
-  import {useRoute} from "vue-router";
-  import store from "../../../../../store";
+import { computed, ref, watch } from "vue";
+import { ElMessageBox } from "element-plus";
+import { useRoute } from "vue-router";
+import store from "../../../../../store";
 
-  const props = defineProps<{
-    editFees: Boolean;
-    showSchedule: Object;
-    editId:Number;
-    unitData:Object;
-  }>();
+const props = defineProps<{
+  editFees: Boolean;
+  showSchedule: Object;
+  editId: Number;
+  unitData: Object;
+}>();
 
-  const route = useRoute()
+const route = useRoute();
 
-  const emits = defineEmits(["closeModal",'editId']);
+const emits = defineEmits(["closeModal", "editId"]);
 
-  const errorMsg = ref("");
-  console.log(props.showSchedule)
-  const form = ref({
-    subdivision_id: '',
-    schedule_id: '',
-    unit_id:'',
-    hoa_subd_dues_name: "",
-    hoa_subd_dues_unit: "",
-    hoa_subd_dues_start_date: "",
-    hoa_subd_dues_end_date: "",
-    hoa_subd_dues_cost: "",
-  });
+const errorMsg = ref("");
+console.log(props.showSchedule);
+const form = ref({
+  subdivision_id: "",
+  schedule_id: "",
+  unit_id: "",
+  hoa_subd_dues_name: "",
+  hoa_subd_dues_unit: "",
+  hoa_subd_dues_start_date: "",
+  hoa_subd_dues_end_date: "",
+  hoa_subd_dues_cost: "",
+});
 
+const dueLoading = computed(() => store.state.dues.currentDue.loading);
+if (props.editId !== 0) {
+  store.dispatch("dues/getDue", props.editId);
+}
 
-  const dueLoading = computed(() => store.state.dues.currentDue.loading);
-  if (props.editId !== 0) {
-    store.dispatch("dues/getDue", props.editId);
+watch(
+  () => store.state.dues.currentDue.data,
+  (newVal, oldVal) => {
+    form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
   }
+);
 
-  watch(
-    () => store.state.dues.currentDue.data,
-    (newVal, oldVal) => {
-      form.value = { ...JSON.parse(JSON.stringify(newVal.data)) };
-    }
-  );
+function closeModal() {
+  emits("editId");
+  emits("closeModal");
+}
 
-  function closeModal() {
-    emits("editId");
-    emits("closeModal");
-  }
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal()
-        done();
-      })
-      .catch(() => {
-      });
-  };
-
-  async function handleSubmit() {
-
-    try {
-      form.value.subdivision_id = parseInt(route.params.id)
-      const res = await store.dispatch('dues/editDue', form.value)
-      if (res.status == 200) {
-        await store.dispatch('dues/getDues', route.params.id)
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The subdivision dues_fees data was successfully created",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
+async function handleSubmit() {
+  try {
+    form.value.subdivision_id = parseInt(route.params.id);
+    form.value.hoa_subd_dues_billing_date = form.value.hoa_subd_dues_start_date;
+    const res = await store.dispatch("dues/editDue", form.value);
+    if (res.status == 200) {
+      await store.dispatch("dues/getDues", route.params.id);
       await store.commit("alert/notify", {
-        title: "Error",
-        type: "danger",
-        message: err,
+        title: "Success",
+        type: "success",
+        message: "The subdivision dues_fees data was successfully created",
       });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
-
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "danger",
+      message: err,
+    });
   }
+}
 </script>
 <style scoped>
-  .dialog-footer button:first-child {
-    margin-right: 10px;
-  }
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 </style>

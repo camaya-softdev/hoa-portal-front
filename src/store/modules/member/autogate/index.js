@@ -123,7 +123,6 @@ export default {
       state.autogate.loading = loading;
     },
     setUserSubdivisions: (state, autogateData) => {
-      state.user_subdivision.links = autogateData.meta.links;
       state.user_subdivision.data = autogateData.data;
     },
 

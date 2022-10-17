@@ -8,6 +8,9 @@ export default {
       loading: false,
       data: [],
     },
+    memberID: {
+      data: 0,
+    },
   },
   actions: {
     getPayments({ commit }, id) {
@@ -28,11 +31,11 @@ export default {
   mutations: {
     setCurrentPayment: (state, memberData) => {
       state.payments.data = memberData.data[0].history;
+      state.memberID.data = memberData.data[0].member_id;
     },
 
     setCurrentPaymentLoading: (state, loading) => {
       state.payments.loading = loading;
     },
-
   },
 };

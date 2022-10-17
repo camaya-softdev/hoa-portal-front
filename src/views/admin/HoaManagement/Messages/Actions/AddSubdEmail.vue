@@ -3,15 +3,13 @@
     v-model="addSubdEmail"
     title="Create Scheduled Email per Subdivision"
     width="50%"
+    custom-class="border-2 border-gray-600"
     :before-close="handleClose"
     center
   >
     <form>
-     <div class="mb-4">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="subdivision"
-        >
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="subdivision">
           Subdivision Name <span class="text-red-300">*</span>
         </label>
         <el-select
@@ -37,7 +35,8 @@
       <div class="mb-4">
         <label
           for="hoa-email-schedule"
-          class="block text-gray-700 text-sm font-bold mb-2">
+          class="block text-gray-700 text-sm font-bold mb-2"
+        >
           HOA Email Schedule <span class="text-red-300">*</span>
         </label>
         <input
@@ -45,9 +44,7 @@
           id="hoa-email-schedule"
           type="date"
           v-model="form.hoa_email_sched"
-          :class="
-            errorMsg[' hoa_email_sched'] ? 'border-red-300' : 'border-gray-300'
-          "
+          :class="errorMsg[' hoa_email_sched'] ? 'border-red-300' : 'border-gray-300'"
           placeholder="HOA Email Schedule"
         />
         <span
@@ -64,16 +61,16 @@
         >
           Hoa Email Schedule Recurrent <span class="text-red-300">*</span>
         </label>
-          <el-select
+        <el-select
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           v-model="form.schedule_id"
-          placeholder="Please Select HOA Email Schedule">
+          placeholder="Please Select HOA Email Schedule"
+        >
           <el-option
             v-for="item in showSchedule"
             :key="item.id"
             :label="item.hoa_schedule_name"
             :value="item.schedule_id"
-
           />
         </el-select>
         <span
@@ -92,7 +89,10 @@
         </label>
         <el-select
           class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          v-model="form.communication_id" filterable placeholder="HOA Autogate Template Name">
+          v-model="form.communication_id"
+          filterable
+          placeholder="HOA Autogate Template Name"
+        >
           <el-option
             v-for="item in emailTemplate"
             :key="item.id"
@@ -111,92 +111,88 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit"
-        >Confirm</el-button
-        >
+        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-  import {ref, reactive, computed} from "vue";
-  import {ElMessageBox} from "element-plus";
-  import {Plus} from "@element-plus/icons-vue";
-  import store from "../../../../../store";
+import { ref, reactive, computed } from "vue";
+import { ElMessageBox } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
+import store from "../../../../../store";
 
-  import type {UploadFile} from "element-plus";
+import type { UploadFile } from "element-plus";
 
-  const fileList = ref([{name: '', url: ''}])
-  const props = defineProps<{
-    addSubdEmail: Boolean;
-    emailTemplate: Object;
-    subdivisionData: Object;
-    showSchedule: Object;
-  }>();
-  const emits = defineEmits(["closeModal",'searchShowUser']);
+const fileList = ref([{ name: "", url: "" }]);
+const props = defineProps<{
+  addSubdEmail: Boolean;
+  emailTemplate: Object;
+  subdivisionData: Object;
+  showSchedule: Object;
+}>();
+const emits = defineEmits(["closeModal", "searchShowUser"]);
 
-  const form = ref({
-    user_id: 0,
-    subdivision_id:'',
-    schedule_id: "",
-    communication_id: "",
-    hoa_email_sched: "",
-  });
-  const errorMsg = ref("");
-  let users = ref('')
-  let data = ref({})
-  let schedule = ref('')
+const form = ref({
+  user_id: 0,
+  subdivision_id: "",
+  schedule_id: "",
+  communication_id: "",
+  hoa_email_sched: "",
+});
+const errorMsg = ref("");
+let users = ref("");
+let data = ref({});
+let schedule = ref("");
 
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
-      .then(() => {
-        closeModal()
-        done();
-      })
-      .catch(() => {
-      });
-  };
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm("Are you sure to close this dialog?")
+    .then(() => {
+      closeModal();
+      done();
+    })
+    .catch(() => {});
+};
 
-  function closeModal() {
-    form.value.user_id = ""
-    form.value.subdivision_id = ""
-    form.value.schedule_id = ""
-    form.value.communication_id = ""
-    form.value.hoa_email_sched = ""
-    errorMsg.value = ''
-    emits("closeModal")
-  }
+function closeModal() {
+  form.value.user_id = "";
+  form.value.subdivision_id = "";
+  form.value.schedule_id = "";
+  form.value.communication_id = "";
+  form.value.hoa_email_sched = "";
+  errorMsg.value = "";
+  emits("closeModal");
+}
 
+async function handleSubmit() {
+  // form.value.user_id = data.value.id
+  // form.value.schedule_id = schedule.value.schedule_id
 
-  async function handleSubmit() {
-    // form.value.user_id = data.value.id
-    // form.value.schedule_id = schedule.value.schedule_id
-
-    const res = await store.dispatch("email/addEmail", form.value);
-    try {
-      if (res.status === 200 || res.status === 201) {
-        await store.dispatch("email/getEmails");
-        await store.commit("alert/notify", {
-          title: "Success",
-          type: "success",
-          message: "The email data was successfully created",
-        });
-        closeModal();
-      } else {
-        errorMsg.value = res.response.data.errors;
-      }
-    } catch (err) {
+  const res = await store.dispatch("email/addEmail", form.value);
+  try {
+    if (res.status === 200 || res.status === 201) {
+      await store.dispatch("email/getEmails");
       await store.commit("alert/notify", {
-        title: "Error",
-        type: "danger",
-        message: err,
+        title: "Success",
+        type: "success",
+        message: "The email data was successfully created",
       });
+      closeModal();
+    } else {
+      errorMsg.value = res.response.data.errors;
     }
+  } catch (err) {
+    await store.commit("alert/notify", {
+      title: "Error",
+      type: "danger",
+      message: err,
+    });
   }
+}
 </script>
 <style scoped>
-  .dialog-footer button:first-child {
-    margin-right: 10px;
-  }
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
 </style>

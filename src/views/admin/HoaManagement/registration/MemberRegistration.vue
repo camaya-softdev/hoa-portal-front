@@ -1,9 +1,12 @@
 <template>
   <page-component navTitle="Member Management" navContent="Member Registration">
     <template v-slot:buttons>
-      <el-button class="button" type="text" @click="addMember = true"
-        >Add Member</el-button
+      <button
+        class="text-blue-600 px-4 rounded-md ml-10 hover:bg-[#FFFFC2] hover:text-blue-900"
+        @click="addMember = true"
       >
+        Add Member
+      </button>
     </template>
     <template v-slot:content>
       <div

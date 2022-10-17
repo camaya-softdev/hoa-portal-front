@@ -160,7 +160,6 @@
               list-type="picture-card"
               action="https://jsonplaceholder.typicode.com/posts/"
               drag
-              :multiple="true"
               :class="
                 errorMsg['hoa_document_path'] ? 'border-red-300' : 'border-gray-300'
               "
@@ -258,6 +257,14 @@ watch(
 );
 
 const updateImageList = (file) => {
+  if (file.size > 2) {
+    return store.commit("alert/notify", {
+      title: "Error",
+      type: "error",
+      message:
+        "The user documents files should be atleast 2mb each. Please delete it Imediately or else it will not be saved!",
+    });
+  }
   const rawFile = file.raw;
   const reader = new FileReader();
   reader.onload = () => {

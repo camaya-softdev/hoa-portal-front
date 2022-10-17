@@ -1,24 +1,26 @@
 <template>
-  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="mt-10 sm:mt-0">
+  <div
+    class="max-w-7xl mt-10 mx-auto py-6 sm:px-6 lg:px-8"
+    style="backdrop-filter: blur(5px)"
+  >
+    <div class="sm:mt-0">
       <div class="md:grid md:grid-cols-3 md:gap-6">
         <div class="md:col-span-1">
-          <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-medium leading-6 text-gray-900 mt-10">
-              Bill Payment
-            </h3>
-            <p class="mt-1 text-sm text-gray-600">Payment Option</p>
+          <div class="shadow overflow-hidden sm:rounded-md">
+            <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-80">
+              <h3 class="text-lg font-medium leading-6 text-black pl-3">Bill Payment</h3>
+              <p class="mt-1 text-sm text-black pl-3">Payment Option</p>
+            </div>
           </div>
         </div>
-        <div class="mt-5 md:mt-0 md:col-span-2">
-          <div class="shadow overflow-hidden sm:rounded-md mt-10">
-            <div class="px-4 py-5 bg-white sm:p-6">
+
+        <div class="md:mt-0 md:col-span-2">
+          <div class="shadow overflow-hidden sm:rounded-md bg-white opacity-80">
+            <div class="px-4 py-5 sm:p-6">
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
-                  <label
-                    for="memberID"
-                    class="block text-sm font-medium text-gray-700"
-                  >Balance</label
+                  <label for="memberID" class="block text-sm font-medium text-gray-700"
+                    >Balance</label
                   >
                   <input
                     type="text"
@@ -35,7 +37,7 @@
                   <label
                     for="email-address"
                     class="block text-sm font-medium text-gray-700"
-                  >Due Date</label
+                    >Due Date</label
                   >
                   <input
                     type="email"
@@ -49,10 +51,8 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-6">
-                  <label
-                    for="subdivision"
-                    class="block text-sm font-medium text-gray-700"
-                  >Payment Option</label
+                  <label for="subdivision" class="block text-sm font-medium text-gray-700"
+                    >Payment Option</label
                   >
                   <select
                     id="subdivision"
@@ -73,30 +73,31 @@
         </div>
       </div>
     </div>
+
     <div class="hidden sm:block" aria-hidden="true">
       <div class="py-5">
-        <div class="border-t border-gray-200"/>
+        <div class="border-t border-gray-200 mt-10" />
       </div>
     </div>
     <div v-if="optionsVar" class="md:grid md:grid-cols-3 md:gap-6">
       <div class="md:col-span-1">
-        <div class="px-4 sm:px-0">
-          <h3 class="text-lg font-medium leading-6 text-gray-900 mt-5">
-            Payment Address
-          </h3>
-          <p class="mt-1 text-sm text-gray-600">
-            This information will be saved as reference
-          </p>
+        <div class="shadow overflow-hidden sm:rounded-md">
+          <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-80">
+            <h3 class="text-lg font-medium leading-6 text-black pl-3">Payment Address</h3>
+            <p class="mt-1 text-sm text-black pl-3">
+              This information will be saved as reference
+            </p>
+          </div>
         </div>
       </div>
-      <div v-if="cashPayment" class="mt-5 md:mt-0 md:col-span-2">
+      <div v-if="cashPayment" class="md:mt-0 md:col-span-2">
         <CashPayment></CashPayment>
       </div>
       <div v-if="onlinePayment" class="mt-5 md:mt-0 md:col-span-2">
         <online-payment></online-payment>
       </div>
     </div>
-    <div class="bg-gray-100 px-5 py-4 text-right sm:px-6 mt-10">
+    <div class="bg-white px-5 py-4 text-right sm:px-6 mt-10 opacity-80">
       <router-link
         type="button"
         to="/billing"
@@ -108,32 +109,32 @@
   </div>
 </template>
 <script setup>
-  import {computed, ref} from "vue";
-  import CashPayment from "./PaymentOptions/CashPayment.vue";
-  import OnlinePayment from "./PaymentOptions/OnlinePayment.vue";
-  import store from "../../../store";
-  import {useRoute} from 'vue-router'
+import { computed, ref } from "vue";
+import CashPayment from "./PaymentOptions/CashPayment.vue";
+import OnlinePayment from "./PaymentOptions/OnlinePayment.vue";
+import store from "../../../store";
+import { useRoute } from "vue-router";
 
-  const route = useRoute();
+const route = useRoute();
 
-  store.dispatch('billPayment/getBillPayments',route.params.id)
-  const billPaymentData = computed(() => store.state.billPayment.billPayments.data)
-  const billPaymentLoading = computed(() => store.state.billPayment.billPayments.loading)
+store.dispatch("billPayment/getBillPayments", route.params.id);
+const billPaymentData = computed(() => store.state.billPayment.billPayments.data);
+const billPaymentLoading = computed(() => store.state.billPayment.billPayments.loading);
 
-  let cashPayment = ref(true);
-  let onlinePayment = ref(false);
-  let optionsVar = ref(1);
+let cashPayment = ref(true);
+let onlinePayment = ref(false);
+let optionsVar = ref(1);
 
-  function paymentOption() {
-    let optionsNumber = parseInt(optionsVar.value);
-    if (optionsNumber === 1) {
-      cashPayment.value = true;
+function paymentOption() {
+  let optionsNumber = parseInt(optionsVar.value);
+  if (optionsNumber === 1) {
+    cashPayment.value = true;
 
-      onlinePayment.value = false;
-    } else if (optionsNumber === 2) {
-      cashPayment.value = false;
+    onlinePayment.value = false;
+  } else if (optionsNumber === 2) {
+    cashPayment.value = false;
 
-      onlinePayment.value = true;
-    }
+    onlinePayment.value = true;
   }
+}
 </script>

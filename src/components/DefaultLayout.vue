@@ -11,11 +11,7 @@
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <router-link :to="{ name: 'Dashboard' }">
-                <img
-                  class="h-12 w-auto"
-                  src="/logo/camayacoastwhite.png"
-                  alt="Camaya Coast"
-                />
+                <img class="h-16 w-auto" src="/logo/hoa-logo.webp" alt="HOA Portal" />
               </router-link>
             </div>
             <div class="hidden md:block">
@@ -51,7 +47,7 @@
                     leave-to-class="transform opacity-0 scale-95"
                   >
                     <MenuItems
-                      class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      class="opacity-80 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                     >
                       <MenuItem
                         v-for="item in adminManagement"
@@ -91,7 +87,7 @@
                     leave-to-class="transform opacity-0 scale-95"
                   >
                     <MenuItems
-                      class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      class="opacity-80 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                     >
                       <MenuItem
                         v-for="item in hoaManagement"
@@ -136,6 +132,12 @@
                       </div>
                       <div class="text-sm font-medium leading-none text-gray-400">
                         {{ user.data.email }}
+                      </div>
+                      <div
+                        v-if="user.data.subdivision_name"
+                        class="text-left text-base font-medium leading-none text-white"
+                      >
+                        {{ user.data.subdivision_name }}
                       </div>
                     </div>
                     <svg
@@ -343,6 +345,12 @@
               <div class="text-sm font-medium leading-none text-gray-400">
                 {{ user.data.email }}
               </div>
+              <div
+                v-if="user.data.subdivision_name"
+                class="text-left text-base font-medium leading-none text-white"
+              >
+                {{ user.data.subdivision_name }}
+              </div>
             </div>
           </div>
           <div class="mt-3 px-2 space-y-1">
@@ -388,6 +396,7 @@ import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import ChangePassword from "../views/admin/Dashboard/Profile/ChangePassword.vue";
 import { useRouter } from "vue-router";
+import { now } from "lodash";
 
 let user = "";
 let changePassword = ref(false);
@@ -424,13 +433,13 @@ export default {
       adminManagement = [
         { name: "Subdivision Management", to: "Subdivision" },
         { name: "User Management", to: "UserManagement" },
-        { name: "RFID", to: "RFIDRegistration" },
+        { name: "RFID Registration", to: "RFIDRegistration" },
       ];
     } else {
       adminManagement = [
         { name: "Subdivision Management", to: "Subdivision" },
         { name: "User Management", to: "UserManagement" },
-        { name: "RFID", to: "RFIDRegistration" },
+        { name: "RFID Registration", to: "RFIDRegistration" },
         { name: "Privilege Management", to: "PrivilegeManagement" },
         { name: "Sales Agent", to: "SalesAgent" },
       ];
