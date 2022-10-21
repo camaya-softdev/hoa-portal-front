@@ -16,17 +16,34 @@
             <img :src="newsData.photo" :alt="newsData.title" class="w-full h-full object-center object-cover lg:w-full lg:h-full"/>
           </div> -->
 
-          <div class="flex justify-center" style="width: 100%;">
+          <!-- desktop view -->
+          <div class="hidden md:block flex justify-center justify-items-center">
+              <img :src="newsData.photo" :alt="newsData.title" class="w-full aspect-w-2 aspect-h-2">
+              <h3 class="mt-6 mb-6 text-2xl font-semibold text-center text-gray-700">
+                <span aria-hidden="true" class="absolute inset-0"></span>{{newsData.desc}}
+              </h3>
+
+              <RichTextEditor
+                class="text-sm text-gray-600"
+                id="hoa-autogate-template-message"
+                theme="bubble"
+                :content="content(newsData.story)"
+                :readOnly="true"
+              />
+            </div>
+
+            <!-- mobile view -->
+            <div class="md:hidden">
               <img :src="newsData.photo" :alt="newsData.title" class="w-full aspect-w-2 aspect-h-2">
             </div>
 
-          <div class="mt-6 flex justify-center">
+            <div class="mt-6 md:hidden">
               <div>
-                <h3 class="text-2xl font-semibold text-center text-gray-700">
+                <p class="mb-6 text-lg font-semibold text-center text-gray-700">
                   <span aria-hidden="true" class="absolute inset-0"></span>{{newsData.desc}}
-                </h3>
+                </p>
                 <RichTextEditor
-                  class="mt-12 text-sm text-gray-600"
+                  class="text-xs text-gray-600"
                   id="hoa-autogate-template-message"
                   theme="bubble"
                   :content="content(newsData.story)"
@@ -34,6 +51,7 @@
                 />
               </div>
             </div>
+
         </div>
 
       </div>

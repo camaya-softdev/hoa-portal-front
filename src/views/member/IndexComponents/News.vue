@@ -1,6 +1,6 @@
 <template>
   <!-- <section class="md:h-full flex items-center text-gray-600"> -->
-  <section class="items-center text-gray-600">
+ 
     <div class="mx-auto">
       <div class="text-center mb-12">
         <!-- <h5 class="text-base md:text-lg text-blue-500 mb-1">See Our Latest News</h5> -->
@@ -15,7 +15,7 @@
         <!-- grid -->
         <div class="grid grid-rows-1 grid-flow-col gap-2 hidden md:block m-4">
           <div v-for="data in newsData" :key="data.id" class="grid grid-cols-1 gap-2 my-4">
-            <div class="h-full border-0 border-gray-200 border-opacity-60 rounded-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:cursor-pointer, hover:shadow-xl hover:shadow-slate-900/10 bg-white" style="border-radius: 1rem;" >
+            <div class="h-full border-0 border-gray-200 border-opacity-60 rounded-lg overflow-hidden transform transition duration-500 hover:scale-100 hover:cursor-pointer, hover:shadow-xl hover:shadow-slate-900/10 bg-white" style="border-radius: 1rem;" >
               <img :src="data.image" :alt="data.title" class="lg:h-42 md:h-48 w-full object-cover object-center"/>
               <div class="p-6">
                 <h1 class="text-2xl text-gray-900 font-semibold mb-3">{{ data.title }}</h1>
@@ -95,7 +95,7 @@
         
         <!-- carousel mobile-->
         <div>
-          <div class="px-4 md:hidden">
+          <div class="md:hidden">
             <el-carousel 
               :autoplay="false"
               height="300px" 
@@ -128,7 +128,7 @@
       :newsId="newsId"
       @closeModal="newsDialog = false"
     ></news-action>
-  </section>
+  
 </template>
 
 <script setup>

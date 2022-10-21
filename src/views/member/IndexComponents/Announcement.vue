@@ -2,7 +2,7 @@
   <!-- <h1 class="text-2xl md:text-3xl font-semibold text-center text-black mb-5 mt-12">
     Announcements
   </h1> -->
-  <div class="mt-12">
+  <div class="mx-auto mt-12">
     <!--<h1 class="text-2xl font-semibold mb-3 text-center text-gray-700 mt-4">Cities are Crowded</h1>-->
 
     <div class="title_divider font-semibold" style="margin-top: 5rem !important;">
@@ -16,10 +16,10 @@
     ></div>
 
     <!-- desktop view -->
-    <div class="px-4 hidden md:block">
+    <div class="hidden md:block">
       <el-carousel 
         :interval="3000" 
-        height="300px" 
+        height="500px" 
         justify="center" 
         class="shadow-xl shadow-slate-900/10"
         indicator-position="none"
@@ -40,7 +40,7 @@
     </div>
 
     <!-- mobile view -->
-    <div class="px-4 md:hidden">
+    <div class="md:hidden">
       <el-carousel 
         :autoplay="false"
         height="300px" 

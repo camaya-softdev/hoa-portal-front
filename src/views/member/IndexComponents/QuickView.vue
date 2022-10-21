@@ -33,15 +33,15 @@
     </template>
   </Table> -->
 
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto">
     <ul role="list" class="mt-5 mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
       <li>
         <ul role="list" class="flex flex-col gap-y-6 sm:gap-y-8 transform transition duration-500 hover:scale-105">
           <li>
             <figure class="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
                 <blockquote class="relative">
-                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">500</p> 
-                  <!-- {{ tableData.card }} -->
+                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">{{ tableData.card }}</p> 
+                  
                 </blockquote>
                 <figcaption class="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
                   <div>
@@ -67,8 +67,7 @@
         <li>
             <figure class="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
                 <blockquote class="relative">
-                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">&#8369; 9,500</p> 
-                  <!-- &#8369; {{ tableData.total_cost }} -->
+                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">&#8369; {{ tableData.total_cost }}</p> 
                 </blockquote>
                 <figcaption class="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
                   <div>
@@ -91,8 +90,7 @@
         <li>
             <figure class="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
                 <blockquote class="relative">
-                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">25 Nov 2022</p> 
-                  <!-- {{ tableData.month }} -->
+                  <p class="text-center text-4xl font-medium leading-none tracking-tight text-yellow-600">{{ tableData.month }}</p>
                 </blockquote>
                 <figcaption class="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
                   <div>
