@@ -5,10 +5,13 @@ import Footer from "./components/Footer.vue";
 </script>
 <style>
 body {
-  background-image: url("/background-image1.webp");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  /* background-image: url("/background-image1.webp"); */
+  background-image: url("/test-bg.jpg");
+    background-color: whitesmoke;
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    background-size: cover;
+    /* backdrop-filter: blur(2.5px); */
 }
 
 .el-table {

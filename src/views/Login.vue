@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
-      <div class="bg-white opacity-80">
+      <div class="bg-white opacity-90 shadow-xl shadow-slate-900/10" style="border-radius: 1rem;">
         <div>
           <img
             class="mx-auto h-20 w-auto"
@@ -9,9 +9,8 @@
             alt="Camaya Coast"
           />
 
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-600">
-            HOA PORTAL
-          </h2>
+          <h2 class="mt-2 text-center text-3xl">HOA<span style="color:#CA8A04;"><strong>PORTAL</strong></span></h2>
+
         </div>
         <form class="mt-8 space-y-6 m-5" @submit="login">
           <div
