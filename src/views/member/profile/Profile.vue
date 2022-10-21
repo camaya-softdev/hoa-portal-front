@@ -5,7 +5,7 @@
     element-loading-text="Fetching Data..."
   ></div>
   <div class="w-screen" v-else>
-    <header class="bg-white shadow opacity-80">
+    <!-- <header class="bg-white shadow opacity-100">
       <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h3 class="font-bold text-red-700 text-center">
           NOTICE: COMPLETE THE REGISTRATION FORM BELOW TO PROCEED
@@ -14,10 +14,18 @@
           Thank you and Welcome to {{ data.subdivision_name }}
         </p>
       </div>
-    </header>
-    <main class="w-screen" style="backdrop-filter: blur(5px)">
+    </header> -->
+    <main class="w-screen"><!-- style="backdrop-filter: blur(2.5px)" -->
       <div class="max-w-7xl mx-auto py-6 sm:px-7 lg:px-8">
         <div class="px-4 py-6 sm:px-0">
+
+          <h3 class="font-bold text-red-700 text-center">
+          NOTICE: COMPLETE THE REGISTRATION FORM BELOW TO PROCEED
+          </h3>
+          <p class="text-center text-sm text-gray-700 mt-2 mb-12">
+            Thank you and welcome to {{ data.subdivision_name }}!
+          </p>
+
           <!--personal information -->
           <PersonalInformation />
           <div class="hidden sm:block" aria-hidden="true">
@@ -54,7 +62,7 @@
           <a
             type="button"
             href="/"
-            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
           >
             Next
           </a>
@@ -96,4 +104,5 @@ if (
 store.dispatch("profile/getProfiles");
 const data = computed(() => store.state.profile.profile.data);
 const profileLoading = computed(() => store.state.profile.profile.loading);
+
 </script>

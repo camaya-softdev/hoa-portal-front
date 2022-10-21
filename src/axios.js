@@ -6,7 +6,7 @@ const axiosClient = axios.create({
   // baseURL:'http://68.183.179.81:8086',
   baseURL: "https://apidevhoaportal.camayacoast.com/",
   // baseURL: "https://apihoaportal.camayacoast.com",
-  // baseURL: "http://hoa-portal.test",
+  // baseURL: "https://hoa-portal.test/",
   withCredentials: true,
 });
 

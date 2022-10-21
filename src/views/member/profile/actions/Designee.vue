@@ -3,18 +3,17 @@
     <div class="md:grid md:grid-cols-3 md:gap-6">
       <div class="md:col-span-1">
         <div class="shadow overflow-hidden sm:rounded-md">
-          <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-80">
+          <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-90">
             <h3 class="text-lg font-medium leading-6 text-black pl-3">Designee</h3>
             <p class="mt-1 text-sm text-black pl-3">
-              Note: if single parents are qualified designees. if married, spouse and
-              children are qualified
+              Note: For married owners: 'spouse and children'; if single: 'parents' are qualified designees. 
             </p>
           </div>
         </div>
       </div>
       <div class="mt-5 md:mt-0 md:col-span-2">
         <div class="shadow overflow-hidden sm:rounded-md">
-          <div class="px-4 py-5 bg-white sm:p-6 opacity-80">
+          <div class="px-4 py-5 bg-white sm:p-6 opacity-90">
             <Table class="mt-3">
               <template v-slot:table>
                 <thead class="border-gray-50 border-b-2">
@@ -61,7 +60,7 @@
             <button
               type="submit"
               @click="addDesignee = true"
-              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transform transition duration-500 hover:scale-105"
             >
               Add
             </button>

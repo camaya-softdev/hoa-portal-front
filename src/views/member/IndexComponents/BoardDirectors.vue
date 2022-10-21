@@ -1,41 +1,60 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-  <div class="py-12 bg-white" v-if="directorsData.length !== 0">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="lg:text-center">
-        <p
-          class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
-        >
-          Board Of Directors
-        </p>
-      </div>
+  <div class="bg-none" v-if="directorsData.length !== 0">
+    <div class="mx-auto">
+      <div class="">
+        <!-- <div class="lg:text-center">
+          <p class="pt-6 text-2xl font-semibold tracking-tight text-yellow-600">
+            BOARD OF DIRECTORS
+          </p>
+        </div> -->
 
-      <div class="mt-10">
-        <dl
-          class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10"
-        >
+        <div class="title_divider font-semibold">
+          <div class="subtitle">BOARD OF DIRECTORS</div>
+        </div>
+
+        <!-- <div class="flex items-center justify-center rounded-md py-12" v-for="data in directorsData" :key="data.id">
+          <img
+            src="/profile.png"
+            alt="board_of_directors"
+            style="width: 35%"
+            
+          />
+          <p>
+            <span class="ml-20 text-lg leading-6 font-medium text-gray-900">
+              {{ data.fullName }}
+            </span><br/>
+            <span class="ml-20 text-xs text-gray-600" style="text-transform: UPPERCASE;">
+              {{ data.position }}
+            </span>
+          </p>
+        </div> -->
+        
+        <!-- <dl class="space-y-5 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10"> -->
+        <dl class="md:grid md:grid-cols-1 md:gap-x-4 md:gap-y-4">
           <div v-for="data in directorsData" :key="data.id" class="relative">
             <dt>
-              <div
-                class="absolute flex items-center justify-center h-15 w-15 rounded-md bg-indigo-500 text-white"
-              >
-                <img
+              <div class="flex items-center h-15 w-15 rounded-md text-white p-6 bg-white" style="border-radius: 1rem;">
+                <!-- <img
                   :src='data.image'
                   class="h-20 w-30 rounded-2xl"
+                /> -->
+                <img
+                  src="/profile.png"
+                  alt="board_of_directors"
+                  style="width: 35%"
                 />
+                <span><p>
+                  <span class="ml-4 text-xl leading-6 font-medium text-gray-900">{{ data.fullName }}</span><br/>
+                  <span class="ml-4 text-lg text-gray-600" style="text-transform: UPPERCASE;">{{ data.position }}</span><br/>
+                  <span class="ml-4 text-md text-gray-600" style="font-family: 'Lexend', sans-serif; font-weight: 300;">{{ data.description }}</span>
+                </p></span>
               </div>
-              <p class="ml-40 text-lg leading-6 font-medium text-gray-900">
-                {{ data.fullName }}
-              </p>
+              
             </dt>
-            <dd class="mt-2 ml-40 text-base text-gray-500">
-              {{ data.position }}
-            </dd>
-            <dd class="mt-2 ml-40 text-base text-gray-500">
-              {{ data.description }}
-            </dd>
           </div>
         </dl>
+        
       </div>
     </div>
   </div>

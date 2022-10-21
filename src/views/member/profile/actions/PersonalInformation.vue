@@ -3,7 +3,7 @@
     <div class="md:grid md:grid-cols-3 md:gap-6">
       <div class="md:col-span-1">
         <div class="shadow overflow-hidden sm:rounded-md">
-          <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-80">
+          <div class="px-4 py-5 sm:p-6 sm:px-0 bg-white opacity-90">
             <h3 class="text-lg font-medium leading-6 text-black pl-3">
               Personal Information
             </h3>
@@ -16,7 +16,7 @@
       <div class="mt-5 md:mt-0 md:col-span-2">
         <form @submit.prevent="handleSubmit">
           <div class="shadow overflow-hidden sm:rounded-md">
-            <div class="px-4 py-5 bg-white sm:p-6 opacity-80">
+            <div class="px-4 py-5 bg-white sm:p-6 opacity-90">
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
                   <label for="memberID" class="block text-sm font-medium text-gray-700"
@@ -270,7 +270,7 @@
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 opacity-80">
               <button
                 type="submit"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transform transition duration-500 hover:scale-105"
               >
                 Save
               </button>
