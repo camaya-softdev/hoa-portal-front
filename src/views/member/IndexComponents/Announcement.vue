@@ -21,8 +21,8 @@
         :interval="3000" 
         height="500px" 
         justify="center" 
-        class="shadow-xl shadow-slate-900/10"
         indicator-position="none"
+        class="shadow-xl shadow-slate-900/10"
         >
           <el-carousel-item
             v-for="data in eventsData"

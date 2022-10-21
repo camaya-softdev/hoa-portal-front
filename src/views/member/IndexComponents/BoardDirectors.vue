@@ -34,7 +34,7 @@
         <dl class="md:grid md:grid-cols-1 md:gap-x-4 md:gap-y-4">
           <div v-for="data in directorsData" :key="data.id" class="relative">
             <dt>
-              <div class="flex items-center h-15 w-15 rounded-md text-white p-6 bg-white" style="border-radius: 1rem;">
+              <div class="flex items-center h-15 w-15 rounded-md text-white p-6 bg-white shadow-xl shadow-slate-900/10" style="border-radius: 1rem;">
                 <!-- <img
                   :src='data.image'
                   class="h-20 w-30 rounded-2xl"
