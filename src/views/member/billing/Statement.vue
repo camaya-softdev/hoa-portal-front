@@ -92,61 +92,22 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-100">
-                <tr class="bg-gray-50" v-for="data in billingData.dues">
+                <tr
+                  class="bg-gray-50"
+                  v-for="data in billingData.billing[0].billingSummary"
+                >
                   <td class="text-sm text-gray-700 text-center">
-                    {{ billingData.billing[0].payment_due }}
+                    {{ data.date }}
                   </td>
 
                   <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    {{ data.due_name }}
+                    {{ data.description }}
                   </td>
-                  <td
-                    v-if="data.unit_id === 1"
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    ₱{{ data.due_cost * billingData.lot_area }}
-                  </td>
-                  <td
-                    v-if="data.unit_id === 2"
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    ₱{{ data.due_cost }}
-                  </td>
-                  <td
-                    v-if="data.unit_id === 3"
-                    class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"
-                  >
-                    ₱{{ data.due_cost * billingData.designee + data.due_cost }}
+                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                    ₱{{ data.amount }}
                   </td>
                 </tr>
               </tbody>
-              <tbody class="divide-y divide-gray-100">
-                <tr class="bg-gray-50" v-for="fee in billingData.fees">
-                  <td class="text-sm text-gray-700 text-center">
-                    {{ billingData.billing[0].payment_due }}
-                  </td>
-
-                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    {{ fee.fee_name }}
-                  </td>
-                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    ₱ {{ fee.fee_cost }}
-                  </td>
-                </tr>
-              </tbody>
-              <!-- <tbody class="divide-y divide-gray-100">
-                <tr class="bg-gray-50" v-if="billingData.billing[0].total_balance > 0">
-                  <td class="text-sm text-gray-700 text-center">
-                    {{ billingData.billing[0].statement_date }}
-                  </td>
-                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    Outstanding Balance
-                  </td>
-                  <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    ₱ {{ billingData.billing[0].total_balance }}
-                  </td>
-                </tr>
-              </tbody> -->
             </template>
           </Table>
           <!-- <hr class="border-gray-500 mt-4" />

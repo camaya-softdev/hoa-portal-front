@@ -4,9 +4,9 @@ import store from "./store";
 const axiosClient = axios.create({
   // baseURL:'http://10.90.2.55:8086',
   // baseURL:'http://68.183.179.81:8086',
-  baseURL: "https://apidevhoaportal.camayacoast.com/",
+  // baseURL: "https://apidevhoaportal.camayacoast.com/",
   // baseURL: "https://apihoaportal.camayacoast.com",
-  // baseURL: "https://hoa-portal.test/",
+  baseURL: "http://hoa-portal.test/",
   withCredentials: true,
 });
 
