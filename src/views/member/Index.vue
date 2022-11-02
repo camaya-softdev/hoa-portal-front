@@ -10,19 +10,19 @@
         <div class="mb-2 bg-white bg-opacity-0"><Announcement></Announcement></div>
 
         <!-- desktop view -->
-        <div class="grid grid-rows-1 grid-flow-col gap-4 hidden md:block">
+        <!-- <div class="grid grid-rows-1 grid-flow-col gap-4 hidden md:block">
           <div class="grid grid-cols-2 gap-4">
             <div class="bg-white bg-opacity-0"><News></News></div>
             <div class="bg-white bg-opacity-0"><BoardofDirectors></BoardofDirectors></div>
           </div>
-        </div>
+        </div> -->
         
         <!-- mobile view -->
-        <div class="bg-white bg-opacity-0 md:hidden"><News></News></div>  
-        <div class="mb-2 bg-white bg-opacity-0 pb-5 md:hidden"><BoardofDirectors></BoardofDirectors></div>
+        <!-- <div class="bg-white bg-opacity-0 md:hidden"><News></News></div>  
+        <div class="mb-2 bg-white bg-opacity-0 pb-5 md:hidden"><BoardofDirectors></BoardofDirectors></div> -->
 
-        <!-- <div class="bg-white bg-opacity-0"><News></News></div>  
-        <div class="mb-2 bg-white bg-opacity-0 pb-5"><BoardofDirectors></BoardofDirectors></div> -->
+        <div class="bg-white bg-opacity-0"><News></News></div>  
+        <div class="mb-2 bg-white bg-opacity-0 pb-5"><BoardofDirectors></BoardofDirectors></div>
 
         
 

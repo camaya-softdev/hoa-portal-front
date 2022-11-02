@@ -11,25 +11,25 @@
         <template v-slot:table>
           <thead class="border-gray-50 border-b-2">
             <tr>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Bill Month
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Statement No.
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Date Paid
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Past Due
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Current Balance
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Payment Status
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">Action</th>
+              <th class="p-3 text-sm tracking-wide text-center">Action</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
@@ -79,25 +79,25 @@
         <template v-slot:table>
           <thead class="border-gray-50 border-b-2">
             <tr>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Bill Month
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Statement No.
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Date Paid
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Past Due
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Current Balance
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">
+              <th class="p-3 text-sm tracking-wide text-center">
                 Payment Status
               </th>
-              <th class="p-3 text-sm font-semibold tracking-wide text-center">Action</th>
+              <th class="p-3 text-sm tracking-wide text-center">Action</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">

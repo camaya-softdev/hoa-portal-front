@@ -13,8 +13,8 @@
         
         <!-- desktop view -->
         <!-- grid -->
-        <div class="grid grid-rows-1 grid-flow-col gap-2 hidden md:block m-4">
-          <div v-for="data in newsData" :key="data.id" class="grid grid-cols-1 gap-2 my-4 ">
+        <div class="md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-4 hidden md:block m-4">
+          <div v-for="data in newsData" :key="data.id" class="my-4">
             <div class="h-full border-0 border-gray-200 border-opacity-60 rounded-lg overflow-hidden transform transition duration-500 hover:scale-100 hover:cursor-pointer, hover:shadow-xl hover:shadow-slate-900/10 bg-white shadow-xl shadow-slate-900/10" style="border-radius: 1rem;" >
               <img :src="data.image" :alt="data.title" class="lg:h-42 md:h-48 w-full object-cover object-center"/>
               <div class="p-6">

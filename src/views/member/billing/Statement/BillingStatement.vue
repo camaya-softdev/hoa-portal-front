@@ -3,9 +3,12 @@
     v-model="openStatement"
     title="Billing Statement"
     width="80%"
-    :before-close="handleClose"
+   
     center
   >
+
+    <!-- :before-close="handleClose" -->
+
     <!-- <h1 class="text-2xl md:text-3xl font-semibold text-center text-gray-700 mb-5">
       Billing Statement
     </h1> -->
@@ -15,7 +18,7 @@
         <!-- <el-button @click="closeModal">Close</el-button> -->
         <a
           type="button"
-          class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
           href="/billing"
           >Close</a
         >

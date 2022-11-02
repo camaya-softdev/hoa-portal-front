@@ -7,7 +7,7 @@ import Footer from "./components/Footer.vue";
 <style>
   body {
     /* background-image: url("/background-image1.webp"); */
-    background-image: url("/test-bg.jpg");
+    background-image: url("/camaya-bg-new.jpg");
     background-color: whitesmoke;
     background-repeat: no-repeat;
     /* background-attachment: fixed; */

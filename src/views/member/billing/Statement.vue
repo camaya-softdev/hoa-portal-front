@@ -8,7 +8,7 @@
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
       <hr class="border-gray-500" />
       <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+        <h3 class="text-lg text-center leading-6 text-gray-900">
           Statement of Account
         </h3>
       </div>
@@ -40,7 +40,7 @@
           </div>
           <hr class="border-gray-500" />
           <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+            <h3 class="text-lg text-center leading-6 text-gray-900">
               Account Summary
             </h3>
           </div>
@@ -70,23 +70,23 @@
 
           <hr class="border-gray-500" />
           <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg text-center leading-6 font-semibold text-gray-900">
+            <h3 class="text-lg text-center leading-6 text-gray-900">
               Billing Summary
             </h3>
           </div>
           <hr class="border-gray-500" />
           <Table class="mt-3">
             <template v-slot:table>
-              <thead class="border-gray-50 border-b-2">
+              <thead class="border-gray-50 border-b-2" style="color: black;">
                 <tr>
-                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                  <th class="p-3 text-sm tracking-wide text-center">
                     Date
                   </th>
 
-                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                  <th class="p-3 text-sm tracking-wide text-center">
                     Description
                   </th>
-                  <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                  <th class="p-3 text-sm tracking-wide text-center">
                     Amount
                   </th>
                 </tr>
@@ -167,7 +167,7 @@
       class="flex justify-center"
     >
       <p class="text-sm font-bold text-blue-500">
-        <span class="text-green-500">status: </span>
+        <span class="text-green-500">Status: </span>
         <span v-if="billingData.billing[0].status === 'For Verification'">
           For Verification
         </span>
@@ -199,7 +199,7 @@
           name: 'Payment',
           params: { id: billingData.billing[0].billingId },
         }"
-        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600"
       >
         Pay
       </router-link>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-<!--    <link rel="icon" href="/favicon.ico" />-->
+    <!-- <link rel="icon" href="/favicon.ico" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <link rel="shortcut icon" href="/logo/camaya_favicon" type="image/x-icon"/>
@@ -45,6 +45,11 @@
         margin-left: 10px
       }
 
+      .font-semibold {
+        font-weight: 600;
+        font-size: 24px !important;
+      }
+
       .el-dialog {
         position: relative;
         margin: var(--el-dialog-margin-top,15vh) auto 50px;
@@ -69,6 +74,7 @@
       .el-dialog__title {
         line-height: var(--el-dialog-font-line-height);
         font-size: var(--el-dialog-title-font-size);
+        /* font-size: 24px !important; */
         color: #ca8a04 !important;
         text-align: left;
       }
@@ -109,6 +115,19 @@
         width: 100%;
         height: fit-content;
         overflow-y: scroll;
+      }
+
+      .el-table th.el-table__cell>.cell {
+        display: inline-block;
+        box-sizing: border-box;
+        position: relative;
+        vertical-align: middle;
+        width: 100%;
+        color: black !important;
+      }
+
+      .el-card__header {
+        background-color: #ca8a04 !important;
       }
 
     </style>

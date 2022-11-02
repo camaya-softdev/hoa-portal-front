@@ -31,10 +31,10 @@
         </div> -->
         
         <!-- <dl class="space-y-5 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10"> -->
-        <dl class="md:grid md:grid-cols-1 md:gap-x-4 md:gap-y-4">
+        <dl class="md:grid md:grid-cols-3 md:gap-x-4 md:gap-y-4">
           <div v-for="data in directorsData" :key="data.id" class="relative">
             <dt>
-              <div class="flex items-center h-15 w-15 rounded-md text-white p-6 bg-white shadow-xl shadow-slate-900/10" style="border-radius: 1rem;">
+              <div class="flex items-center h-15 w-15 my-4 rounded-md text-white p-6 bg-white shadow-xl shadow-slate-900/10" style="border-radius: 1rem;">
                 <!-- <img
                   :src='data.image'
                   class="h-20 w-30 rounded-2xl"
@@ -47,7 +47,7 @@
                 <span><p>
                   <span class="ml-4 text-xl leading-6 font-medium text-gray-900">{{ data.fullName }}</span><br/>
                   <span class="ml-4 text-lg text-gray-600" style="text-transform: UPPERCASE;">{{ data.position }}</span><br/>
-                  <span class="ml-4 text-md text-gray-600" style="font-family: 'Lexend', sans-serif; font-weight: 300;">{{ data.description }}</span>
+                  <span class="ml-4 text-xs text-gray-600" style="font-family: 'Lexend', sans-serif; font-weight: 300;">{{ data.description }}</span>
                 </p></span>
               </div>
               
