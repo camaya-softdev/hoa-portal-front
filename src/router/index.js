@@ -196,6 +196,18 @@ const routes = [
         component: () =>
           import("../views/admin/AdminManagement/Agent/Agent.vue"),
       },
+      {
+        path:"/privacy-policy",
+        name:"PrivacyPolicy",
+        component:()=>
+          import("../views/member/reminders/PrivacyPolicy.vue")
+      },
+      {
+        path:"/disclaimer",
+        name:"Disclaimer",
+        component:()=>
+          import("../views/member/reminders/Disclaimer.vue")
+      }
     ],
   },
   {

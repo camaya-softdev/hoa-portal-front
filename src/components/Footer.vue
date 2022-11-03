@@ -6,7 +6,8 @@
           &copy; {{ new Date().getFullYear() }} Camaya Coast All rights reserved
           <br/><small classs="text-xs" style="text-transform: uppercase;">System Version: v1.0.0</small>
         </p>
-        
+       <p> <router-link :to="{name:'Disclaimer'}">Disclaimer</router-link></p>
+       <p> <router-link :to="{name:'PrivacyPolicy'}">Privacy Policy</router-link></p>
       </div>
     </div>
   </div>

@@ -291,9 +291,13 @@
       <!-- /End replace -->
     </div>
   </main>
-
+  <change-password
+  :changePassword="changePassword"
+  @closeModal="changePassword = false"
+></change-password>
 </template>
 <script>
+import ChangePassword from "../admin/Dashboard/Profile/ChangePassword.vue";
 import {
   UserIcon,
   TrendingUpIcon,
@@ -304,9 +308,9 @@ import {
 } from "@heroicons/vue/outline";
 import Table from "../../components/Table.vue";
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed,ref } from "vue";
 import ForVerification from "./Dashboard/ForVerification/forVerification.vue";
-
+let changePassword = ref(false);
 export default {
   components: {
     UserIcon,
@@ -317,6 +321,7 @@ export default {
     PrinterIcon,
     ClipboardListIcon,
     ForVerification,
+    ChangePassword
   },
 
   setup() {
@@ -349,6 +354,8 @@ export default {
       CreditCardIcon,
       HomeIcon,
       ClipboardListIcon,
+      ChangePassword,
+      changePassword
     };
   },
 };
