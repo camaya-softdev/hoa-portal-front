@@ -49,6 +49,7 @@
               </div> -->
             </div>
 
+            <!-- desktop view -->
             <div class="hidden md:block">
 
               <div class="m-0 p-0 text-sm text-right" style="color: gray">{{ displayClock() }}</div>
@@ -159,6 +160,7 @@
               
             </div>
 
+            <!-- mobile view -->
             <div class="-mr-2 flex md:hidden">
               <!-- Mobile menu button -->
               <DisclosureButton

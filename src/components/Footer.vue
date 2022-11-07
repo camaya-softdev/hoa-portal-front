@@ -1,17 +1,35 @@
 <template>
-  <div class="footerWrap top-[100vh]">
+  <div class="footerWrap top-[100vh] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="footer">
-      <div class="mx-auto py-6 sm:px-6 lg:px-8 footerContent">
-        <p class="text-gray-700 text-xs">
+
+      <!-- desktop view -->
+      <div class="footerContent mx-auto flex items-center justify-between h-16 text-gray-700 text-xs">
+        <div class="hidden md:block">
           &copy; {{ new Date().getFullYear() }} Camaya Coast All rights reserved
           <br/><small classs="text-xs" style="text-transform: uppercase;">System Version: v1.0.0</small>
-        </p>
-       <p> <router-link :to="{name:'Disclaimer'}">Disclaimer</router-link></p>
-       <p> <router-link :to="{name:'PrivacyPolicy'}">Privacy Policy</router-link></p>
+        </div>
+        <div class="hidden md:block">
+          <router-link :to="{name:'Disclaimer'}"><u>Disclaimer</u></router-link>
+          <router-link :to="{name:'PrivacyPolicy'}" class="ml-4"><u>Privacy Policy</u></router-link>
+        </div>
       </div>
+
+      <!-- mobile view -->
+      <div class="footerContent text-gray-700 text-xs text-center">
+        <div class="md:hidden">
+          <router-link :to="{name:'Disclaimer'}"><u>Disclaimer</u></router-link>
+          <router-link :to="{name:'PrivacyPolicy'}" class="ml-4"><u>Privacy Policy</u></router-link>
+        </div>
+        <div class="md:hidden my-4">
+          &copy; {{ new Date().getFullYear() }} Camaya Coast All rights reserved
+          <br/><small classs="text-xs" style="text-transform: uppercase;">System Version: v1.0.0</small>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
+
 <style scoped>
   .footerWrap {
     width: 100%;

@@ -24,8 +24,6 @@
         <div class="bg-white bg-opacity-0"><News></News></div>  
         <div class="mb-2 bg-white bg-opacity-0 pb-5"><BoardofDirectors></BoardofDirectors></div>
 
-        
-
         <!-- <div class="mb-5"><Community></Community></div>-->
       </div>
       <!-- /End replace -->
