@@ -5,7 +5,7 @@
     element-loading-text="Fetching Data..."
   ></div>
   <div v-else class="flex h-full flex-col">
-    <Disclosure as="nav" class="bg-none py-5" v-slot="{ open }">
+    <Disclosure as="nav" class="bg-none py-5" v-slot="{ open }" style="z-index: 1000;">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
@@ -44,7 +44,7 @@
                 :aria-current="navigation.current ? 'page' : undefined"
                 >Dashboard
               </router-link>
-              <Menu as="div" class="ml-3 relative">
+              <Menu as="div" class="relative">
                 <MenuButton
                   :class="[
                     navigation.current
