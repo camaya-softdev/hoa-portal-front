@@ -3,6 +3,7 @@
     v-model="eventDialog"
     title="ANNOUNCEMENTS"
     width="80%"
+    :before-close="handleClose"
   >
   <!-- :before-close="handleClose" -->
 
@@ -54,18 +55,19 @@
             
           </div>
 
-          <!-- <button class="mt-6 rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-yellow-600 text-white hover:bg-yellow-600 hover:text-white active:bg-yellow-600 active:text-slate-300 focus-visible:outline-slate-900 transform transition duration-500 hover:scale-105" onclick="done()">
-            <span>Done</span>
-          </button> -->
+          <button class="mt-6 rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-yellow-600 text-white hover:bg-yellow-600 hover:text-white active:bg-yellow-600 active:text-slate-300 focus-visible:outline-slate-900 transform transition duration-500 hover:scale-105" 
+          @click="closeDialog">
+            <span>Close</span>
+          </button>
 
         </div>
       </div>
 
-<!--    <template #footer>-->
-<!--      <span class="dialog-footer">-->
-<!--        <el-button @click="closeDialog">Close</el-button>-->
-<!--      </span>-->
-<!--    </template>-->
+   <!-- <template #footer>
+     <span class="dialog-footer">
+       <el-button @click="closeDialog">Close</el-button>
+     </span>
+   </template> -->
 
   </el-dialog>
 </template>
@@ -82,7 +84,7 @@
   }>();
   const emits = defineEmits(["closeModal",'eventId']);
 
-  console.log(props.eventId)
+
 
   function closeDialog(){
     emits('eventId')
@@ -94,10 +96,10 @@
   }
 
   if(props.eventId !== 0){
-    console.log(props.eventId)
+
     store.dispatch('showEvent/getEvents',props.eventId);
   }
-  console.log(props.eventId)
+
   const eventData = computed(()=>store.state.showEvent.currentEvent.data)
   const eventLoading = computed(()=>store.state.showEvent.currentEvent.loading)
 
