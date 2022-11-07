@@ -26,7 +26,13 @@
               <th class="p-3 text-sm tracking-wide text-center">
                 Current Balance
               </th>
+
+              <th class="p-3 text-sm  tracking-wide text-center">
+                Amount Paid
+              </th>
+              <!-- <th class="p-3 text-sm font-semibold tracking-wide text-center"></th> -->
               <th class="p-3 text-sm tracking-wide text-center">
+
                 Payment Status
               </th>
               <th class="p-3 text-sm tracking-wide text-center">Action</th>
@@ -49,6 +55,7 @@
               <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
                 &#8369; {{ data.current_balance }}
               </td>
+              <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center"> &#8369; {{data.amount_paid}}</td>
               <td class="p-3 text-sm text-gray-700 whitespace-nowrap text-center">
                 {{ data.status }}
               </td>
