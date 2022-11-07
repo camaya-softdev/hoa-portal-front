@@ -2,7 +2,7 @@
   <el-dialog
     v-model="showDocument"
     title="Show Files"
-    width="80%"
+    width="100%"
     :before-close="handleClose"
     center
   >

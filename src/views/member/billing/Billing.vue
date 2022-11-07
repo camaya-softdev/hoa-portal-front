@@ -178,13 +178,6 @@ async function downloadPDF(memberId, billingId) {
   });
 
   if (res.status === 200 || res.status === 201) {
-    // var printWindow = window.open(
-    //   `http://hoa-portal.test/invoice/${memberId}/${billingId}`
-    // );
-
-    var printWindow = window.open(
-      `https://apidevhoaportal.camayacoast.com/invoice/${memberId}/${billingId}/`
-    );
     await store.dispatch("billing/getBillings", props.statementID);
     await store.commit("alert/notify", {
       title: "Success",

@@ -27,13 +27,21 @@ export default {
     },
     downloadPDF({}, data) {
       return axiosClient
-        .get(`/invoice/${data.userId}/${data.billingId}/`)
-        .then((res) => {
-          return res;
+        .get(`/invoice/${data.userId}/${data.billingId}/` ,{
+          responseType: 'blob'
         })
-        .catch((err) => {
-          throw err;
-        });
+        .then(response => {
+          let fileUrl = window.URL.createObjectURL(response.data);
+          let fileLink = document.createElement('a');
+
+          fileLink.href = fileUrl;
+          fileLink.setAttribute('download', 'invoice.pdf');
+          document.body.appendChild(fileLink)
+
+          fileLink.click();
+        }).catch(error => {
+          console.log(error.response.data)
+        })
     },
   },
   mutations: {
