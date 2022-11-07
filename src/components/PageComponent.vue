@@ -62,7 +62,7 @@
                   clip-rule="evenodd"
                 ></path>
               </svg>
-              <span class="ml-1 text-sm font-medium text-black md:ml-2 dark:text-white">{{
+              <span class="ml-1 text-sm font-medium text-black md:ml-2 dark:text-black">{{
                 navChildContent
               }}</span>
             </div>
