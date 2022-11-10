@@ -157,9 +157,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function register() {
-  console.log(form.value);
   const res = await store.dispatch("member/addMember", form.value);
-  // console.log(res.response.data.errors)
   try {
     if (res.status === 200 || res.status === 201) {
       await store.dispatch("member/getMembers");

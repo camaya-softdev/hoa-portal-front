@@ -29,7 +29,7 @@ axiosClient.interceptors.response.use(
   function (error) {
     if (error.response.statusText === "Unauthorized") {
       sessionStorage.removeItem("TOKEN");
-      alert("Invalid user token. Window will reload");
+      alert("You have started a new session so this session will automatically end.");
       window.location.reload();
       // setTimeout(() => window.location.reload(), 2000);
     }

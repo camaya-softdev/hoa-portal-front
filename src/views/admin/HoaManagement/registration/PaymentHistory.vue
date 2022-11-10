@@ -42,85 +42,28 @@
                     </tr>
                   </thead>
                   <tbody class="bg-white">
-                    <tr class="whitespace-nowrap" v-for="data in props.row.dues">
-                      <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ props.row.bill_month }}
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900">
-                          {{ data.due_name }}
-                        </div>
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="text-sm text-gray-500" v-if="data.unit_id === 1">
-                          &#8369; {{ data.due_cost * props.row.lot_area }}
-                        </div>
-                        <div class="text-sm text-gray-500" v-if="data.unit_id === 2">
-                          &#8369; {{ data.due_cost }}
-                        </div>
-                        <div class="text-sm text-gray-500" v-if="data.unit_id === 3">
-                          &#8369; {{ data.due_cost * props.row.designee + data.due_cost }}
-                        </div>
-                      </td>
-                    </tr>
+                    <tr
+                    class="whitespace-nowrap"
+                    v-for="data in props.row.billingSummary"
+                  >
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                      {{ data.date }}
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-900">
+                        {{ data.description }}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-500">&#8369; {{ data.amount }}</div>
+                    </td>
+                  </tr>
                     <!--end tr-->
                   </tbody>
-                  <tbody class="bg-white">
-                    <tr class="whitespace-nowrap" v-for="data in props.row.fees">
-                      <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ props.row.bill_month }}
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="text-sm text-gray-900">
-                          {{ data.fee_name }}
-                        </div>
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="text-sm text-gray-500">
-                          &#8369; {{ data.fee_cost }}
-                        </div>
-                      </td>
-                    </tr>
-                    <!--end tr-->
-                  </tbody>
+           
                 </table>
               </div>
             </div>
-            <!-- <div
-              class="grid grid-cols-12 gap-12 m-auto justify-items-center"
-              v-for="data in props.row.dues"
-            >
-              <p class="col-span-6 sm:col-span-3">
-                {{ props.row.bill_month }}
-              </p>
-              <p class="col-span-6 sm:col-span-3">
-                {{ data.due_name }}
-              </p>
-              <p class="col-span-6 sm:col-span-3">
-                ₱{{ data.due_cost * props.row.lot_area }}
-              </p>
-            </div> -->
-            <!-- <el-table :data="props.row.dues" style="width: 80% overflow-x: auto">
-              <el-table-column>
-                <template #default="scope">
-                  <p>{{ props.row.bill_month }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column prop="due_name"></el-table-column>
-              <el-table-column>
-                <template #default="scope">
-                  <p v-if="scope.row.unit_id === 1">
-                    {{ scope.row.due_cost * props.row.lot_area }}
-                  </p>
-                  <p v-if="scope.row.unit_id === 2">
-                    {{ scope.row.due_cost }}
-                  </p>
-                  <p v-if="scope.row.unit_id === 3">
-                    {{ scope.row.due_cost * props.row.designee + scope.row.due_cost }}
-                  </p>
-                </template>
-              </el-table-column>
-            </el-table> -->
           </template>
         </el-table-column>
         <el-table-column type="index" labe="#" prop="id" />
@@ -209,16 +152,6 @@ store.dispatch("paymentHistory/getPaymentHistories", {
   url: 1,
 });
 
-// const tableHeader = [
-//   { id: "1", type: "index", name: "#", prop: "id" },
-//   { id: "2", name: "Statement Number", prop: "statement_number" },
-//   { id: "3", name: "Bill Month", prop: "bill_month" },
-//   { id: "4", name: "Date Paid", prop: "hoa_billing_date_paid" },
-//   { id: "5", name: "Past Due", prop: "past_due" },
-//   { id: "6", name: "Total Cost", prop: "total_cost" },
-//   { id: "7", name: "Amount Paid", prop: "amount_paid" },
-//   { id: "8", name: "Payment Status", prop: "hoa_billing_status" },
-// ];
 
 let tableData = computed(() => store.state.paymentHistory.paymentHistory);
 
@@ -245,8 +178,7 @@ function downloadReports(row) {
     id: row.id,
     defaultNum: row.defaultNum,
   });
-  // editId.value = row.id;
-  // editTransaction.value = true;
+
 }
 
 function downloadSOA(row) {
@@ -255,8 +187,7 @@ function downloadSOA(row) {
     id: row.id,
     defaultNum: row.defaultNum,
   });
-  // editId.value = row.id;
-  // editTransaction.value = true;
+
 }
 
 function ledger() {

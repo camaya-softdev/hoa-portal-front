@@ -18,17 +18,17 @@
               <template v-slot:table>
                 <thead class="border-gray-50 border-b-2">
                   <tr>
-                    <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                    <th class="p-3 text-sm tracking-wide text-center">
                       Name of Designee
                     </th>
 
-                    <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                    <th class="p-3 text-sm tracking-wide text-center">
                       Relationship
                     </th>
-                    <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                    <th class="p-3 text-sm tracking-wide text-center">
                       Birthday
                     </th>
-                    <th class="p-3 text-sm font-semibold tracking-wide text-center">
+                    <th class="p-3 text-sm tracking-wide text-center">
                       Action
                     </th>
                   </tr>
