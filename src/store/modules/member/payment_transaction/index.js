@@ -82,6 +82,26 @@ export default {
           console.log(error.response.data);
         });
     },
+
+    exportPaymentLogs({}) {
+      return axiosClient
+        .get("/api/admin/payment/logs/export/data/", {
+          responseType: "blob",
+        })
+        .then((response) => {
+          let fileUrl = window.URL.createObjectURL(response.data);
+          let fileLink = document.createElement("a");
+
+          fileLink.href = fileUrl;
+          fileLink.setAttribute("download", "payment_logs.xlsx");
+          document.body.appendChild(fileLink);
+
+          fileLink.click();
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        });
+    },
   },
   mutations: {
     setCurrentPaymentTransaction: (state, paymentTransactionData) => {

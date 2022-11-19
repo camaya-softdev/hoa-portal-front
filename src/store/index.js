@@ -48,7 +48,7 @@ import showNews from "./modules/hoamember/showNews";
 import billing from "./modules/hoamember/billing";
 import payment from "./modules/hoamember/payment";
 import billPayment from "./modules/hoamember/billPayment";
-import paymentCash from "./modules/hoamember/paymentCash";
+import paymentOption from "./modules/hoamember/paymentOption";
 
 //helpers
 import show_member_user from "./modules/helpers/show_member_user";
@@ -101,7 +101,7 @@ const store = createStore({
     billing: billing,
     payment: payment,
     billPayment: billPayment,
-    paymentCash: paymentCash,
+    paymentOption: paymentOption,
 
     //helpers
     show_member_user: show_member_user,

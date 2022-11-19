@@ -8,7 +8,7 @@
         <div class="hidden md:block">
           &copy; {{ new Date().getFullYear() }} Camaya Coast All rights reserved
           <br /><small classs="text-xs" style="text-transform: uppercase"
-            >System Version: v1.0.0</small
+            >System Version: v2.0.0</small
           >
         </div>
         <div v-if="isMember === 1" class="hidden md:block">

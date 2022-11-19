@@ -159,7 +159,7 @@ const updateImageList = (file) => {
 
 async function handleSubmit() {
   try {
-    const res = await store.dispatch("paymentCash/addPaymentAddress", {
+    const res = await store.dispatch("paymentOption/cashPayment", {
       id: route.params.id,
       payment: form.value,
     });

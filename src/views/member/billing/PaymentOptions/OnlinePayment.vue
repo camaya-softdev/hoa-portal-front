@@ -1,88 +1,49 @@
 <template>
-  <form action="#" method="POST">
-    <div class="shadow sm:rounded-md sm:overflow-hidden">
-      <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-        <div class="col-span-6 sm:col-span-6">
-          <label
-            for="memberID"
-            class="block text-sm font-medium text-gray-700"
-          >First Name</label
-          >
-          <input
-            type="text"
-            name="memberID"
-            id="memberID"
-            autocomplete="memberID"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
+  <div class="container">
+    <div class="row">
+      <div class="shadow sm:rounded-md sm:overflow-hidden bg-white opacity-80">
+        <div class="px-4 py-5 space-y-6 sm:p-6">
+          <div class="grid grid-cols-9 gap-6">
+            <div class="col-span-4 sm:col-span-3">
+              <img src="/payment_provider/jcb.png" class="object-fit w-20" alt="JCB" />
+            </div>
+            <div class="col-span-4 sm:col-span-3">
+              <img src="/payment_provider/visa.png" class="object-fit w-20" alt="Visa" />
+            </div>
+
+            <div class="col-span-4 sm:col-span-3">
+              <img
+                src="/payment_provider/mastercard.png"
+                class="object-fit w-20"
+                alt="MasterCard"
+              />
+            </div>
+          </div>
         </div>
-        <div class="col-span-6 sm:col-span-6">
-          <label
-            for="memberID"
-            class="block text-sm font-medium text-gray-700"
-          >Last Name</label
+        <div class="bg-gray-100 px-5 py-4 text-right sm:px-6 mt-10">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            @click="handleSubmit"
           >
-          <input
-            type="text"
-            name="memberID"
-            id="memberID"
-            autocomplete="memberID"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-        </div>
-        <div class="col-span-6 sm:col-span-6">
-          <label
-            for="memberID"
-            class="block text-sm font-medium text-gray-700"
-          >Credit Card Number</label
-          >
-          <input
-            type="text"
-            name="memberID"
-            id="memberID"
-            autocomplete="memberID"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-        </div>
-        <div class="col-span-6 sm:col-span-6">
-          <label
-            for="memberID"
-            class="block text-sm font-medium text-gray-700"
-          >CVC</label
-          >
-          <input
-            type="text"
-            name="memberID"
-            id="memberID"
-            autocomplete="memberID"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
-        </div>
-        <div class="col-span-6 sm:col-span-6">
-          <label
-            for="memberID"
-            class="block text-sm font-medium text-gray-700"
-          >Card Expiration</label
-          >
-          <input
-            type="date"
-            name="memberID"
-            id="memberID"
-            autocomplete="memberID"
-            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-          />
+            Proceed
+          </button>
         </div>
       </div>
     </div>
-  </form>
+  </div>
 </template>
 
-<script>
-    export default {
-        name: "OnlinePayment"
-    }
+<script setup>
+import { useRoute } from "vue-router";
+import store from "../../../../store";
+const route = useRoute();
+const billingID = route.params.id;
+async function handleSubmit() {
+  const res = await store.dispatch("paymentOption/onlinePayment", billingID);
+  if (res.status === 200) {
+    return window.location.replace(res.data);
+  }
+}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

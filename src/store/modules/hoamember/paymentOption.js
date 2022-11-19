@@ -4,7 +4,7 @@ import { ElNotification } from "element-plus";
 export default {
   namespaced: true,
   actions: {
-    addPaymentAddress({}, data) {
+    cashPayment({}, data) {
       return axiosClient
         .post(`/api/member/bill/payment/cash/${data.id}/`,data.payment)
         .then((res) => {
@@ -14,6 +14,18 @@ export default {
           return err;
         });
     },
+
+    onlinePayment({},id){
+      return axiosClient
+      .get(`/api/member/bill/payment/online/paymaya/${id}/`)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        return err;
+      });
+    }
   },
+
 
 };
