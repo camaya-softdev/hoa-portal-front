@@ -76,6 +76,19 @@
                 ></el-button>
               </el-tooltip>
 
+              <el-tooltip
+              content="Preview Autogate Template"
+              placement="bottom"
+              effect="light"
+            >
+              <el-button
+                size="small"
+                type="primary"
+                :icon="View"
+                @click="previewTemplate(scope.row)"
+              ></el-button>
+            </el-tooltip>
+
               <!--              <el-tooltip-->
               <!--                content="Delete Autogate Template"-->
               <!--                placement="bottom"-->
@@ -127,14 +140,22 @@
     @searchBackground="searchBackground"
     @closeModal="editTemplate = false"
   ></edit-autogate-template>
+<welcome
+  v-if="showPreviewId !== 0"
+  :show-preview-template="showPreviewTemplate"
+  :show-preview-id="showPreviewId"
+  @showPreviewId="showPreviewId = 0"
+  @closeModal = "showPreviewTemplate = false"
+></welcome>
 </template>
 <script setup>
 import { ref, computed } from "vue";
 import PageComponent from "../../../../components/PageComponent.vue";
 import Pagination from "../../../../components/Pagination.vue";
-import { Edit, Delete } from "@element-plus/icons-vue";
+import { Edit, Delete,View } from "@element-plus/icons-vue";
 import AddAutogateTemplate from "./Actions/AddAutogateTemplate.vue";
 import EditAutogateTemplate from "./Actions/EditAutogateTemplate.vue";
+import Welcome from "./Preview/Kiosk/Welcome.vue";
 import store from "../../../../store";
 import _ from "lodash";
 import { useRouter } from "vue-router";
@@ -142,6 +163,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 let addTemplate = ref(false);
 let editTemplate = ref(false);
+let showPreviewTemplate = ref(false);
+let showPreviewId = ref(0);
 let editId = ref(0);
 store.dispatch("template/getTemplates", 1);
 store.dispatch("background_image/getBackgroundImages");
@@ -182,7 +205,10 @@ function editModal(row) {
   editId.value = row.id;
   editTemplate.value = true;
 }
-
+function previewTemplate(row){
+  showPreviewId.value = row.id;
+  showPreviewTemplate.value = true
+}
 function addMessage(row) {
   router.push({ name: "TemplateMessage", params: { id: row.id } });
 }

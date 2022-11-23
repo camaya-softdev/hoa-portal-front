@@ -196,6 +196,12 @@ const routes = [
         component: () =>
           import("../views/admin/AdminManagement/Agent/Agent.vue"),
       },
+      // {
+      //   path:"/kiosk/welcome",
+      //   name:"KioskWelcome",
+      //   component:()=>
+      //     import('../views/admin/HoaManagement/Autogate/Preview/Kiosk/Welcome.vue')
+      // }
     ],
   },
   {

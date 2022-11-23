@@ -38,11 +38,11 @@
                 {{ timeDate }}
               </div>
               <div class="ml-4 flex items-center">
-                <a
+                <router-link
                   class="group inline-flex items-center justify-center"
                   style="font-size: 1.3rem"
-                  href="/Home"
-                  >HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span></a
+                  :to="{name:'Home'}"
+                  >HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span></router-link
                 >
                 <router-link
                   :to="{ name: 'Profile' }"
@@ -146,7 +146,7 @@
       </div>
       <div class="mt-3">
         <p class="inline-flex items-center justify-center py-2 px-4 text-sm">
-          <a href="/Home"
+          <router-link :to="{ name: 'Home' }"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -160,12 +160,12 @@
                 stroke-linejoin="round"
                 d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
               /></svg
-          ></a>
+          ></router-link>
           <span class="ml-1">{{ user.data.subdivision_name }}</span>
           <span> 
-           <a
+           <router-link
               class="ml-3 group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-yellow-600 text-white hover:bg-yellow-600 hover:text-white active:bg-yellow-600 active:text-slate-300 focus-visible:outline-slate-900 transform transition duration-500 hover:scale-105"
-              href="/Billing"
+              :to="{name:'Billing'}"
             >
               <span class="">View Billing</span>
               <svg
@@ -182,7 +182,7 @@
                   d="M8.25 4.5l7.5 7.5-7.5 7.5"
                 />
               </svg>
-            </a>
+           </router-link>
           </span>
         </p>
       </div>
@@ -207,7 +207,7 @@ import {
 } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
-import { computed,ref } from "vue";
+import { computed,ref,watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
 const user = '';
@@ -274,7 +274,10 @@ export default {
     function runningClock(){
       timeDate.value = getCurrentTime();
     }
-   setInterval(() => runningClock(), 1000)
+    watchEffect(()=>{
+      setInterval(() => runningClock(), 1000)
+    })
+  
 
     return {
       user: computed(() => store.state.navigation.member.data),

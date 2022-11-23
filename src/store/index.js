@@ -30,6 +30,7 @@ import fee from "./modules/member/fee";
 import paymentHistory from "./modules/member/payment";
 import temp_msg from "./modules/member/template_message";
 import background_image from "./modules/member/background_image";
+import autogate_template_preview from "./modules/member/autogate_template_preview";
 
 //hoa member/profile
 import information from "./modules/hoamember/profile/information";
@@ -85,6 +86,7 @@ const store = createStore({
     generate_new_password: generate_new_password,
     forVerification: forVerification,
     adminChangePassword: adminChangePassword,
+    autogateTemplatePreview:autogate_template_preview,
 
     information: information,
     notification: notification,
