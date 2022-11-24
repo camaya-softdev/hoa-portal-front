@@ -36,7 +36,6 @@
   import Announcement from "./IndexComponents/Announcement.vue";
   import News from "./IndexComponents/News.vue";
   import BoardofDirectors from "./IndexComponents/BoardDirectors.vue";
-  import Community from "./IndexComponents/Community.vue";
 </script>
 
 <style>

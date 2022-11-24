@@ -54,6 +54,7 @@ import paymentOption from "./modules/hoamember/paymentOption";
 //helpers
 import show_member_user from "./modules/helpers/show_member_user";
 import generate_new_password from "./modules/admin/generate_new_password";
+import pickLot from "./modules/hoamember/pickLot";
 
 const store = createStore({
   modules: {
@@ -104,6 +105,7 @@ const store = createStore({
     payment: payment,
     billPayment: billPayment,
     paymentOption: paymentOption,
+    pickLot:pickLot,
 
     //helpers
     show_member_user: show_member_user,

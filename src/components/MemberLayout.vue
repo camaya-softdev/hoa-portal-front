@@ -41,47 +41,96 @@
                 <router-link
                   class="group inline-flex items-center justify-center"
                   style="font-size: 1.3rem"
-                  :to="{name:'Home'}"
-                  >HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span></router-link
+                  :to="{ name: 'Home' }"
+                  >HOA<span style="color: #ca8a04"
+                    ><strong>PORTAL</strong></span
+                  ></router-link
                 >
-                <router-link
-                  :to="{ name: 'Profile' }"
-                  :class="[
-                    active ? 'text-black' : '',
-                    'block px-4 py-2 text-sm text-black',
-                  ]"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5"
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="Profile Page"
+                  placement="bottom"
+                >
+                  <router-link
+                    :to="{ name: 'Profile' }"
+                    :class="[
+                      active ? 'text-black' : '',
+                      'block px-4 py-2 text-sm text-black',
+                    ]"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-5 h-5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                      />
+                    </svg>
+                  </router-link>
+                </el-tooltip>
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="Change Lot Page"
+                  placement="bottom"
+                >
+                  <router-link
+                    :to="{ name: 'PickLot' }"
+                    :class="[
+                      active ? 'text-black' : '',
+                      'block px-4 py-2 text-sm text-black',
+                    ]"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                    />
-                  </svg>
-                </router-link>
-
-                <DisclosureButton v-slot="{ active }" @click="logout" as="a" href="#">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-5 h-5"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"
+                      />
+                    </svg>
+                  </router-link>
+                </el-tooltip>
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="Logout"
+                  placement="bottom"
+                >
+                  <DisclosureButton
+                    v-slot="{ active }"
+                    @click="logout"
+                    as="a"
+                    href="#"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
-                    />
-                  </svg>
-                </DisclosureButton>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-5 h-5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                      />
+                    </svg>
+                  </DisclosureButton>
+                </el-tooltip>
               </div>
             </div>
 
@@ -94,9 +143,15 @@
                 <text
                   class="group inline-flex items-center justify-center"
                   style="font-size: 1.3rem"
-                  >HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span></text
+                  >HOA<span style="color: #ca8a04"
+                    ><strong>PORTAL</strong></span
+                  ></text
                 >
-                <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
+                <MenuIcon
+                  v-if="!open"
+                  class="block h-6 w-6"
+                  aria-hidden="true"
+                />
                 <XIcon v-else class="block h-6 w-6" aria-hidden="true" />
               </DisclosureButton>
             </div>
@@ -104,7 +159,10 @@
         </div>
 
         <DisclosurePanel class="-mr-1 md:hidden px-5">
-          <div class="fixed inset-0 bg-slate-300/50 opacity-100" aria-hidden="true"></div>
+          <div
+            class="fixed inset-0 bg-slate-300/50 opacity-100"
+            aria-hidden="true"
+          ></div>
           <div
             class="px-5 pt-2 pb-3 space-y-1 sm:px-3 inset-x-0 top-full mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-slate-900 shadow-xl ring-1 ring-slate-900/5 opacity-100 scale-100"
           >
@@ -162,10 +220,10 @@
               /></svg
           ></router-link>
           <span class="ml-1">{{ user.data.subdivision_name }}</span>
-          <span> 
-           <router-link
+          <span>
+            <router-link
               class="ml-3 group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-yellow-600 text-white hover:bg-yellow-600 hover:text-white active:bg-yellow-600 active:text-slate-300 focus-visible:outline-slate-900 transform transition duration-500 hover:scale-105"
-              :to="{name:'Billing'}"
+              :to="{ name: 'Billing' }"
             >
               <span class="">View Billing</span>
               <svg
@@ -182,7 +240,7 @@
                   d="M8.25 4.5l7.5 7.5-7.5 7.5"
                 />
               </svg>
-           </router-link>
+            </router-link>
           </span>
         </p>
       </div>
@@ -193,7 +251,6 @@
 </template>
 
 <script>
-
 import { format } from "date-fns";
 import AutoLogout from "./AutoLogout.vue";
 import {
@@ -207,10 +264,10 @@ import {
 } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
-import { computed,ref,watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
-const user = '';
+const user = "";
 const navigation = [
   { name: "Home", to: "Home", current: false },
   { name: "Billing", to: "Billing", current: false },
@@ -232,23 +289,27 @@ export default {
     MenuItems,
     MenuIcon,
     XIcon,
-    AutoLogout
+    AutoLogout,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
 
-
-    if (parseInt(store.state.auth.user.hoa_member_registered) !== 1) {
-      store.commit("alert/notify", {
-        title: "ATTENTION",
-        type: "warning",
-        message: "Complete all fields in profile first before you proceed",
-      });
-      router.push({
-        name: "Profile",
-      });
+    // if (parseInt(store.state.auth.user.hoa_member_registered) !== 1) {
+    //   store.commit("alert/notify", {
+    //     title: "ATTENTION",
+    //     type: "warning",
+    //     message: "Complete all fields in profile first before you proceed",
+    //   });
+    //   router.push({
+    //     name: "Profile",
+    //   });
+    // }
+    store.dispatch("navigation/getUser");
+    if (parseInt(store.state.navigation.member.data.lot_default) === 0) {
+      router.push({ name: "PickLot" });
     }
+
     function logout() {
       store.dispatch("auth/logout").then(() => {
         router.push({
@@ -256,7 +317,7 @@ export default {
         });
       });
     }
-    store.dispatch("navigation/getUser");
+
     if (
       parseInt(store.state.auth.user.hoa_admin) === 1 &&
       parseInt(store.state.auth.user.hoa_member) === 0
@@ -271,13 +332,16 @@ export default {
       });
     }
 
-    function runningClock(){
+    function runningClock() {
       timeDate.value = getCurrentTime();
     }
-    watchEffect(()=>{
-      setInterval(() => runningClock(), 1000)
-    })
-  
+    watchEffect((onInvalidate) => {
+      const timer = setInterval(() => runningClock(), 1000);
+
+      onInvalidate(()=>{
+        clearInterval(timer);
+      })
+    });
 
     return {
       user: computed(() => store.state.navigation.member.data),
@@ -286,7 +350,7 @@ export default {
       userNavigation,
       timeDate,
       logout,
-      AutoLogout
+      AutoLogout,
     };
   },
 };

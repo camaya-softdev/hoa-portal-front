@@ -2,7 +2,8 @@
   <el-dialog
     v-model="showPreviewTemplate"
     title="Welcome Page"
-    width="80%"
+    width="100%"
+    :fullscreen="true"
     custom-class="border-2 border-gray-600 bg-black"
     :before-close="handleClose"
     center
@@ -45,6 +46,7 @@
     :footerThirdPage = "templateData.hoa_autogate_template_footer_third_page"
     :backgroundImage = "templateData.hoa_background_image"
     :logo="templateData.logo"
+    :reset-id="resetID"
     @close-modal="secondPreviewTemplate = false"
   ></SecondPage>
 </template>
@@ -79,11 +81,19 @@ let templateData = computed(()=>store.state.autogateTemplatePreview.currentAutog
 function secondPage() {
   secondPreviewTemplate.value = true;
   emits("closeModal");
+ 
 }
+
+function resetID(){
+    emits('showPreviewId');
+}
+
 function closeModal() {
-  emits("showPreviewId");
+  resetID();
   emits("closeModal");
 }
+
+
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")
     .then(() => {

@@ -229,7 +229,6 @@ const handleClose = (done: () => void) => {
 
 async function handleSubmit() {
   form.value.subdivision_id = route.params.id;
-  console.log(form.value.user_id);
   const res = await store.dispatch("director/addDirector", form.value);
   try {
     if (res.status === 200 || res.status === 201) {

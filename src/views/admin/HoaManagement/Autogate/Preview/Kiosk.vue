@@ -4,7 +4,7 @@
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",
-
+    backgroundAttachment:"fixed"
   }'
 
   
@@ -14,7 +14,7 @@
       <img
         :src="logo ? logo : `/logo/camayacoast.webp`"
         alt="logo"
-        className="object-scale-down h-60 mb-16"
+        class="object-scale-down h-60 mb-16"
       />
       <div class="text-center">
         <slot name="preview"></slot>

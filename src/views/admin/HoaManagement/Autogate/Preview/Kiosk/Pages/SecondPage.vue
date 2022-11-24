@@ -2,7 +2,8 @@
   <el-dialog
     v-model="secondPreviewTemplate"
     title="Second Page"
-    width="80%"
+    width="100%"
+    :fullscreen="true"
     custom-class="border-2 border-gray-600 bg-black"
     :before-close="handleClose"
     center
@@ -37,6 +38,7 @@
     :footerThirdPage="footerThirdPage"
     :backgroundImage="backgroundImage"
     :logo="logo"
+    :reset-id="resetID"
     @close-modal="thirdPreviewTemplate = false"
   ></ThirdPage>
 </template>
@@ -51,6 +53,7 @@ let thirdPreviewTemplate = ref(false);
 let secondPageLoading = ref(true);
 const props = defineProps<{
   secondPage: String;
+  resetID:Function;
   footerSecondPage: String;
   thirdPages:String;
   footerThirdPage:String;
@@ -90,6 +93,7 @@ watchEffect((onInvalidate) => {
 
 function closeModal() {
   emits("closeModal");
+  props.resetID;
 }
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")

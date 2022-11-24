@@ -15,7 +15,7 @@ export default {
     getAutogateTemplate({ commit }, id) {
       commit("setCurrentAutogateTemplateLoading", true);
       return axiosClient
-        .get(`/api/admin/template/preview/${id}/template`)
+        .get(`/api/admin/template/preview/${id}/template/`)
         .then((res) => {
           commit("setCurrentAutogateTemplate", res.data);
           commit("setCurrentAutogateTemplateLoading", false);

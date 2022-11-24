@@ -131,7 +131,8 @@ function login(ev) {
       if (user.admin) {
         window.location.href = "/dashboard";
       } else {
-        window.location.href = "/home";
+        window.location.href = "/pick-a-lot";
+        // router.push({name:'PickLot'});
       }
     })
     .catch((err) => {

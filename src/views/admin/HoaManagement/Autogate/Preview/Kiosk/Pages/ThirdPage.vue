@@ -2,7 +2,8 @@
   <el-dialog
     v-model="thirdPreviewTemplate"
     title="Third Page"
-    width="80%"
+    width="100%"
+    :fullscreen="true"
     custom-class="border-2 border-gray-600 bg-black"
     :before-close="handleClose"
     center
@@ -33,11 +34,13 @@ const props = defineProps<{
   backgroundImage:String;
   footerThirdPage: String;
   logo:String;
+  resetID:Function;
   thirdPreviewTemplate: Boolean;
 }>();
 const emits = defineEmits(["closeModal"]);
 function closeModal() {
   emits("closeModal");
+  props.resetID;
 }
 // watchEffect((onInvalidate) => {
 //   if (props.thirdPage || props.footerThirdPage) {

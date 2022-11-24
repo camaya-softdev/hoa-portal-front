@@ -226,7 +226,7 @@
         </span>
       </div>
 
-      <div class="mb-4">
+      <!-- <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
           for="hoa_subd_lot_default"
@@ -234,7 +234,7 @@
           Primary Address
         </label>
         <el-checkbox value="1" v-model="form.hoa_subd_lot_default" label="Yes" border />
-      </div>
+      </div> -->
     </form>
     <template #footer>
       <span class="dialog-footer">
@@ -250,14 +250,6 @@ import { computed, ref } from "vue";
 import { ElMessageBox } from "element-plus";
 import { useRoute } from "vue-router";
 import store from "../../../../../store";
-import {
-  Listbox,
-  ListboxLabel,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/vue";
-import { CheckIcon, SelectorIcon } from "@heroicons/vue/solid";
 
 const props = defineProps<{
   addProperty: Boolean;
@@ -282,7 +274,7 @@ const form = ref({
   hoa_subd_lot_area: "",
   hoa_sales_agent_name: "",
   hoa_sales_agent_contact_number: "",
-  hoa_subd_lot_default: 0,
+  // hoa_subd_lot_default: 0,
 });
 
 const errorMsg = ref("");

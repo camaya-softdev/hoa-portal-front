@@ -245,7 +245,12 @@ const routes = [
     name: "Profile",
     component: () => import("../views/member/profile/Profile.vue"),
   },
-
+  {
+    path: "/pick-a-lot",
+    meta: { requiresAuth: true },
+    name: "PickLot",
+    component: () => import("../views/member/PickLot.vue"),
+  },
   {
     path: "/login",
     meta: { isGuest: true },
