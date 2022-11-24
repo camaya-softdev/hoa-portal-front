@@ -247,12 +247,14 @@
     </div>
     <AutoLogout v-if="user"></AutoLogout>
     <router-view></router-view>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { format } from "date-fns";
 import AutoLogout from "./AutoLogout.vue";
+import Footer from "./Footer.vue";
 import {
   Disclosure,
   DisclosureButton,
@@ -264,7 +266,7 @@ import {
 } from "@headlessui/vue";
 import { MenuIcon, XIcon } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, watch } from "vue";
 import { useRouter } from "vue-router";
 
 const user = "";
@@ -281,6 +283,7 @@ let timeDate = ref(getCurrentTime());
 export default {
   components: {
     Disclosure,
+    Footer,
     DisclosureButton,
     DisclosurePanel,
     Menu,
@@ -306,9 +309,16 @@ export default {
     //   });
     // }
     store.dispatch("navigation/getUser");
-    if (parseInt(store.state.navigation.member.data.lot_default) === 0) {
-      router.push({ name: "PickLot" });
-    }
+
+    watch(
+      () => store.state.navigation.member.data,
+      (newValue, oldValue) => {
+        console.log(newValue);
+        if (parseInt(newValue.data.lot_default) === 0) {
+          router.push({ name: "PickLot" });
+        }
+      }
+    );
 
     function logout() {
       store.dispatch("auth/logout").then(() => {
@@ -338,9 +348,9 @@ export default {
     watchEffect((onInvalidate) => {
       const timer = setInterval(() => runningClock(), 1000);
 
-      onInvalidate(()=>{
+      onInvalidate(() => {
         clearInterval(timer);
-      })
+      });
     });
 
     return {
@@ -350,7 +360,6 @@ export default {
       userNavigation,
       timeDate,
       logout,
-      AutoLogout,
     };
   },
 };

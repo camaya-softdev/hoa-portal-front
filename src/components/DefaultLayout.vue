@@ -312,6 +312,7 @@
     </Disclosure>
     <AutoLogout v-if="user"></AutoLogout>
     <router-view></router-view>
+    <Footer />
     <change-password
       :changePassword="changePassword"
       @closeModal="changePassword = false"
@@ -331,7 +332,7 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/vue";
-import moment from "moment";
+import Footer from "./Footer.vue";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/vue/outline";
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
@@ -363,6 +364,8 @@ export default {
     MenuIcon,
     XIcon,
     ChangePassword,
+    Footer,
+    AutoLogout
   },
   setup() {
     const store = useStore();
@@ -420,7 +423,6 @@ export default {
 
     return {
       changePassword,
-      ChangePassword,
       user: computed(() => store.state.navigation.member.data),
       navigationLoading: computed(() => store.state.navigation.member.loading),
       adminManagement,

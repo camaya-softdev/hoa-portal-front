@@ -1,7 +1,12 @@
 <template>
-  <div class="min-h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+  <div
+    class="min-h-full flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8"
+  >
     <div class="max-w-md w-full space-y-8">
-      <div class="bg-white opacity-90 shadow-xl shadow-slate-900/10" style="border-radius: 1rem;">
+      <div
+        class="bg-white opacity-90 shadow-xl shadow-slate-900/10"
+        style="border-radius: 1rem"
+      >
         <div>
           <img
             class="mx-auto h-20 w-auto"
@@ -9,8 +14,9 @@
             alt="Camaya Coast"
           />
 
-          <h2 class="mt-2 text-center text-3xl">HOA<span style="color:#CA8A04;"><strong>PORTAL</strong></span></h2>
-
+          <h2 class="mt-2 text-center text-3xl">
+            HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span>
+          </h2>
         </div>
         <form class="mt-8 space-y-6 m-5" @submit="login">
           <div
@@ -129,11 +135,19 @@ function login(ev) {
     .dispatch("auth/login", user)
     .then(() => {
       if (user.admin) {
-        window.location.href = "/dashboard";
-      } else {
-        window.location.href = "/pick-a-lot";
-        // router.push({name:'PickLot'});
+        return (window.location.href = "/dashboard");
       }
+      // router.push('/');
+      window.location.href = '/';
+      // if (
+      //   parseInt(store.state.auth.user.hoa_admin) === 0 &&
+      //   parseInt(store.state.auth.user.hoa_member) === 1
+      // ) {
+      //   return (window.location.href = "/pick-a-lot");
+      //   // router.push({name:'PickLot'});
+      // }
+      // // console.log(parseInt(store.state.auth.user.hoa_member) === 1)
+      // // window.location.href = "/dashboard";
     })
     .catch((err) => {
       errorMsg.value = err.response.data.error || err.response.data.message;

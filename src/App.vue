@@ -24,6 +24,5 @@ import Footer from "./components/Footer.vue";
 <template>
   <div class="min-h-screen">
     <router-view></router-view>
-    <Footer/>
   </div>
 </template>
