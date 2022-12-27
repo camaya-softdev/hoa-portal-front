@@ -35,7 +35,7 @@
             <!-- desktop view -->
             <div class="hidden md:block">
               <div class="m-0 p-0 text-sm text-right" style="color: gray">
-                {{ timeDate }}
+                {{ dateNow + ' ' +timeDate }}
               </div>
               <div class="ml-4 flex items-center">
                 <router-link
@@ -280,6 +280,7 @@ const userNavigation = [
 ];
 const getCurrentTime = () => format(new Date(), "h:mm:ss a");
 let timeDate = ref(getCurrentTime());
+let dateNow = ref(format(new Date(), 'yyyy-MM-dd'));
 export default {
   components: {
     Disclosure,
@@ -343,6 +344,7 @@ export default {
     }
 
     function runningClock() {
+
       timeDate.value = getCurrentTime();
     }
     watchEffect((onInvalidate) => {
@@ -359,6 +361,7 @@ export default {
       navigation,
       userNavigation,
       timeDate,
+      dateNow,
       logout,
     };
   },
