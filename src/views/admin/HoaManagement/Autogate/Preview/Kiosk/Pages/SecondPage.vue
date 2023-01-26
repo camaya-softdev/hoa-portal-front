@@ -8,9 +8,9 @@
     :before-close="handleClose"
     center
   >
-  <div v-if="secondPageLoading">
-    <p>Data is Loading....</p>
-  </div>
+    <div v-if="secondPageLoading">
+      <p>Data is Loading....</p>
+    </div>
     <Kiosk v-else #preview :background-image="backgroundImage" :logo="logo">
       <div class="mb2">
         <RichTextEditor
@@ -20,9 +20,9 @@
       </div>
       <div class="mb-2">
         <RichTextEditor
-        theme="bubble"
-        :content="content(footerSecondPage)"
-      ></RichTextEditor>
+          theme="bubble"
+          :content="content(footerSecondPage)"
+        ></RichTextEditor>
       </div>
     </Kiosk>
     <template #footer>
@@ -34,11 +34,11 @@
   </el-dialog>
   <ThirdPage
     :third-preview-template="thirdPreviewTemplate"
-    :thirdPages = "thirdPages"
+    :thirdPages="thirdPages"
     :footerThirdPage="footerThirdPage"
     :backgroundImage="backgroundImage"
     :logo="logo"
-    @reset="reset"
+    @reset="resetToNormalID"
     @close-modal="thirdPreviewTemplate = false"
   ></ThirdPage>
 </template>
@@ -54,23 +54,23 @@ let thirdPreviewTemplate = ref(false);
 let secondPageLoading = ref(true);
 const props = defineProps<{
   secondPage: String;
-  resetID:Function;
+  resetID: Function;
   footerSecondPage: String;
-  thirdPages:String;
-  footerThirdPage:String;
-  backgroundImage:String;
-  logo:String;
+  thirdPages: String;
+  footerThirdPage: String;
+  backgroundImage: String;
+  logo: String;
   secondPreviewTemplate: Boolean;
 }>();
-const emits = defineEmits(["closeModal","resetID"]);
+const emits = defineEmits(["closeModal", "resetId"]);
 
 function thirdPage() {
   thirdPreviewTemplate.value = true;
   emits("closeModal");
 }
 
-function reset(){
-  emits("resetID")
+function resetToNormalID() {
+  emits("resetId");
 }
 function content(value) {
   //   let balance = value
@@ -89,15 +89,15 @@ watchEffect((onInvalidate) => {
       () => (secondPageLoading.value = false),
       1000
     );
-    onInvalidate(()=>{
-        clearInterval(timerLoading);
-    })
+    onInvalidate(() => {
+      clearInterval(timerLoading);
+    });
   }
 });
 
 function closeModal() {
+  resetToNormalID();
   emits("closeModal");
-  reset();
 }
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")

@@ -26,9 +26,9 @@
           <!-- {scanHoaData.users.autogate.hoa_autogate_subdivision_name.toUpperCase()} SUBDIVISION! -->
         </span>
       </p>
-      <p className="text-3xl md:text-3xl sm:text-3xl text-black">
+      <p className="text-3xl md:text-3xl sm:text-3xl text-white">
         
-        {scanHoaData.users.autogate.template.hoa_autogate_template_footer}
+        {{templateData.hoa_autogate_template_footer}}
       </p>
     </Kiosk>
     <template #footer>
