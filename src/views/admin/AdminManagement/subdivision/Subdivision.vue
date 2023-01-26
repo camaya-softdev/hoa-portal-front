@@ -298,7 +298,7 @@ async function deleteSubdivision(index, row) {
     }
   }
 }
-
+let label = 1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -310,6 +310,16 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("subdivision/getSubdivisions", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("subdivision/getSubdivisions", { url: Number(label - 1) });
+      label--;
+      return;
+    }
     await store.dispatch("subdivision/getSubdivisions", { url: link.label });
   }
 }

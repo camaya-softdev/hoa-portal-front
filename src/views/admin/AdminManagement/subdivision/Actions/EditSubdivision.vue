@@ -311,7 +311,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal()">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="btnLoading" :disabled="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -337,7 +337,7 @@ const props = defineProps<{
   editId: Number;
 }>();
 const emits = defineEmits(["closeModal", "editId"]);
-
+let btnLoading = ref(false);
 const form = ref({
   id: "",
   hoa_subd_name: "",
@@ -414,6 +414,7 @@ function closeModal() {
 }
 
 async function handleSubmit() {
+  btnLoading.value = true
   form.value.hoa_subd_contact_person = emailData.value.hoa_member_name;
   const res = await store.dispatch("subdivision/editSubdivision", form.value);
   try {
@@ -424,6 +425,7 @@ async function handleSubmit() {
         type: "success",
         message: "The subdivision data was successfully updated",
       });
+      btnLoading.value = false
       closeModal();
     } else {
       errorMsg.value = res.response.data.errors;
@@ -434,7 +436,9 @@ async function handleSubmit() {
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
+  btnLoading.value = false
 }
 </script>
 <style scoped>

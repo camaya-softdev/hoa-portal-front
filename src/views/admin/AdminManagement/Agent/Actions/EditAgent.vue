@@ -177,7 +177,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal()">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="btnLoading" :disabled="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -193,7 +193,7 @@ const props = defineProps<{
   editId: Number;
 }>();
 const emits = defineEmits(["closeModal", "editId"]);
-
+let btnLoading = ref(false);
 const form = ref({
   hoa_sales_agent_email: "",
   hoa_sales_agent_lname: "",
@@ -231,6 +231,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function handleSubmit() {
+  btnLoading.value = true
   const res = await store.dispatch("agent/editAgent", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
@@ -240,6 +241,7 @@ async function handleSubmit() {
         type: "success",
         message: "The sales agent data was successfully updated",
       });
+      btnLoading.value = false
       closeModal();
     } else {
       errorMsg.value = res.response.data.errors;
@@ -250,7 +252,9 @@ async function handleSubmit() {
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
+  btnLoading.value = false
 }
 </script>
 <style scoped>

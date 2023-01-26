@@ -93,32 +93,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="flex justify-center mt-5">
-        <nav
-          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-        >
-          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
-          <a
-            v-for="(link, i) of tableData.links"
-            :key="i"
-            :disabled="!link.url"
-            href="#"
-            @click="getForPage($event, link)"
-            aria-current="page"
-            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
-            :class="[
-              link.active
-                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
-              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
-              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
-            ]"
-            v-html="link.label"
-          >
-          </a>
-        </nav>
-      </div>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
     </template>
   </page-component>
   <add-agent :add-agent="addAgent" @close-modal="addAgent = false"></add-agent>
@@ -138,6 +113,7 @@ import PageComponent from "../../../../components/PageComponent.vue";
 import { Edit, Delete, Lock, Unlock } from "@element-plus/icons-vue";
 import store from "../../../../store";
 import _ from "lodash";
+import Pagination from "../../../../components/Pagination.vue";
 
 let addAgent = ref(false);
 let editAgent = ref(false);
@@ -230,6 +206,7 @@ async function deleteAgent(index, row) {
     }
   }
 }
+let label = 1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -241,6 +218,16 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("agent/getAgents", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("agent/getAgents", { url: Number(label - 1) });
+      label--;
+      return;
+    }
     await store.dispatch("agent/getAgents", { url: link.label });
   }
 }

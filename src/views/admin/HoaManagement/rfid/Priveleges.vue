@@ -207,7 +207,7 @@ async function deletePaymentTransaction(row) {
     }
   }
 }
-
+let label = 1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -219,6 +219,18 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("payment_transaction/getPaymentTransactions", 
+      { url: Number(label + 1),id:route.params.id });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("payment_transaction/getPaymentTransactions", 
+      { url: Number(label - 1),id:route.params.id });
+      label--;
+      return;
+    }
     await store.dispatch("payment_transaction/getPaymentTransactions", {
       url: Number(link.label),
       id: route.params.id,

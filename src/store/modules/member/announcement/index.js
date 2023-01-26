@@ -42,7 +42,7 @@ export default {
         });
     },
 
-    getAnnouncements({ commit }, url=1) {
+    getAnnouncements({ commit }, {url=1}={}) {
       commit("setAnnouncementsLoading", true);
       url = `/api/admin/announcement/?page=${Number(url)}`
       return axiosClient.get(url).then((res) => {

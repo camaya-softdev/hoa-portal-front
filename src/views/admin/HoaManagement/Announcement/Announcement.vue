@@ -177,6 +177,7 @@ async function deleteAnnouncent(row) {
     }
   }
 }
+let label=1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -188,7 +189,17 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
-    await store.dispatch("announcement/getAnnouncements", { url: link.label });
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("announcement/getAnnouncements", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("announcement/getAnnouncements", { url: Number(label - 1) });
+      label--;
+      return;
+    }
+    await store.dispatch("announcement/getAnnouncements", { url: Number(link.label) });
   }
 }
 function fullStory(row) {

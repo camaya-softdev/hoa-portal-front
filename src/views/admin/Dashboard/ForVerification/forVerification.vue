@@ -239,12 +239,22 @@ function showDocumentFile(row) {
   showDocument.value = true;
   documentID.value = 1;
 }
-
+let label = 1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
     return;
   }
+  if(link.label == 'Next &raquo;'){
+      await store.dispatch("orVerification/getForVerifications", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("orVerification/getForVerifications", { url: Number(label - 1) });
+      label--;
+      return;
+    }
   await store.dispatch("forVerification/getForVerifications", {
     url: link.label,
   });

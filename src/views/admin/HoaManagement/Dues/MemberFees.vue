@@ -174,6 +174,7 @@ let searchFee = _.debounce(function () {
     .catch((err) => console.log(err));
 }, 1000);
 
+let label=1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -185,6 +186,16 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("fee/getFees", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("fee/getFees", { url: Number(label - 1) });
+      label--;
+      return;
+    }
     await store.dispatch("fee/getFees", { data: lotId, url: link.label });
   }
 }

@@ -195,6 +195,7 @@ async function deleteEmail(row) {
     }
   }
 }
+let label=1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -206,6 +207,16 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
+    if(link.label == 'Next &raquo;'){
+      await store.dispatch("email/getEmails", { url: Number(1 + label) });
+      label++;
+      return;
+    }
+    if(link.label == '&laquo; Previous'){
+      await store.dispatch("email/getEmails", { url: Number(label - 1) });
+      label--;
+      return;
+    }
     await store.dispatch("email/getEmails", { url: link.label });
   }
 }

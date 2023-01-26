@@ -240,7 +240,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :disabled="btnLoading" :loading="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -258,7 +258,7 @@ const props = defineProps<{
 }>();
 
 const fileList = ref([{ name: "", url: "" }]);
-
+let btnLoading = ref(false);
 const emits = defineEmits(["closeModal", "searchBackground"]);
 
 const form = ref({
@@ -337,6 +337,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function handleSubmit() {
+  btnLoading.value = true;
   form.value.background_image_id = background.value;
   form.value.hoa_autogate_template_second_page = JSON.stringify(
     form.value.hoa_autogate_template_second_page
@@ -357,12 +358,14 @@ async function handleSubmit() {
     } else {
       errorMsg.value = res.response.data.errors;
     }
+    btnLoading.value = false
   } catch (err) {
     await store.commit("alert/notify", {
       title: "Error",
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
 }
 </script>

@@ -129,7 +129,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal()">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="btnLoading" :disabled="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -153,7 +153,7 @@ const form = ref({
 });
 
 const errorMsg = ref("");
-
+let btnLoading = ref(false);
 function closeModal() {
   (form.value.hoa_privilege_package_name = ""),
     (form.value.hoa_privilege_package_desc = ""),
@@ -174,6 +174,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function handleSubmit() {
+  btnLoading.value = true
   const res = await store.dispatch("privilege/addPrivilege", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
@@ -183,6 +184,7 @@ async function handleSubmit() {
         type: "success",
         message: "The privilege data was successfully created",
       });
+      btnLoading.value = false
       closeModal();
     } else {
       errorMsg.value = res.response.data.errors;
@@ -193,7 +195,9 @@ async function handleSubmit() {
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
+  btnLoading.value = false
 }
 </script>
 <style scoped>

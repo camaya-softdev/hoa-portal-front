@@ -242,14 +242,14 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="btnLoading" :disabled="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import RichTextEditor from "../../../../../components/RichTextEditor.vue";
 import { ElMessageBox } from "element-plus";
 import store from "../../../../../store";
@@ -260,8 +260,7 @@ const props = defineProps<{
   backgroundData: Object;
 }>();
 
-const fileList = ref([{ name: "", url: "" }]);
-
+let btnLoading = ref(false);
 const emits = defineEmits(["closeModal", "editId", "searchBackground"]);
 
 if (props.editId !== 0) {
@@ -352,6 +351,7 @@ function content(value) {
 }
 
 async function handleSubmit() {
+  btnLoading.value = true
   form.value.background_image_id = background.value;
   form.value.hoa_autogate_template_second_page = JSON.stringify(
     form.value.hoa_autogate_template_second_page
@@ -372,12 +372,14 @@ async function handleSubmit() {
     } else {
       errorMsg.value = res.response.data.errors;
     }
+    btnLoading.value = false
   } catch (err) {
     await store.commit("alert/notify", {
       title: "Error",
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
 }
 </script>

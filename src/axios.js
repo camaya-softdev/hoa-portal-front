@@ -3,8 +3,8 @@ import store from "./store";
 
 const axiosClient = axios.create({
   // baseURL: "https://apidevhoaportal.camayacoast.com/",
-  // baseURL: "https://apihoaportal.camayacoast.com",
-  baseURL: "http://hoa-portal.test/",
+  baseURL: "https://apihoaportal.camayacoast.com/",
+  // baseURL: "http://hoa-portal.test",
   withCredentials: true,
 });
 

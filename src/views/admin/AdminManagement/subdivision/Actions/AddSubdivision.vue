@@ -137,106 +137,34 @@
           {{ errorMsg["hoa_subd_dues_payment_target"][0] }}
         </span>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">
-          Contact Person <span class="text-red-300">*</span>
-        </label>
+     
+       
 
-        <Combobox
-          v-model="emailData"
-          :class="
-            errorMsg['hoa_subd_contact_person'] ? 'border-red-300' : 'border-gray-300'
-          "
-        >
-          <div class="relative mt-1">
-            <div
-              class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            >
-              <ComboboxInput
-                class="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900"
-                placeholde="Contact Person"
-                :displayValue="
-                  (person) =>
-                    person.hoa_member_name === undefined ? '' : person.hoa_member_name
-                "
-                @change="search = $event.target.value"
-                @keyup="searchPerson"
-              />
-              <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-                <SelectorIcon class="w-5 h-5 text-gray-400" aria-hidden="true" />
-              </ComboboxButton>
-            </div>
-            <TransitionRoot
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              @after-leave="search = ''"
-            >
-              <transition
-                enter-active-class="transition duration-100 ease-out"
-                enter-from-class="transform scale-95 opacity-0"
-                enter-to-class="transform scale-100 opacity-100"
-                leave-active-class="transition duration-75 ease-out"
-                leave-from-class="transform scale-100 opacity-100"
-                leave-to-class="transform scale-95 opacity-0"
-              >
-                <ComboboxOptions
-                  class="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-                >
-                  <div
-                    v-if="showEmail.length === 0 && search !== ''"
-                    class="cursor-default select-none relative py-2 px-4 text-gray-700"
-                  >
-                    Nothing found.
-                  </div>
-
-                  <ComboboxOption
-                    v-for="person in showEmail"
-                    as="template"
-                    :key="person.id"
-                    :value="person"
-                    v-slot="{ selected, active }"
-                  >
-                    <li
-                      class="cursor-default select-none relative py-2 pl-10 pr-4"
-                      :class="{
-                        'text-white bg-teal-600': active,
-                        'text-gray-900': !active,
-                      }"
-                    >
-                      <span
-                        class="block truncate"
-                        :class="{
-                          'font-medium': selected,
-                          'font-normal': !selected,
-                        }"
-                      >
-                        {{ person.hoa_member_name }}
-                      </span>
-                      <span
-                        v-if="selected"
-                        class="absolute inset-y-0 left-0 flex items-center pl-3"
-                        :class="{
-                          'text-white': active,
-                          'text-teal-600': !active,
-                        }"
-                      >
-                        <CheckIcon class="w-5 h-5" aria-hidden="true" />
-                      </span>
-                    </li>
-                  </ComboboxOption>
-                </ComboboxOptions>
-              </transition>
-            </TransitionRoot>
-          </div>
-        </Combobox>
-        <span
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            Contact Person <span class="text-red-300">*</span>
+          </label>
+          <el-select
+            class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            v-model="form.hoa_subd_contact_person"
+            filterable
+            placeholder="Full Name"
+          >
+            <el-option
+              v-for="item in showEmail"
+              :key="item.id"
+              :label="item.hoa_member_name"
+              :value="item.hoa_member_name"
+            />
+          </el-select>
+          <span
           v-if="errorMsg['hoa_subd_contact_person']"
           class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
         >
           {{ errorMsg["hoa_subd_contact_person"][0] }}
         </span>
-      </div>
+        </div>
+      
       <div class="mb-4">
         <label
           class="block text-gray-700 text-sm font-bold mb-2"
@@ -311,7 +239,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal()">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :disabled="btnLoading" :loading="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -337,7 +265,7 @@ const props = defineProps<{
   showEmail: Object;
 }>();
 const emits = defineEmits(["closeModal"]);
-
+let btnLoading = ref(false);
 const form = ref({
   hoa_subd_name: "",
   hoa_subd_image:'',
@@ -372,7 +300,7 @@ const handleClose = (done: () => void) => {
 
 function onImageChoose(ev) {
   const file = ev.target.files[0];
-  console.log(ev.target.files[0]);
+
   const reader = new FileReader();
   reader.onload = () => {
     // The field to send on backend and apply validations
@@ -388,6 +316,7 @@ function closeModal() {
   form.value.hoa_subd_name = "";
   form.value.hoa_subd_area = "";
   form.value.hoa_subd_blocks = "";
+  form.value.hoa_subd_image = "";
   form.value.hoa_subd_lots = "";
   form.value.hoa_subd_contact_person = "";
   form.value.hoa_subd_contact_number = "";
@@ -398,7 +327,8 @@ function closeModal() {
 }
 
 async function handleSubmit() {
-  form.value.hoa_subd_contact_person = emailData.value.hoa_member_name;
+  btnLoading.value = true
+  // form.value.hoa_subd_contact_person = emailData.value.hoa_member_name;
   const res = await store.dispatch("subdivision/addSubdivision", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
@@ -408,6 +338,7 @@ async function handleSubmit() {
         type: "success",
         message: "The subdivision data was successfully created",
       });
+      btnLoading.value = false
       closeModal();
     } else {
       errorMsg.value = res.response.data.errors;
@@ -418,7 +349,9 @@ async function handleSubmit() {
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
+  btnLoading.value = false
 }
 </script>
 <style scoped>

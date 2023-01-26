@@ -53,7 +53,7 @@ export default {
 
     getAgents({ commit }, {url = 1} = {}) {
       commit("setAgentsLoading", true);
-      url = `/api/admin/agent/?page=${Number(url)}/`
+      url = `/api/admin/agent/?page=${Number(url)}`
       return axiosClient.get(url).then((res) => {
         commit("setAgentsLoading", false);
         commit("setAgents", res.data);

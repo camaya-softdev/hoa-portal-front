@@ -139,7 +139,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="closeModal">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmit">Confirm</el-button>
+        <el-button type="primary" @click="handleSubmit" :disabled="btnLoading" :loading="btnLoading">Confirm</el-button>
       </span>
     </template>
   </el-dialog>
@@ -151,6 +151,7 @@ import { ElMessageBox } from "element-plus";
 import store from "../../../../../store";
 
 const fileList = ref([{ name: "", url: "" }]);
+let btnLoading = ref(false);
 const props = defineProps<{
   editAutogate: Boolean;
   editId: Number;
@@ -208,6 +209,7 @@ function closeModal() {
 }
 
 async function handleSubmit() {
+  btnLoading.value = true
   form.value.user_id = users.value;
   form.value.hoa_autogate_member_name = data.value.fullName;
   form.value.hoa_autogate_subdivision_name = data.value.subdivision[0].name;
@@ -224,12 +226,14 @@ async function handleSubmit() {
     } else {
       errorMsg.value = res.response.data.errors;
     }
+    btnLoading.value = false
   } catch (err) {
     await store.commit("alert/notify", {
       title: "Error",
       type: "danger",
       message: err,
     });
+    btnLoading.value = false
   }
 }
 const handleClose = (done: () => void) => {
