@@ -37,10 +37,10 @@ const props = defineProps<{
   resetID:Function;
   thirdPreviewTemplate: Boolean;
 }>();
-const emits = defineEmits(["closeModal"]);
+const emits = defineEmits(["closeModal","reset"]);
 function closeModal() {
   emits("closeModal");
-  props.resetID;
+  emits("reset")
 }
 // watchEffect((onInvalidate) => {
 //   if (props.thirdPage || props.footerThirdPage) {

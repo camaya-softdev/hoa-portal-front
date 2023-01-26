@@ -27,8 +27,8 @@
         </span>
       </p>
       <p className="text-3xl md:text-3xl sm:text-3xl text-black">
-        Wait Lang Po
-        <!-- {scanHoaData.users.autogate.template.hoa_autogate_template_footer} -->
+        
+        {scanHoaData.users.autogate.template.hoa_autogate_template_footer}
       </p>
     </Kiosk>
     <template #footer>
@@ -46,7 +46,7 @@
     :footerThirdPage = "templateData.hoa_autogate_template_footer_third_page"
     :backgroundImage = "templateData.hoa_background_image"
     :logo="templateData.logo"
-    :reset-id="resetID"
+    @reset-id="resetID"
     @close-modal="secondPreviewTemplate = false"
   ></SecondPage>
 </template>

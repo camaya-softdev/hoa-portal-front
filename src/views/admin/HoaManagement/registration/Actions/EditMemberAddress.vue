@@ -227,7 +227,7 @@
             {{ errorMsg["hoa_sales_agent_contact_number"][0] }}
           </span>
         </div>
-        <!-- <div class="mb-4">
+        <div class="mb-4">
           <label
             class="block text-gray-700 text-sm font-bold mb-2"
             for="hoa_subd_lot_default"
@@ -235,7 +235,7 @@
             Primary Address <span class="text-red-300">*</span>
           </label>
           <el-checkbox value="1" v-model="form.hoa_subd_lot_default" label="Yes" border />
-        </div> -->
+        </div>
       </form>
     </div>
 
@@ -278,7 +278,7 @@ const form = ref({
   hoa_sales_agent_name: "",
   hoa_sales_agent_contact_number: "",
   unique_lot: "",
-  // hoa_subd_lot_default: false,
+  hoa_subd_lot_default: false,
 });
 
 let subData = ref({});

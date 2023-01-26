@@ -38,7 +38,7 @@
     :footerThirdPage="footerThirdPage"
     :backgroundImage="backgroundImage"
     :logo="logo"
-    :reset-id="resetID"
+    @reset="reset"
     @close-modal="thirdPreviewTemplate = false"
   ></ThirdPage>
 </template>
@@ -48,6 +48,7 @@ import RichTextEditor from "../../../../../../../components/RichTextEditor.vue";
 import { ElMessageBox } from "element-plus";
 import ThirdPage from "./ThirdPage.vue";
 import { ref, watchEffect } from "vue";
+import reset from "../../../../../../../store/modules/member/reset";
 
 let thirdPreviewTemplate = ref(false);
 let secondPageLoading = ref(true);
@@ -61,13 +62,16 @@ const props = defineProps<{
   logo:String;
   secondPreviewTemplate: Boolean;
 }>();
-const emits = defineEmits(["closeModal"]);
+const emits = defineEmits(["closeModal","resetID"]);
 
 function thirdPage() {
   thirdPreviewTemplate.value = true;
   emits("closeModal");
 }
 
+function reset(){
+  emits("resetID")
+}
 function content(value) {
   //   let balance = value
   //     .replace("[balance]", value.balance)
@@ -93,7 +97,7 @@ watchEffect((onInvalidate) => {
 
 function closeModal() {
   emits("closeModal");
-  props.resetID;
+  reset();
 }
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm("Are you sure to close this dialog?")
