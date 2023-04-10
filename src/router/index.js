@@ -129,6 +129,12 @@ const routes = [
           import("../views/admin/HoaManagement/Messages/Communication.vue"),
       },
       {
+        path:"/message-templates",
+        name:"MessageTemplate",
+        component:()=>
+          import("../views/admin/HoaManagement/Messages/Template.vue")
+      },
+      {
         path: "/autogate",
         name: "Autogate",
         component: () =>
