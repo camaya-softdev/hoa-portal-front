@@ -45,7 +45,7 @@
             <el-popover
               placement="top-start"
               title="Extension of Member Table"
-              :width="240"
+              :width="280"
               trigger="hover"
             >
               <template #reference>
@@ -81,6 +81,14 @@
                   type="primary"
                   :icon="CreditCard"
                   @click="paymentHistory(scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip content="Member Designee" placement="bottom" effect="light">
+                <el-button
+                  size="small"
+                  type="primary"
+                  :icon="Avatar"
+                  @click="memberDesignee(scope.row)"
                 ></el-button
               ></el-tooltip>
             </el-popover>
@@ -151,8 +159,6 @@
 import { ref, computed } from "vue";
 import AddMember from "./Actions/AddMember.vue";
 import EditMember from "./Actions/EditMember.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import {
   Edit,
   Delete,
@@ -162,10 +168,11 @@ import {
   CreditCard,
   Lock,
   Unlock,
+  Avatar
 } from "@element-plus/icons-vue";
 import store from "../../../../store";
 import { useRouter } from "vue-router";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const router = useRouter();
 let addMember = ref(false);
@@ -195,11 +202,12 @@ const tableHeader = [
   { id: "6", name: "Suffix", prop: "hoa_member_suffix" },
   { id: "7", name: "E Bill", prop: "hoa_member_ebill" },
   { id: "8", name: "SMS", prop: "hoa_member_sms" },
+  {id:'9',name:'Age',prop:'age'},
 ];
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchMember = _.debounce(function () {
+let searchMember = debounce(function () {
   store
     .dispatch("member/getSearchMembers", { data: search.value, label: 1 })
     .then(() => (tableData = computed(() => store.state.member.members)))
@@ -311,6 +319,12 @@ function paymentHistory(row) {
   router.push({
     name: "MemberPaymentHistory",
     params: { id: row.id, email: row.email },
+  });
+}
+function memberDesignee(row) {
+  router.push({
+    name: "MemberDesignee",
+    params: { user_id: row.id },
   });
 }
 </script>

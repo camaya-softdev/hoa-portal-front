@@ -76,12 +76,10 @@
 <script setup>
 import { Files, Document } from "@element-plus/icons-vue";
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import ShowFees from "./Actions/ShowFees.vue";
 import { useRouter } from "vue-router";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const router = useRouter();
 
@@ -101,7 +99,7 @@ const search = ref("");
 const filterTableData = computed(() => tableData.value.data);
 console.log(tableData.value.data);
 
-let searchDueFee = _.debounce(function () {
+let searchDueFee = debounce(function () {
   store
     .dispatch("dues_fees/getSearchDueFees", { data: search.value, label: 1 })
     .then(() => (tableData = computed(() => store.state.dues_fees.dues_fees)))

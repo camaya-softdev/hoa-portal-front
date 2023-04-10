@@ -123,13 +123,11 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddEmail from "./Actions/AddEmail.vue";
 import EditEmail from "./Actions/EditEmail.vue";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 import AddSubdEmail from "./Actions/AddSubdEmail.vue";
 
 let addEmail = ref(false);
@@ -154,7 +152,7 @@ const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchShowUser = _.debounce(function (user) {
+let searchShowUser = debounce(function (user) {
   store
     .dispatch("show_member_user/getSearchShowMemberUsers", user)
     .then(
@@ -166,7 +164,7 @@ let searchShowUser = _.debounce(function (user) {
     .catch((err) => console.log(err));
 }, 1000);
 
-let searchEmail = _.debounce(function () {
+let searchEmail = debounce(function () {
   store
     .dispatch("email/getSearchEmails", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.email.email)))

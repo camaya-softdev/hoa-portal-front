@@ -92,7 +92,45 @@
           placeholder="Suffix"
         />
       </div>
-
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_suffix">
+          Birthday
+        </label>
+        <el-date-picker
+          v-model="form.birthday"
+          type="date"
+          format="YYYY/MM/DD"
+          value-format="YYYY-MM-DD"
+          placeholder="Enter your Birthday"
+          :popper-class="errorMsg['birthday'] ? 'border-red-300' : 'border-gray-300'"
+          size="large"
+        />
+        <span
+          v-if="errorMsg['birthday']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["birthday"][0] }}
+        </span>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_suffix">
+          Age 
+        </label>
+        <input
+          class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="age"
+          :class="errorMsg['age'] ? 'border-red-300' : 'border-gray-300'"
+          type="number"
+          v-model="form.age"
+          placeholder="Age"
+        />
+        <span
+          v-if="errorMsg['age']"
+          class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+        >
+          {{ errorMsg["age"][0] }}
+        </span>
+      </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="hoa_member_suffix">
           Notification
@@ -130,20 +168,22 @@ const form = ref({
   hoa_member_suffix: "",
   hoa_member_ebill: 0,
   hoa_member_sms: 0,
+  age: "",
+  birthday: "",
 });
 
 const errorMsg = ref("");
 
 function closeModal() {
-  (form.value.email = ""),
-    (form.value.hoa_member_lname = ""),
-    (form.value.hoa_member_fname = ""),
-    (form.value.hoa_member_mname = ""),
-    (form.value.notification = ""),
-    (form.value.hoa_member_suffix = ""),
-    (form.value.hoa_member_ebill = 0),
-    (form.value.hoa_member_sms = 0),
-    (errorMsg.value = "");
+  form.value.email = "";
+  form.value.hoa_member_lname = "";
+  form.value.hoa_member_fname = "";
+  form.value.hoa_member_mname = "";
+  form.value.notification = "";
+  form.value.hoa_member_suffix = "";
+  form.value.hoa_member_ebill = 0;
+  form.value.hoa_member_sms = 0;
+  errorMsg.value = "";
   emits("closeModal");
 }
 
@@ -157,6 +197,7 @@ const handleClose = (done: () => void) => {
 };
 
 async function register() {
+  console.log(form.value);
   const res = await store.dispatch("member/addMember", form.value);
   try {
     if (res.status === 200 || res.status === 201) {

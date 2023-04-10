@@ -93,16 +93,15 @@
     </template>
   </page-component>
 
-  <addRFID
+  <AddRFID
     :addRFID="addRFID"
     @searchShowUser="searchShowUser"
     :userEmail="userEmail"
     @closeModal="addRFID = false"
   ></addRFID>
-  <editRFID
+  <EditRFID
     v-if="editId !== 0"
     :editRFID="editRFID"
-    @searchShowUser="searchShowUser"
     :userEmail="userEmail"
     @closeModal="editRFID = false"
     :edit-id="editId"
@@ -111,14 +110,13 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
+
 import { Edit, CreditCard } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import store from "../../../../store";
 import AddRFID from "./Actions/AddRFID.vue";
 import EditRFID from "./Actions/EditRFID.vue";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const router = useRouter();
 let addRFID = ref(false);
@@ -134,7 +132,7 @@ const filterTableData = computed(() => tableData.value.data);
 const userData = computed(() => store.state.rfid.cardEmail);
 let userEmail = computed(() => store.state.show_member_user.showMemberUser.data);
 
-let searchShowUser = _.debounce(function (user) {
+let searchShowUser = debounce(function (user) {
   store
     .dispatch("show_member_user/getSearchShowMemberUsers", user)
     .then(
@@ -146,7 +144,7 @@ let searchShowUser = _.debounce(function (user) {
     .catch((err) => console.log(err));
 }, 1000);
 
-let searchAgent = _.debounce(function () {
+let searchAgent = debounce(function () {
   store
     .dispatch("rfid/getSearchRFIDs", { data: search.value, url: null })
     .then(() => (tableData = computed(() => store.state.rfid.rfid)))

@@ -133,14 +133,11 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import { PrinterIcon } from "@heroicons/vue/outline";
 import EditTransaction from "./Actions/EditTransaction.vue";
 import { useRoute } from "vue-router";
 import store from "../../../../store";
-import Table from "../../../../components/Table.vue";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const route = useRoute();
 const paymentTransactionEmail = route.params.email;
@@ -157,7 +154,7 @@ let tableData = computed(() => store.state.paymentHistory.paymentHistory);
 
 const search = ref("");
 
-let searchPaymentTransaction = _.debounce(function () {
+let searchPaymentTransaction = debounce(function () {
   store
     .dispatch("paymentHistory/getSearchPaymentHistories", {
       id: route.params.id,

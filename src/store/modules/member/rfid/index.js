@@ -57,7 +57,7 @@ export default {
       let url = ''
       console.log(link)
       console.log(link.label)
-      url = `/api/admin/rfid/search/data/?find=${link.data}&page=${link.label}`
+      url = `/api/admin/rfid/search/data/?find=${link.data}&page=${link.label}/`
       return axiosClient.get(url).then((res) => {
         commit("setRFIDs", res.data);
         return res;

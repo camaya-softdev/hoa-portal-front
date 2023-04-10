@@ -118,7 +118,7 @@
           <input
             class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="subdivision-lot-block-number"
-            type="number"
+            type="text"
             v-model="form.hoa_subd_lot_block"
             :class="errorMsg['hoa_subd_lot_block'] ? 'border-red-300' : 'border-gray-300'"
             placeholder="Subdivision Block Number"
@@ -140,7 +140,7 @@
           <input
             class="shadow appearance-none border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="subdivision-lot-number"
-            type="number"
+            type="text"
             v-model="form.hoa_subd_lot_num"
             :class="errorMsg['hoa_subd_lot_num'] ? 'border-red-300' : 'border-gray-300'"
             placeholder="Subdivision Lot Number"

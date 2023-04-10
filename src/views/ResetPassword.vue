@@ -139,10 +139,5 @@
       errorMsg.value = err.response.data.error || err.response.data.message;
     }
 
-
-
-
-
-
   }
 </script>

@@ -75,32 +75,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="flex justify-center mt-5">
-        <nav
-          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-        >
-          <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
-          <a
-            v-for="(link, i) of tableData.links"
-            :key="i"
-            :disabled="!link.url"
-            href="#"
-            @click="getForPage($event, link)"
-            aria-current="page"
-            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
-            :class="[
-              link.active
-                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
-              i === 0 ? 'rounded-l-md bg-gray-100 text-gray-700' : '',
-              i === tableData.links.length - 1 ? 'rounded-r-md' : '',
-            ]"
-            v-html="link.label"
-          >
-          </a>
-        </nav>
-      </div>
+      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
       <div class="mt-4 px-4 py-3 bg-gray-50 text-right sm:px-6 opacity-80">
         <router-link
           :to="{ name: 'MemberDues' }"
@@ -129,13 +104,13 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
+
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddOtherFees from "./Actions/AddOtherFees.vue";
 import EditOtherFees from "./Actions/EditOtherFees.vue";
 import { useRoute } from "vue-router";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const addFees = ref(false);
 const editFees = ref(false);
@@ -167,7 +142,7 @@ function editModal(row) {
   editFees.value = true;
 }
 
-let searchFee = _.debounce(function () {
+let searchFee = debounce(function () {
   store
     .dispatch("fee/getSearchFees", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.fee.fee)))

@@ -18,6 +18,7 @@ import adminChangePassword from "./modules/admin/profile/change_password";
 import lot from "./modules/member/lot";
 import reset from "./modules/member/reset";
 import document from "./modules/member/document";
+import adminMemberDesignee from "./modules/member/designee";
 import announcement from "./modules/member/announcement";
 import rfid from "./modules/member/rfid";
 import payment_transaction from "./modules/member/payment_transaction";
@@ -88,6 +89,7 @@ const store = createStore({
     forVerification: forVerification,
     adminChangePassword: adminChangePassword,
     autogateTemplatePreview:autogate_template_preview,
+    adminMemberDesignee,
 
     information: information,
     notification: notification,

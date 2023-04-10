@@ -62,8 +62,7 @@
   </page-component>
 </template>
 <script setup>
-import RichTextEditor from "../../../../components/RichTextEditor.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
+// import RichTextEditor from "../../../../components/RichTextEditor.vue";
 import store from "../../../../store";
 import { useRouter, useRoute } from "vue-router";
 import { watch, ref, computed } from "vue";

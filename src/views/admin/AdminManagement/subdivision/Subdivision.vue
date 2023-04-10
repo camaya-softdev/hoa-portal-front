@@ -127,7 +127,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
+      <Pagination :tableData="tableData" @getForPage="getForPage" />
     </template>
   </page-component>
   <add-subdivision
@@ -155,13 +155,11 @@ import {
   Lock,
   Unlock,
 } from "@element-plus/icons-vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import AddSubdivision from "./Actions/AddSubdivision.vue";
 import EditSubdivision from "./Actions/EditSubdivision.vue";
 import { useRouter } from "vue-router";
 import store from "../../../../store";
-import _ from "lodash";
+import debounce  from "lodash/debounce";
 
 const router = useRouter();
 
@@ -217,7 +215,7 @@ const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchSubdivision = _.debounce(function () {
+let searchSubdivision = debounce(function () {
   store
     .dispatch("subdivision/getSearchSubdivision", {
       data: search.value,

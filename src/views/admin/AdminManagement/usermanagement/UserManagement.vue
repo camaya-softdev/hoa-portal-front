@@ -207,11 +207,9 @@ import { ref, computed } from "vue";
 import AddModal from "./Actions/AddModal.vue";
 import EditModal from "./Actions/EditModal.vue";
 import ResetPassword from "./Actions/ResetPassword.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import { Edit, Delete, Lollipop, Lock, Unlock } from "@element-plus/icons-vue";
 import store from "../../../../store";
-import _ from "lodash";
+import { debounce } from "lodash";
 
 let addDialog = ref(false);
 let editDialog = ref(false);
@@ -272,14 +270,14 @@ const tableRowClassName = ({ row, rowIndex }) => {
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchUser = _.debounce(function () {
+let searchUser = debounce(function () {
   store
     .dispatch("user/getSearchUsers", { data: search.value, url: null })
     .then(() => (tableData = computed(() => store.state.user.users)))
     .catch((err) => console.log(err));
 }, 1000);
 
-let searchShowUser = _.debounce(function (user) {
+let searchShowUser = debounce(function (user) {
   store
     .dispatch("user/getSearchShowUsers", user)
     .then(() => (userEmail.value = computed(() => store.state.user.userEmail.data)))

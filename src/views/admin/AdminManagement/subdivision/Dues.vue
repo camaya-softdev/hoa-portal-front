@@ -109,8 +109,7 @@
 import { ref, computed } from "vue";
 import AddFees from "./Actions/AddFees.vue";
 import EditFees from "./Actions/EditFees.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import { Edit, Delete, Lock, Unlock } from "@element-plus/icons-vue";
+import { Lock, Unlock } from "@element-plus/icons-vue";
 import store from "../../../../store";
 import { useRoute } from "vue-router";
 
@@ -154,7 +153,7 @@ store.dispatch("dues/getShowSchedule");
 store.dispatch("dues/getShowUnits");
 const showSchedule = computed(() => store.state.dues.duesSchedule.data);
 const unitData = computed(() => store.state.dues.duesUnits.data);
-console.log(unitData);
+
 const tableData = computed(() => store.state.dues.due);
 const duesLoading = computed(() => store.state.dues.due.loading);
 

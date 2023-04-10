@@ -217,7 +217,6 @@ import { computed, ref } from "vue";
 import { Edit } from "@element-plus/icons-vue";
 import EditForVerification from "./actions/EditForVerification.vue";
 import ShowFiles from "./actions/ShowFiles.vue";
-import Pagination from "../../../../components/Pagination.vue";
 
 store.dispatch("forVerification/getForVerifications");
 

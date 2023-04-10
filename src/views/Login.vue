@@ -97,10 +97,12 @@
           <div class="mb-5 pb-10">
             <button
               type="submit"
+              :disabled="buttonLoading"
               class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+              :loading="buttonLoading"
+              >
               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                <LockClosedIcon
+                <LockClosedIcon 
                   class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
                   aria-hidden="true"
                 />
@@ -117,10 +119,12 @@
 <script setup>
 import { LockClosedIcon } from "@heroicons/vue/solid";
 import store from "../store";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import { ref } from "vue";
 
-const router = useRouter();
+// const router = useRouter();
+
+let buttonLoading = ref(false);
 const user = {
   email: "",
   password: "",
@@ -131,26 +135,19 @@ let errorMsg = ref("");
 
 function login(ev) {
   ev.preventDefault();
+  buttonLoading.value = true
   store
     .dispatch("auth/login", user)
     .then(() => {
       if (user.admin) {
         return (window.location.href = "/dashboard");
       }
-      // router.push('/');
       window.location.href = '/';
-      // if (
-      //   parseInt(store.state.auth.user.hoa_admin) === 0 &&
-      //   parseInt(store.state.auth.user.hoa_member) === 1
-      // ) {
-      //   return (window.location.href = "/pick-a-lot");
-      //   // router.push({name:'PickLot'});
-      // }
-      // // console.log(parseInt(store.state.auth.user.hoa_member) === 1)
-      // // window.location.href = "/dashboard";
+      buttonLoading.value = false
     })
     .catch((err) => {
       errorMsg.value = err.response.data.error || err.response.data.message;
+      buttonLoading.value = false
     });
 }
 </script>

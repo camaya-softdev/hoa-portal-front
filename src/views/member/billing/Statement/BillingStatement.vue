@@ -29,7 +29,6 @@
 <script lang="ts" setup>
 import Statement from "../Statement.vue";
 import { ElMessageBox } from "element-plus";
-import store from "../../../../store";
 import router from "../../../../router";
 
 const props = defineProps<{

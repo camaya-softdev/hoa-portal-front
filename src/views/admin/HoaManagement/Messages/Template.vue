@@ -111,9 +111,6 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
-import RichTextEditor from "../../../../components/RichTextEditor.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddMessageTemplate from "./Actions/AddMessageTemplate.vue";
 import EditMessageTemplate from "./Actions/EditMessageTemplate.vue";

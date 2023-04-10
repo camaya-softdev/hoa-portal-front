@@ -21,6 +21,7 @@ export default {
   },
   actions: {
     addMember({}, member) {
+  
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/member/", member)

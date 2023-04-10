@@ -208,22 +208,19 @@
 </template>
 
 <script lang="ts" setup>
-import { PaperClipIcon } from "@heroicons/vue/solid";
-import Table from "../../../components/Table.vue";
-import { computed, watch } from "vue";
+
+import { computed,ref } from "vue";
 import store from "../../../store";
-import member from "../../../store/modules/admin/member";
 
 const props = defineProps<{
   statementID: Number;
 }>();
-let billingData = "";
+let billingData = ref('');
+console.log(props.statementID)
 if (props.statementID !== 0) {
-  console.log(props.statementID);
   store.dispatch("billing/getBillings", props.statementID);
   billingData = computed(() => store.state.billing.billings.data);
 }
 
-// watch(()=>)
 const billingLoading = computed(() => store.state.billing.billings.loading);
 </script>

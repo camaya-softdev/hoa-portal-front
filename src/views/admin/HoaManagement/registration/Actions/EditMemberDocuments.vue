@@ -257,7 +257,8 @@ watch(
 );
 
 const updateImageList = (file) => {
-  if (file.size > 2) {
+  console.log(file)
+  if (file.size > 1024 ** 2) {
     return store.commit("alert/notify", {
       title: "Error",
       type: "error",

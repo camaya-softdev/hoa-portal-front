@@ -151,7 +151,56 @@
                     {{ errorMsg["hoa_member_phone_num"][0] }}
                   </span>
                 </div>
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="middle-name" class="block text-sm font-medium text-gray-700"
+                    >Birthday <span class="text-red-300">*</span></label
+                  >
+                  <input
+                    type="date"
+                    name="birthday"
+                    id="birthday"
+                    v-model="form.birthday"
+                    :class="
+                      errorMsg['birthday'] ? 'border-red-300' : 'border-gray-300'
+                    "
+                    autocomplete="middle-name"
+                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  />
+                  <span
+                    v-if="errorMsg['birthday']"
+                    class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+                  >
+                    {{ errorMsg["birthday"][0] }}
+                  </span>
+                </div>
 
+                <div class="col-span-6 sm:col-span-3">
+                  <label
+                    for="contact-number"
+                    class="block text-sm font-medium text-gray-700"
+                    >Age <span class="text-red-300">*</span></label
+                  >
+                  <input
+                    type="number"
+                    name="age"
+                    id="age"
+                    v-model="form.age"
+                    :class="
+                      errorMsg['age']
+                        ? 'border-red-300'
+                        : 'border-gray-300'
+                    "
+                    autocomplete="contact-number"
+                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  />
+                  <span
+                    v-if="errorMsg['age']"
+                    class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+                  >
+                    {{ errorMsg["age"][0] }}
+                  </span>
+                </div>
+                
                 <div class="col-span-6 sm:col-span-6">
                   <label for="subdivision" class="block text-sm font-medium text-gray-700"
                     >Subdivision</label
@@ -300,6 +349,8 @@ let form = ref({
   hoa_subd_lot_block: "",
   hoa_subd_lot_num: "",
   hoa_subd_lot_area: "",
+  birthday:"",
+  age:""
 });
 watch(
   () => store.state.information.information.data,

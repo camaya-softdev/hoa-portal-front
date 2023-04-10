@@ -4,7 +4,6 @@ import Login from "../views/Login.vue";
 import ResetPassword from "../views/ResetPassword.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import MemberLayout from "../components/MemberLayout.vue";
-import Profile from "../views/member/profile/Profile.vue";
 
 const routes = [
   {
@@ -38,6 +37,14 @@ const routes = [
         component: () =>
           import(
             "../views/admin/HoaManagement/registration/MemberRegistration.vue"
+          ),
+      },
+      {
+        path: "/member-designee/:user_id",
+        name: "MemberDesignee",
+        component: () =>
+          import(
+            "../views/admin/HoaManagement/registration/MemberDesignee.vue"
           ),
       },
       {
@@ -122,12 +129,6 @@ const routes = [
           import("../views/admin/HoaManagement/Messages/Communication.vue"),
       },
       {
-        path: "/create-template-template",
-        name: "MessageTemplate",
-        component: () =>
-          import("../views/admin/HoaManagement/Messages/Template.vue"),
-      },
-      {
         path: "/autogate",
         name: "Autogate",
         component: () =>
@@ -146,14 +147,6 @@ const routes = [
         component: () =>
           import(
             "../views/admin/HoaManagement/background_image/BackgroundImage.vue"
-          ),
-      },
-      {
-        path: "/autogate-template-message/:id",
-        name: "TemplateMessage",
-        component: () =>
-          import(
-            "../views/admin/HoaManagement/template_message/TemplateMessage.vue"
           ),
       },
       {

@@ -104,7 +104,6 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddDirectors from "./Actions/AddDirectors.vue";
 import EditDirectors from "./Actions/EditDirectors.vue";

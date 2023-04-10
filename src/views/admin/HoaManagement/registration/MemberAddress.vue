@@ -100,13 +100,10 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddMemberAddress from "./Actions/AddMemberAddress.vue";
 import EditMemberAddress from "./Actions/EditMemberAddress.vue";
 import store from "../../../../store";
-import _ from "lodash";
-
 import { useRoute } from "vue-router";
 
 let addProperty = ref(false);

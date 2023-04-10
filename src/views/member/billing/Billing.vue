@@ -160,7 +160,6 @@
 </template>
 
 <script setup>
-import Table from "../../../components/Table.vue";
 import BillingStatement from "./Statement/BillingStatement.vue";
 import store from "../../../store";
 import { computed, ref } from "vue";

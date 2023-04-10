@@ -43,11 +43,20 @@
             />
           </template>
           <template #default="scope">
-            <el-popover placement="top-start" title="Action" :width="200" trigger="hover">
+            <el-popover
+              placement="top-start"
+              title="Action"
+              :width="200"
+              trigger="hover"
+            >
               <template #reference>
                 <el-button round>...</el-button>
               </template>
-              <el-tooltip content="Edit Sales Agent" placement="bottom" effect="light">
+              <el-tooltip
+                content="Edit Sales Agent"
+                placement="bottom"
+                effect="light"
+              >
                 <el-button
                   size="small"
                   type="success"
@@ -81,7 +90,11 @@
                   @click="changeStatus(scope.$index, scope.row)"
                 ></el-button
               ></el-tooltip>
-              <el-tooltip content="Delete Sales Agent" placement="bottom" effect="light">
+              <el-tooltip
+                content="Delete Sales Agent"
+                placement="bottom"
+                effect="light"
+              >
                 <el-button
                   size="small"
                   type="danger"
@@ -93,7 +106,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :tableData="tableData" @getForPage="getForPage"></Pagination>
+      <pagination :tableData="tableData" @getForPage="getForPage" />
     </template>
   </page-component>
   <add-agent :add-agent="addAgent" @close-modal="addAgent = false"></add-agent>
@@ -109,11 +122,9 @@
 import { ref, computed } from "vue";
 import AddAgent from "./Actions/AddAgent.vue";
 import EditAgent from "./Actions/EditAgent.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
 import { Edit, Delete, Lock, Unlock } from "@element-plus/icons-vue";
 import store from "../../../../store";
-import _ from "lodash";
-import Pagination from "../../../../components/Pagination.vue";
+import { debounce } from "lodash";
 
 let addAgent = ref(false);
 let editAgent = ref(false);
@@ -148,12 +159,12 @@ let tableData = computed(() => store.state.agent.agent);
 const search = ref("");
 const filterTableData = computed(() => tableData.value.data);
 
-let searchAgent = _.debounce(function () {
+let searchAgent = debounce(function(){
   store
     .dispatch("agent/getSearchAgents", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.agent.agent)))
-    .catch((err) => console.log(err));
-}, 1000);
+    .catch((err) => alert(err));
+},1000)
 
 const tableRowClassName = ({ row, rowIndex }) => {
   //change table row to  red if the agent is disable
@@ -167,7 +178,7 @@ const editId = ref(0);
 
 function editModal(index, row) {
   editId.value = row.id;
-  console.log(editId.value);
+
   editAgent.value = true;
 }
 
@@ -190,7 +201,11 @@ async function changeStatus(index, row) {
 }
 
 async function deleteAgent(index, row) {
-  if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
+  if (
+    confirm(
+      `Are you sure you want to delete this data? Operation can't be undone`
+    )
+  ) {
     try {
       const res = await store.dispatch("agent/deleteAgent", row.id);
       if (res.status === 204) {
@@ -218,12 +233,12 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
-    if(link.label == 'Next &raquo;'){
+    if (link.label == "Next &raquo;") {
       await store.dispatch("agent/getAgents", { url: Number(1 + label) });
       label++;
       return;
     }
-    if(link.label == '&laquo; Previous'){
+    if (link.label == "&laquo; Previous") {
       await store.dispatch("agent/getAgents", { url: Number(label - 1) });
       label--;
       return;

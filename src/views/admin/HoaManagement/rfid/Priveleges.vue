@@ -98,14 +98,12 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
-import { Edit, Delete } from "@element-plus/icons-vue";
+import { Delete } from "@element-plus/icons-vue";
 import AddPrivilege from "./Actions/AddPrivilege.vue";
 import AddLoad from "./Actions/AddLoad.vue";
 import { useRoute } from "vue-router";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const addPrivilege = ref(false);
 let addLoad = ref(false);
@@ -173,7 +171,7 @@ function loadAmount(load) {
   totalLoad = parseInt(totalLoad) - parseInt(load);
   console.log(totalLoad);
 }
-let searchTransaction = _.debounce(function () {
+let searchTransaction = debounce(function () {
   store
     .dispatch("payment_transaction/getSearchPaymentTransactions", {
       id: cardID,

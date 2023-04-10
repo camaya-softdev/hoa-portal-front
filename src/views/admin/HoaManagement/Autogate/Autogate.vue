@@ -124,8 +124,6 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import AddAutogate from "./Actions/AddAutogate.vue";
 import EditAutogate from "./Actions/EditAutogate.vue";

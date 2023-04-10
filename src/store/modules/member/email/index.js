@@ -29,7 +29,7 @@ export default {
   actions: {
     addEmail({}, email) {
       return axiosClient
-        .post("/api/admin/email/", email)
+        .post("/api/admin/email", email)
         .then((res) => {
           return res;
         })
@@ -39,7 +39,7 @@ export default {
     },
     editEmail({}, email) {
       return axiosClient
-        .put(`/api/admin/email/${email.id}/`, email)
+        .put(`/api/admin/email/${email.id}`, email)
         .then((res) => {
           return res;
         })

@@ -150,14 +150,12 @@
 </template>
 <script setup>
 import { ref, computed } from "vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
-import { Edit, Delete,View } from "@element-plus/icons-vue";
+import { Edit,View } from "@element-plus/icons-vue";
 import AddAutogateTemplate from "./Actions/AddAutogateTemplate.vue";
 import EditAutogateTemplate from "./Actions/EditAutogateTemplate.vue";
 import Welcome from "./Preview/Kiosk/Welcome.vue";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -175,14 +173,14 @@ const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchTemplate = _.debounce(function () {
+let searchTemplate = debounce(function () {
   store
     .dispatch("template/getSearchTemplates", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.template.template)))
     .catch((err) => console.log(err));
 }, 1000);
 
-let searchBackground = _.debounce(function (background) {
+let searchBackground = debounce(function (background) {
   store
     .dispatch("background_image/getSearchBackgroundImages", {
       data: background,

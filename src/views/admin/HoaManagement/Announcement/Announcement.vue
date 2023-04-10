@@ -121,13 +121,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { Edit, Delete, Document } from "@element-plus/icons-vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import AddAnnouncement from "./Actions/AddAnnouncement.vue";
 import { useRouter } from "vue-router";
 import EditAnnouncement from "./Actions/EditAnnouncement.vue";
 import store from "../../../../store";
-import _ from "lodash";
+import {debounce} from "lodash";
 
 const router = useRouter();
 let addAnnouncement = ref(false);
@@ -145,7 +143,7 @@ const search = ref("");
 
 const filterTableData = computed(() => tableData.value.data);
 
-let searchAnnouncement = _.debounce(function () {
+let searchAnnouncement = debounce(function () {
   store
     .dispatch("announcement/getSearchAnnouncements", {
       data: search.value,

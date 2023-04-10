@@ -3,7 +3,7 @@
     v-model="changePassword"
     title="Change Password"
     width="30%"
-    
+    :before-close="handleClose"
     custom-class="border-2 border-gray-600 opacity-100"
     center
   >

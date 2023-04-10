@@ -174,7 +174,7 @@ const route = useRoute();
 const router = useRouter();
 const documentEmail = route.params.documentEmail;
 const updateImageList = (file) => {
-  if (file.size > 2) {
+  if (file.size > 1024 ** 2) {
     return store.commit("alert/notify", {
       title: "Error",
       type: "error",

@@ -119,11 +119,9 @@
 import { ref, computed } from "vue";
 import AddPrivilege from "./Actions/AddPrivilege.vue";
 import EditPrivilege from "./Actions/EditPrivilege.vue";
-import PageComponent from "../../../../components/PageComponent.vue";
-import Pagination from "../../../../components/Pagination.vue";
 import { Edit, Delete, Lock, Unlock } from "@element-plus/icons-vue";
 import store from "../../../../store";
-import _ from "lodash";
+import { debounce } from "lodash";
 
 let addPrivilege = ref(false);
 let editPrivilege = ref(false);
@@ -154,7 +152,7 @@ let tableData = computed(() => store.state.privilege.privilege);
 const search = ref("");
 const filterTableData = computed(() => tableData.value.data);
 
-let searchPrivilege = _.debounce(function () {
+let searchPrivilege = debounce(function () {
   store
     .dispatch("privilege/getSearchPrivileges", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.privilege.privilege)))
