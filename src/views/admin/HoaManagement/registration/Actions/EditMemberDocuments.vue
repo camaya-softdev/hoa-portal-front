@@ -205,7 +205,7 @@
         <router-link
           :to="{
             name: 'MemberDocuments',
-            params: { id: route.params.userId, email: documentEmail },
+            params: { id: route.params.userId, documentEmail: documentEmail },
           }"
           class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
@@ -310,7 +310,7 @@ async function handleSubmit() {
       });
       await router.push({
         name: "MemberDocuments",
-        params: { id: route.params.userId, email: documentEmail },
+        params: { id: route.params.userId, documentEmail: documentEmail },
       });
     } else {
       if (res.response.data.errors) {

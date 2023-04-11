@@ -312,7 +312,7 @@ function property(row) {
 function documents(row) {
   router.push({
     name: "MemberDocuments",
-    params: { id: row.id, email: row.email },
+    params: { id: row.id, documentEmail: row.email },
   });
 }
 function paymentHistory(row) {

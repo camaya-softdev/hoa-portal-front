@@ -141,7 +141,7 @@
         <router-link
           :to="{
             name: 'MemberDocuments',
-            params: { id: route.params.userId, email: documentEmail },
+            params: { id: route.params.userId, documentEmail: documentEmail },
           }"
           class="inline-flex mr-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm rounded-md text-white bg-indigo-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
@@ -174,7 +174,8 @@ const route = useRoute();
 const router = useRouter();
 const documentEmail = route.params.documentEmail;
 const updateImageList = (file) => {
-  if (file.size > 1024 ** 2) {
+  const fileMb = file.size / 1024 ** 2;
+  if (fileMb >  2) {
     return store.commit("alert/notify", {
       title: "Error",
       type: "error",
@@ -187,6 +188,7 @@ const updateImageList = (file) => {
   reader.onload = () => {
     form.value.filenames.push(reader.result);
   };
+  console.log(form.value.filenames);
   reader.readAsDataURL(rawFile);
 };
 
@@ -202,7 +204,7 @@ async function handleSubmit() {
       });
       await router.push({
         name: "MemberDocuments",
-        params: { id: route.params.userId, email: documentEmail },
+        params: { id: route.params.userId, documentEmail: documentEmail },
       });
     } else if (res.status === 413) {
       await store.commit("alert/notify", {

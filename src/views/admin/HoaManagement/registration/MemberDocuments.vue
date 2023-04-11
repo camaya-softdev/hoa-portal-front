@@ -101,7 +101,7 @@ import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-const documentEmail = route.params.email;
+const documentEmail = route.params.documentEmail;
 
 store.dispatch("document/getDocuments", route.params.id);
 
