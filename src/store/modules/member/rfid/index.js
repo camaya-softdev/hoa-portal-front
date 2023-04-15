@@ -22,7 +22,7 @@ export default {
   },
 
   actions: {
-    addRFID({}, rfid) {
+    addRFID({commit}, rfid) {
       return axiosClient
         .post("/api/admin/rfid/",rfid)
         .then((res) => {
@@ -33,7 +33,7 @@ export default {
           return err;
         });
     },
-    editRFID({}, rfid) {
+    editRFID({commit}, rfid) {
       return axiosClient
         .put(`/api/admin/rfid/${rfid.id}/`, rfid)
         .then((res) => {

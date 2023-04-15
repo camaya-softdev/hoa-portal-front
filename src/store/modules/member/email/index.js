@@ -27,7 +27,7 @@ export default {
   },
 
   actions: {
-    addEmail({}, email) {
+    addEmail({commit}, email) {
       return axiosClient
         .post("/api/admin/email", email)
         .then((res) => {
@@ -38,7 +38,7 @@ export default {
           return err;
         });
     },
-    editEmail({}, email) {
+    editEmail({commit}, email) {
       return axiosClient
         .put(`/api/admin/email/${email.id}`, email)
         .then((res) => {

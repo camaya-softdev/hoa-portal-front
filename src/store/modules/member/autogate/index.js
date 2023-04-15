@@ -23,7 +23,7 @@ export default {
   },
 
   actions: {
-    addAutogate({}, autogate) {
+    addAutogate({commit}, autogate) {
       return axiosClient
         .post("/api/admin/autogate/", autogate)
         .then((res) => {
@@ -34,7 +34,7 @@ export default {
           return err;
         });
     },
-    editAutogate({}, autogate) {
+    editAutogate({commit}, autogate) {
       return axiosClient
         .put(`/api/admin/autogate/${autogate.id}/`, autogate)
         .then((res) => {

@@ -19,7 +19,7 @@ export default {
   },
 
   actions: {
-    addDirector({}, director) {
+    addDirector({commit}, director) {
       delete director.image_url;
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
@@ -32,7 +32,7 @@ export default {
           return err;
         });
     },
-    editDirector({}, director) {
+    editDirector({commit}, director) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .put(`/api/admin/directors/${director.id}/`, director)

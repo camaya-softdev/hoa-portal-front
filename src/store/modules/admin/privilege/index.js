@@ -16,7 +16,7 @@ export default {
   },
 
   actions: {
-    addPrivilege({}, privilege) {
+    addPrivilege({commit}, privilege) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/privilege/", privilege)
@@ -25,10 +25,11 @@ export default {
           return res;
         })
         .catch((err) => {
+      
           return err;
         });
     },
-    editPrivilege({}, privilege) {
+    editPrivilege({commit}, privilege) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .put(`/api/admin/privilege/${privilege.id}/`, privilege)

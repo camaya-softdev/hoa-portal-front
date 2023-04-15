@@ -21,7 +21,7 @@ export default {
   },
 
   actions: {
-    addAnnouncement({}, announcement) {
+    addAnnouncement({commit}, announcement) {
       return axiosClient
         .post("/api/admin/announcement/",announcement)
         .then((res) => {
@@ -32,7 +32,7 @@ export default {
           return err;
         });
     },
-    editAnnouncement({}, announcement) {
+    editAnnouncement({commit}, announcement) {
       return axiosClient
         .put(`/api/admin/announcement/${announcement.id}/`, announcement)
         .then((res) => {

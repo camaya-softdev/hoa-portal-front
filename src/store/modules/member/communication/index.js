@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    addCommunication({}, communication) {
+    addCommunication({commit}, communication) {
       return axiosClient
         .post("/api/admin/communication/",communication)
         .then((res) => {
@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editCommunication({}, communication) {
+    editCommunication({commit}, communication) {
       return axiosClient
         .put(`/api/admin/communication/${communication.id}/`, communication)
         .then((res) => {

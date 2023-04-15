@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    addTemplate({}, template) {
+    addTemplate({commit}, template) {
       return axiosClient
         .post("/api/admin/template/",template)
         .then((res) => {
@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editTemplate({}, template) {
+    editTemplate({commit}, template) {
       return axiosClient
         .put(`/api/admin/template/${template.id}/`, template)
         .then((res) => {

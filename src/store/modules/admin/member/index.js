@@ -35,6 +35,7 @@ export default {
       return axiosClient
         .put(`/api/admin/member/${member.id}/`, member)
         .then((res) => {
+
           commit("setEditMember",res.data)
           return res;
         })
@@ -94,6 +95,7 @@ export default {
     },
     setEditMember:(state,memberData)=>{
       let members =state.members.data 
+      
       const update_obj = members.findIndex((obj=>obj.id == memberData.data.id))
       members[update_obj] = {...memberData.data}
     },

@@ -28,7 +28,7 @@ export default {
   },
 
   actions: {
-    addDue({}, due) {
+    addDue({commit}, due) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/due/",due)
@@ -40,7 +40,7 @@ export default {
           return err;
         });
     },
-    editDue({}, due) {
+    editDue({commit}, due) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .put(`/api/admin/due/${due.id}/`, due)

@@ -24,7 +24,7 @@ export default {
   },
 
   actions: {
-    addUser({}, user) {
+    addUser({commit}, user) {
       return axiosClient
         .put(`/api/admin/user/add/user/${user.id}/`, user)
         .then((res) => {
@@ -35,7 +35,7 @@ export default {
           return err;
         });
     },
-    editUser({}, user) {
+    editUser({commit}, user) {
       return axiosClient
         .put(`/api/admin/user/${user.id}/`, user)
         .then((res) => {

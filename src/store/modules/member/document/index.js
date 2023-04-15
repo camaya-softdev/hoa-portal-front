@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    addDocument({}, document) {
+    addDocument({commit}, document) {
       return axiosClient
         .post("/api/admin/document/",document)
         .then((res) => {
@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editDocument({}, document) {
+    editDocument({commit}, document) {
       return axiosClient
         .put(`/api/admin/document/${document.id}/`, document)
         .then((res) => {

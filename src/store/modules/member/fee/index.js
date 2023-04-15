@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    addFee({}, fee) {
+    addFee({commit}, fee) {
       return axiosClient
         .post("/api/admin/fee/",fee)
         .then((res) => {
@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editFee({}, fee) {
+    editFee({commit}, fee) {
       return axiosClient
         .put(`/api/admin/fee/${fee.id}/`, fee)
         .then((res) => {

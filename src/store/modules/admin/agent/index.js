@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editAgent({}, agent) {
+    editAgent({commit}, agent) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .put(`/api/admin/agent/${agent.id}/`, agent)

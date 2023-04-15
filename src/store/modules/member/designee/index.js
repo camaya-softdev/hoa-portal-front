@@ -17,7 +17,7 @@ export default {
   },
 
   actions: {
-    addDesignee({}, designee) {
+    addDesignee({commit}, designee) {
       return axiosClient
         .post("/api/admin/member/designee/",designee)
         .then((res) => {
@@ -28,7 +28,7 @@ export default {
           return err;
         });
     },
-    editDesignee({}, designee) {
+    editDesignee({commit}, designee) {
       return axiosClient
         .put(`/api/admin/member/designee/${designee.id}/`, designee)
         .then((res) => {

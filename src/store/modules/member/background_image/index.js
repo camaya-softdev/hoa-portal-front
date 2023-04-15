@@ -15,7 +15,7 @@ export default {
   },
 
   actions: {
-    addBackgroundImage({}, backgroundImage) {
+    addBackgroundImage({commit}, backgroundImage) {
       return axiosClient
         .post("/api/admin/background-image/", backgroundImage)
         .then((res) => {
@@ -26,7 +26,7 @@ export default {
           return err;
         });
     },
-    editBackgroundImage({}, backgroundImage) {
+    editBackgroundImage({commit}, backgroundImage) {
       return axiosClient
         .put(
           `/api/admin/background-image/${backgroundImage.id}/`,

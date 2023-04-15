@@ -16,7 +16,7 @@ export default {
   },
 
   actions: {
-    editPaymentHistory({}, payment) {
+    editPaymentHistory({commit}, payment) {
       return axiosClient
         .put(`/api/admin/payment/transaction/${payment.id}/`, payment)
         .then((res) => {

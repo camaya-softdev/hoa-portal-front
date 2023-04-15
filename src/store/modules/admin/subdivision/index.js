@@ -20,7 +20,7 @@ export default {
   },
 
   actions: {
-    addSubdivision({}, subdivision) {
+    addSubdivision({commit}, subdivision) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/subdivision/", subdivision)
@@ -32,7 +32,7 @@ export default {
           return err;
         });
     },
-    editSubdivision({}, subdivision) {
+    editSubdivision({commit}, subdivision) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .put(`/api/admin/subdivision/${subdivision.id}/`, subdivision)
@@ -108,11 +108,12 @@ export default {
   },
   mutations: {
     setAddSubdivision:(state,subdivisionData)=>{
-      state.subdivision.data.push(subdivisionData);
+      state.subdivision.data.push(subdivisionData.data);
     },
     setEditSubdivision:(state,subdivisionData)=>{
       let subdivisions = state.subdivision.data
       const update_obj = subdivisions.findIndex((obj=>obj.id == subdivisionData.data.id))
+
       subdivisions[update_obj] = {...subdivisionData.data}
     },
     setCurrentSubdivision: (state, subdivisionData) => {

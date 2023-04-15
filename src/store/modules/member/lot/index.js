@@ -24,7 +24,7 @@ export default {
   },
 
   actions: {
-    addLot({}, lot) {
+    addLot({commit}, lot) {
       return axiosClient
         .post("/api/admin/lot/",lot)
         .then((res) => {
@@ -34,7 +34,7 @@ export default {
           return err;
         });
     },
-    editLot({}, lot) {
+    editLot({commit}, lot) {
       return axiosClient
         .put(`/api/admin/lot/${lot.id}/`, lot)
         .then((res) => {
