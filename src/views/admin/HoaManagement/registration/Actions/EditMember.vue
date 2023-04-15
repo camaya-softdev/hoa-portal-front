@@ -196,7 +196,6 @@ async function updateMember(ev) {
     ev.preventDefault();
     const res = await store.dispatch("member/updateMember", form.value);
     if (res.status == 200) {
-      await store.dispatch("member/getMembers");
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

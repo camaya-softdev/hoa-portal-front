@@ -25,6 +25,7 @@ export default {
       return axiosClient
         .post("/api/admin/subdivision/", subdivision)
         .then((res) => {
+          commit("setAddSubdivision",res.data)
           return res;
         })
         .catch((err) => {
@@ -36,6 +37,7 @@ export default {
       return axiosClient
         .put(`/api/admin/subdivision/${subdivision.id}/`, subdivision)
         .then((res) => {
+          commit("setEditSubdivision",res.data)
           return res;
         })
         .catch((err) => {
@@ -105,6 +107,14 @@ export default {
     },
   },
   mutations: {
+    setAddSubdivision:(state,subdivisionData)=>{
+      state.subdivision.data.push(subdivisionData);
+    },
+    setEditSubdivision:(state,subdivisionData)=>{
+      let subdivisions = state.subdivision.data
+      const update_obj = subdivisions.findIndex((obj=>obj.id == subdivisionData.data.id))
+      subdivisions[update_obj] = {...subdivisionData.data}
+    },
     setCurrentSubdivision: (state, subdivisionData) => {
       state.currentSubdivision.data = subdivisionData;
     },

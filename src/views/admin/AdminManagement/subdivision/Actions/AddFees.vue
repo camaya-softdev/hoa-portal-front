@@ -213,7 +213,6 @@ async function handleSubmit() {
     // const data = props.showSchedule.find(i=>i.id === form.value.schedule_id)
     const res = await store.dispatch("dues/addDue", form.value);
     if (res.status == 201) {
-      await store.dispatch("dues/getDues", props.dueId);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

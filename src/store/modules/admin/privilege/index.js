@@ -21,6 +21,7 @@ export default {
       return axiosClient
         .post("/api/admin/privilege/", privilege)
         .then((res) => {
+          commit("setAddPrivilege",res.data)
           return res;
         })
         .catch((err) => {
@@ -32,6 +33,7 @@ export default {
       return axiosClient
         .put(`/api/admin/privilege/${privilege.id}/`, privilege)
         .then((res) => {
+          commit("setEditPrivilege",res.data)
           return res;
         })
         .catch((err) => {
@@ -89,6 +91,14 @@ export default {
     },
   },
   mutations: {
+    setAddPrivilege:(state,privilegeData)=>{
+      state.privilege.data.push(privilegeData.data);
+    },
+    setEditPrivilege:(state,privilegeData)=>{
+      let privileges = state.privilege.data;
+      const update_obj = privileges.findIndex((obj=>obj.id == privilegeData.data.id));
+      privileges[update_obj] = {...privilegeData.data}
+    },
     setCurrentPrivilege: (state, privilegeData) => {
       state.currentPrivilege.data = privilegeData;
     },

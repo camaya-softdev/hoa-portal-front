@@ -25,6 +25,7 @@ export default {
       return axiosClient
         .post("/api/admin/announcement/",announcement)
         .then((res) => {
+          commit("setAddAnnouncement",res.data)
           return res;
         })
         .catch((err) => {
@@ -35,6 +36,7 @@ export default {
       return axiosClient
         .put(`/api/admin/announcement/${announcement.id}/`, announcement)
         .then((res) => {
+          commit("setEditAnnouncement",res.data)
           return res;
         })
         .catch((err) => {
@@ -102,6 +104,14 @@ export default {
     },
   },
   mutations: {
+    setAddAnnouncement:(state,announcementData)=>{
+      state.announcement.data.push(announcementData.data)
+    },
+    setEditAnnouncement:(state,announcementData)=>{
+      let announcements = state.announcement.data;
+      const update_obj = announcements.findIndex((obj=>obj.id == announcementData.data.id))
+      announcements[update_obj] = {...announcementData.data}
+    },
     setCurrentAnnouncement: (state, announcementData) => {
       state.currentAnnouncement.data = announcementData;
     },

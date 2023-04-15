@@ -189,7 +189,6 @@ async function handleSubmit() {
   const res = await store.dispatch("fee/editFee", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("fee/getFees", props.lotId);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

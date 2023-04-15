@@ -154,7 +154,6 @@ async function handleSubmit() {
   const res = await store.dispatch("adminMemberDesignee/editDesignee", form.value);
   try {
     if (res.status === 200) {
-      await store.dispatch("adminMemberDesignee/getDesignees", route.params.user_id);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

@@ -183,7 +183,6 @@ import { computed, ref, watch } from "vue";
 import { ElMessageBox } from "element-plus";
 import store from "../../../../../store";
 
-const fileList = ref([{ name: "", url: "" }]);
 const props = defineProps<{
   editAnnouncement: Boolean;
   editId: Number;
@@ -248,7 +247,6 @@ async function handleSubmit() {
   const res = await store.dispatch("announcement/editAnnouncement", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("announcement/getAnnouncements");
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

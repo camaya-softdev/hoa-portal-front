@@ -19,6 +19,7 @@ export default {
       return axiosClient
         .post("/api/admin/background-image/", backgroundImage)
         .then((res) => {
+          commit("setAddBackgroundImage",res.data)
           return res;
         })
         .catch((err) => {
@@ -32,6 +33,7 @@ export default {
           backgroundImage
         )
         .then((res) => {
+          commit("setEditBackgroundImage",res.data)
           return res;
         })
         .catch((err) => {
@@ -78,6 +80,14 @@ export default {
     },
   },
   mutations: {
+    setAddBackgroundImage:(state,backgroundImageData)=>{
+      state.backgroundImage.data.push(backgroundImageData.data);
+    },
+    setEditBackgroundImage:(state,backgroundImageData)=>{
+      let background_image = state.backgroundImage.data;
+      const update_obj = background_image.findIndex((obj=>obj.id == backgroundImageData.data.id));
+      background_image[update_obj] = {...backgroundImageData.data}
+    },
     setCurrentBackgroundImage: (state, backgroundImageData) => {
       state.currentBackgroundImage.data = backgroundImageData;
     },

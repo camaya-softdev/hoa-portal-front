@@ -21,6 +21,7 @@ export default {
       return axiosClient
         .post("/api/admin/template/",template)
         .then((res) => {
+          commit("setAddTemplate",res.data)
           return res;
         })
         .catch((err) => {
@@ -31,6 +32,7 @@ export default {
       return axiosClient
         .put(`/api/admin/template/${template.id}/`, template)
         .then((res) => {
+          commit("setEditTemplate",res.data)
           return res;
         })
         .catch((err) => {
@@ -76,6 +78,14 @@ export default {
     },
   },
   mutations: {
+    setAddTemplate:(state,templateData)=>{
+      state.template.data.push(templateData);
+    },
+    setEditTemplate:(state,templateData)=>{
+      let templates = state.template.data
+      const update_obj = templates.findIndex((obj=>obj.id==templateData.data.id));
+      templates[update_obj]={...templateData.data}
+    },
     setCurrentTemplate: (state, templateData) => {
       state.currentTemplate.data = templateData;
     },

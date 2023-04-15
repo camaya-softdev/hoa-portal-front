@@ -157,10 +157,6 @@ async function handleSubmit() {
   try {
     const res = await store.dispatch("paymentHistory/editPaymentHistory", form.value);
     if (res.status == 200) {
-      await store.dispatch("paymentHistory/getPaymentHistories", {
-        id: route.params.id,
-        url: 1,
-      });
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

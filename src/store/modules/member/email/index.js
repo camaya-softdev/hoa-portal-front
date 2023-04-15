@@ -31,6 +31,7 @@ export default {
       return axiosClient
         .post("/api/admin/email", email)
         .then((res) => {
+          commit("setAddEmail",res.data)
           return res;
         })
         .catch((err) => {
@@ -41,6 +42,7 @@ export default {
       return axiosClient
         .put(`/api/admin/email/${email.id}`, email)
         .then((res) => {
+          commit("setEditEmail",res.data)
           return res;
         })
         .catch((err) => {
@@ -91,6 +93,14 @@ export default {
     },
   },
   mutations: {
+    setAddEmail:(state,emailData)=>{
+      state.email.data = emailData.data
+    },
+    setEditEmail:(state,emailData)=>{
+      let email = state.email.data;
+      const update_obj = email.findIndex((obj=>obj.id == emailData.data));
+      email[update_obj] = {...emailData.data}
+    },
     setCurrentEmail: (state, emailData) => {
       state.currentEmail.data = emailData;
     },

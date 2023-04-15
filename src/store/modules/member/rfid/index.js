@@ -26,6 +26,7 @@ export default {
       return axiosClient
         .post("/api/admin/rfid/",rfid)
         .then((res) => {
+          commit("setAddRFID",res.data)
           return res;
         })
         .catch((err) => {
@@ -36,6 +37,7 @@ export default {
       return axiosClient
         .put(`/api/admin/rfid/${rfid.id}/`, rfid)
         .then((res) => {
+          commit("setEditRFID",res.data)
           return res;
         })
         .catch((err) => {
@@ -110,6 +112,14 @@ export default {
     }
   },
   mutations: {
+    setAddRFID:(state,rfidData)=>{
+      state.rfid.data.push(rfidData.data);
+    },
+    setEditRFID:(state,rfidData)=>{
+      let rfid = state.rfid.data;
+      const update_obj = rfid.findIndex((obj=>obj.id==rfidData.data.id));
+      rfid[update_obj] = {...rfidData.data}
+    },
     setCurrentRFID: (state, rfidData) => {
       state.currentRFID.data = rfidData;
 

@@ -25,6 +25,7 @@ export default {
       return axiosClient
         .post("/api/admin/directors/", director)
         .then((res) => {
+          commit("setAddDirector",res.data);
           return res;
         })
         .catch((err) => {
@@ -36,6 +37,7 @@ export default {
       return axiosClient
         .put(`/api/admin/directors/${director.id}/`, director)
         .then((res) => {
+          commit("setEditDirector",res.data)
           return res;
         })
         .catch((err) => {
@@ -87,6 +89,14 @@ export default {
     },
   },
   mutations: {
+    setAddDirector:(state,directorData)=>{
+      state.director.data = directorData.data
+    },
+    setEditDirector:(state,directorData)=>{
+      let directors = state.director.data;
+      const update_obj = directors.findIndex((obj=>obj.id == directors.data.id))
+      directors[update_obj] = {...directorData.data}
+    },
     setCurrentDirector: (state, directorData) => {
       state.currentDirector.data = directorData;
     },

@@ -33,6 +33,7 @@ export default {
       return axiosClient
         .post("/api/admin/due/",due)
         .then((res) => {
+          commit("setAddDues",res.data)
           return res;
         })
         .catch((err) => {
@@ -44,6 +45,7 @@ export default {
       return axiosClient
         .put(`/api/admin/due/${due.id}/`, due)
         .then((res) => {
+          commit("setEditDue",res.data)
           return res;
         })
         .catch((err) => {
@@ -121,6 +123,14 @@ export default {
     },
   },
   mutations: {
+    setAddDues:(state,dueData)=>{
+      state.due.data.push(dueData.data)
+    },
+    setEditDue:(state,dueData)=>{
+      let dues = state.due.data;
+      const update_obj = dues.findIndex((obj=>obj.id == dueData.data.id))
+      dues[update_obj] = {...dueData.data}
+    },
     setCurrentDue: (state, dueData) => {
       state.currentDue.data = dueData;
     },

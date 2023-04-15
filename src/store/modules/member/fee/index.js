@@ -21,6 +21,7 @@ export default {
       return axiosClient
         .post("/api/admin/fee/",fee)
         .then((res) => {
+          commit("setAddFee",res.data)
           return res;
         })
         .catch((err) => {
@@ -31,6 +32,7 @@ export default {
       return axiosClient
         .put(`/api/admin/fee/${fee.id}/`, fee)
         .then((res) => {
+          commit("setEditFee",res.data)
           return res;
         })
         .catch((err) => {
@@ -79,6 +81,14 @@ export default {
     },
   },
   mutations: {
+    setAddFee:(state,feeData)=>{
+      state.fee.data.push(feeData.data);
+    },
+    setEditFee:(state,feeData)=>{
+      let fees = state.fee.data;
+      const update_obj = fess.findIndex((obj=>obj.id == feeData.data.id))
+      fess[update_obj] = {...feeData.data}
+    },
     setCurrentFee: (state, feeData) => {
       state.currentFee.data = feeData;
     },

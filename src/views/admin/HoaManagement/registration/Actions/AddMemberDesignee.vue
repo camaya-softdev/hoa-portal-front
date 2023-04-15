@@ -133,7 +133,6 @@
     const res = await store.dispatch("adminMemberDesignee/addDesignee", form.value);
     try {
       if (res.status === 200 || res.status === 201) {
-        await store.dispatch("adminMemberDesignee/getDesignees", route.params.user_id);
         await store.commit("alert/notify", {
           title: "Success",
           type: "success",

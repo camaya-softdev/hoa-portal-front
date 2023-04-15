@@ -222,7 +222,6 @@ async function handleSubmit() {
     form.value.hoa_subd_dues_billing_date = form.value.hoa_subd_dues_start_date;
     const res = await store.dispatch("dues/editDue", form.value);
     if (res.status == 200) {
-      await store.dispatch("dues/getDues", route.params.id);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

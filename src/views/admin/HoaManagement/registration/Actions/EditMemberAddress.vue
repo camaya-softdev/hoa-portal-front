@@ -281,7 +281,7 @@ const form = ref({
   hoa_subd_lot_default: false,
 });
 
-let subData = ref({});
+
 let agData = ref({});
 const errorMsg = ref("");
 

@@ -16,11 +16,12 @@ export default {
   },
 
   actions: {
-    addAgent({}, agent) {
+    addAgent({commit}, agent) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/agent/", agent)
         .then((res) => {
+          commit("setAddAgent",res.data)
           return res;
         })
         .catch((err) => {
@@ -32,6 +33,7 @@ export default {
       return axiosClient
         .put(`/api/admin/agent/${agent.id}/`, agent)
         .then((res) => {
+          commit("setEditAgent",res.data)
           return res;
         })
         .catch((err) => {
@@ -89,6 +91,14 @@ export default {
     },
   },
   mutations: {
+    setAddAgent:(state,agentData)=>{
+      state.agent.data.unshift(agentData.data)
+    },
+    setEditAgent:(state,agentData)=>{
+      let agents = state.agent.data;
+      const update_obj = agents.findIndex((obj=>obj.id == agentData.data.id))
+      agents[update_obj] = {...agentData.data}
+    },
     setCurrentAgent: (state, agentData) => {
       state.currentAgent.data = agentData;
     },

@@ -159,7 +159,6 @@ async function handleSubmit() {
   const res = await store.dispatch("background_image/editBackgroundImage", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("background_image/getBackgroundImages");
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",
