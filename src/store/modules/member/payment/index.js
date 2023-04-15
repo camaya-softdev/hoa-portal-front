@@ -16,11 +16,11 @@ export default {
   },
 
   actions: {
-    editPaymentHistory({}, payment) {
+    editPaymentHistory({commit}, payment) {
       return axiosClient
         .put(`/api/admin/payment/transaction/${payment.id}/`, payment)
         .then((res) => {
-          console.log(res.status);
+          commit("setPaymentHistories",res.data)
           return res;
         })
         .catch((err) => {
@@ -139,6 +139,11 @@ export default {
     },
   },
   mutations: {
+    setEditPaymentHistory:(state,paymentHistoryData)=>{
+      let paymentHistories = state.paymentHistory.data 
+      const update_obj = paymentHistories.findIndex((obj=>obj.id == paymentHistoryData.data.id))
+      paymentHistories[update_obj] = {...paymentHistoryData.data};
+    },
     setCurrentPaymentHistory: (state, paymentHistoryData) => {
       state.currentPaymentHistory.data = paymentHistoryData;
     },

@@ -2,10 +2,10 @@ import axios from "axios";
 import store from "./store";
 
 const axiosClient = axios.create({
-  baseURL: "https://apidevhoaportal.camayacoast.com/",
-  // baseURL: "https://apihoaportal.camayacoast.com/",
+  // baseURL: "https://apidevhoaportal.camayacoast.com/",
+  baseURL: "https://apihoaportal.camayacoast.com/",
   // baseURL: "http://127.0.0.1:80",
-  // baseURL:"http://bqnvanixoa.laravel-sail.site:8080",
+  // baseURL:"http://localhost:80",
   withCredentials: true,
 });
 

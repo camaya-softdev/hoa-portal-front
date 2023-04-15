@@ -15,7 +15,7 @@ export default {
   },
 
   actions: {
-    addPaymentTransaction({}, payment_transaction) {
+    addPaymentTransaction({commit}, payment_transaction) {
       return axiosClient
         .post("/api/admin/transaction/", payment_transaction)
         .then((res) => {

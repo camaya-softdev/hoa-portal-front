@@ -53,7 +53,6 @@ export default {
 
   },
   mutations: {
-
     setDueFees: (state, dues_feesData) => {
       state.dues_fees.links = dues_feesData.meta.links;
       state.dues_fees.data = dues_feesData.data;

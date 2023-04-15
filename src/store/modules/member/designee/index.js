@@ -17,20 +17,22 @@ export default {
   },
 
   actions: {
-    addDesignee({}, designee) {
+    addDesignee({commit}, designee) {
       return axiosClient
         .post("/api/admin/member/designee/",designee)
         .then((res) => {
+          commit("setAddDesignee",res.data)
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    editDesignee({}, designee) {
+    editDesignee({commit}, designee) {
       return axiosClient
         .put(`/api/admin/member/designee/${designee.id}/`, designee)
         .then((res) => {
+          commit("setEditDesignee",res.data)
           return res;
         })
         .catch((err) => {
@@ -70,6 +72,14 @@ export default {
     },
   },
   mutations: {
+    setAddDesignee:(state,designeeData)=>{
+      state.designee.data.push(designeeData);
+    },
+    setEditDesignee:(state,designeeData)=>{
+      let designees = state.designee.data;
+      const update_obj = designee.findIndex((obj=>obj.id == designeeData.data.id));
+      designees[update_obj] = {...designeeData.data}
+    },
     setCurrentDesignee: (state, designeeData) => {
       state.currentDesignee.data = designeeData;
     },

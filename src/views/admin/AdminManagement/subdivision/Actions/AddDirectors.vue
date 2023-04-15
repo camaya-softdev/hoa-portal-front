@@ -232,7 +232,6 @@ async function handleSubmit() {
   const res = await store.dispatch("director/addDirector", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("director/getDirectors", route.params.id);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

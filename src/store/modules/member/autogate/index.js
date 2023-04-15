@@ -23,20 +23,22 @@ export default {
   },
 
   actions: {
-    addAutogate({}, autogate) {
+    addAutogate({commit}, autogate) {
       return axiosClient
         .post("/api/admin/autogate/", autogate)
         .then((res) => {
+          commit("setAddAutogate",res.data)
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    editAutogate({}, autogate) {
+    editAutogate({commit}, autogate) {
       return axiosClient
         .put(`/api/admin/autogate/${autogate.id}/`, autogate)
         .then((res) => {
+          commit("setEditAutogate",res.data)
           return res;
         })
         .catch((err) => {
@@ -106,6 +108,14 @@ export default {
     },
   },
   mutations: {
+    setAddAutogate:(state,autogateData)=>{
+      state.autogate.data.push(autogateData.data);
+    },
+    setEditAutogate:(state,autogateData)=>{
+      let autogates = state.autogate.data
+      const update_obj = autogates.findIndex((obj=>obj.id == autogateData.data.id));
+      autogates[update_obj] = {...autogateData.data}
+    },
     setCurrentAutogate: (state, autogateData) => {
       state.currentAutogate.data = autogateData;
     },

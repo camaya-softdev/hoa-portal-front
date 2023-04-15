@@ -24,20 +24,22 @@ export default {
   },
 
   actions: {
-    addUser({}, user) {
+    addUser({commit}, user) {
       return axiosClient
         .put(`/api/admin/user/add/user/${user.id}/`, user)
         .then((res) => {
+          commit("setAddUser",res.data)
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    editUser({}, user) {
+    editUser({commit}, user) {
       return axiosClient
         .put(`/api/admin/user/${user.id}/`, user)
         .then((res) => {
+          commit("setEditUser",res.data)
           return res;
         })
         .catch((err) => {
@@ -137,6 +139,14 @@ export default {
     }
   },
   mutations: {
+    setAddUser: (state,userData)=>{
+      state.user.data.push(userData.data);
+    },
+    setEditUser:(state,userData)=>{
+      let users = state.user.data
+      const update_obj = users.findIndex((obj=>obj.id == userData.data.id));
+      users[update_obj] = {...userData.data}
+    },
     setCurrentUser: (state, userData) => {
       state.currentUser.data = userData;
     },

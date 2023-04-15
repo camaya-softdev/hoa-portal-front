@@ -149,7 +149,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { ElMessageBox } from "element-plus";
 import store from "../../../../../store";
 // import { error } from "../../../../../utils/response";
@@ -197,11 +197,10 @@ const handleClose = (done: () => void) => {
 };
 
 async function register() {
-  console.log(form.value);
   const res = await store.dispatch("member/addMember", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("member/getMembers");
+      // await store.dispatch("member/getMembers");
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

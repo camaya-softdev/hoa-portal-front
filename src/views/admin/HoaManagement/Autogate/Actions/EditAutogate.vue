@@ -216,7 +216,6 @@ async function handleSubmit() {
   const res = await store.dispatch("autogate/editAutogate", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("autogate/getAutogates");
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",

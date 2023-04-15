@@ -134,6 +134,7 @@ function editModal(row) {
   editDesignee.value = true;
 }
 
+
 async function deleteDesignee(row) {
   if (confirm(`Are you sure you want to delete this data? Operation can't be undone`)) {
     try {

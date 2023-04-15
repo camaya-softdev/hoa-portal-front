@@ -17,20 +17,22 @@ export default {
   },
 
   actions: {
-    addCommunication({}, communication) {
+    addCommunication({commit}, communication) {
       return axiosClient
         .post("/api/admin/communication/",communication)
         .then((res) => {
+          commit("setAddCommunication",res.data)
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    editCommunication({}, communication) {
+    editCommunication({commit}, communication) {
       return axiosClient
         .put(`/api/admin/communication/${communication.id}/`, communication)
         .then((res) => {
+          commit("setEditCommunication",res.data)
           return res;
         })
         .catch((err) => {
@@ -77,6 +79,14 @@ export default {
     },
   },
   mutations: {
+    setAddCommunication:(state,communicationData)=>{
+      state.communication.data.push(communicationData);
+    },
+    setEditCommunication:(state,communicationData)=>{
+      let communications = state.communication.data;
+      const update_obj = communications.findIndex((obj=>obj.id == communicationData.data.id));
+      communications[update_obj]={...communicationData.data}
+    },
     setCurrentCommunication: (state, communicationData) => {
       state.currentCommunication.data = communicationData;
     },

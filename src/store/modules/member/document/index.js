@@ -17,20 +17,22 @@ export default {
   },
 
   actions: {
-    addDocument({}, document) {
+    addDocument({commit}, document) {
       return axiosClient
         .post("/api/admin/document/",document)
         .then((res) => {
+          commit("setAddDocument",res.data)
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    editDocument({}, document) {
+    editDocument({commit}, document) {
       return axiosClient
         .put(`/api/admin/document/${document.id}/`, document)
         .then((res) => {
+          commit("setEditDocument",res.data)
           return res;
         })
         .catch((err) => {
@@ -68,6 +70,14 @@ export default {
     },
   },
   mutations: {
+    setAddDocument:(state,documentData)=>{
+      state.document.data.push(documentData.data);
+    },
+    setEditDocument:(state,documentData)=>{
+      let documents = state.document.data
+      const update_obj = documents.findIndex((obj=>obj.id == documentData.data.id));
+      documents[update_obj] = {...documentData.data}
+    },
     setCurrentDocument: (state, documentData) => {
       state.currentDocument.data = documentData;
     },

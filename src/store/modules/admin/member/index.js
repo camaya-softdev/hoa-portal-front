@@ -1,5 +1,4 @@
 import axiosClient from "../../../../axios";
-import { ElNotification } from "element-plus";
 
 export default {
   namespaced: true,
@@ -20,22 +19,24 @@ export default {
     },
   },
   actions: {
-    addMember({}, member) {
-  
+    addMember({commit}, member) {
       axiosClient.get('/sanctum/csrf-cookie/')
       return axiosClient
         .post("/api/admin/member/", member)
         .then((res) => {
+          commit('setAddMember',res.data);
           return res;
         })
         .catch((err) => {
           return err;
         });
     },
-    updateMember({}, member) {
+    updateMember({commit}, member) {
       return axiosClient
         .put(`/api/admin/member/${member.id}/`, member)
         .then((res) => {
+
+          commit("setEditMember",res.data)
           return res;
         })
         .catch((err) => {
@@ -89,6 +90,15 @@ export default {
     },
   },
   mutations: {
+    setAddMember:(state,memberData)=>{
+      state.members.data.unshift(memberData.data);
+    },
+    setEditMember:(state,memberData)=>{
+      let members =state.members.data 
+      
+      const update_obj = members.findIndex((obj=>obj.id == memberData.data.id))
+      members[update_obj] = {...memberData.data}
+    },
     setCurrentMember: (state, memberData) => {
       state.currentMember.data = memberData;
     },

@@ -348,7 +348,6 @@ async function handleSubmit() {
   const res = await store.dispatch("template/addTemplate", form.value);
   try {
     if (res.status === 200 || res.status === 201) {
-      await store.dispatch("template/getTemplates", 1);
       await store.commit("alert/notify", {
         title: "Success",
         type: "success",
