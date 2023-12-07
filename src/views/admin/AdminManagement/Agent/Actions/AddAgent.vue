@@ -212,7 +212,7 @@ async function handleSubmit() {
   try {
     if (res.status === 200 || res.status === 201) {
 
-      await store.commit("alert/notify", {
+      store.commit("alert/notify", {
         title: "Success",
         type: "success",
         message: "The sales agent data was successfully created",
@@ -223,7 +223,7 @@ async function handleSubmit() {
       errorMsg.value = res.response.data.errors;
     }
   } catch (err) {
-    await store.commit("alert/notify", {
+    store.commit("alert/notify", {
       title: "Error",
       type: "danger",
       message: err,

@@ -7,14 +7,16 @@ import Footer from "./components/Footer.vue";
 <style>
   body {
     /* background-image: url("/background-image1.webp"); */
-    background-image: url("/camaya-bg-new.jpg");
-    background-color: whitesmoke;
-    background-repeat: no-repeat;
+    /* background-image: url("/camaya-bg-new.jpg"); */
+  /*  background-color: whitesmoke;
+      background-repeat: no-repeat; */
     /* background-attachment: fixed; */
-    background-size: cover;
+  /*  background-size: cover; */
     /* backdrop-filter: blur(2.5px); */
   }
-
+  .member-header{
+    background-color: #FFCF00;
+  }
   .el-table {
     opacity: 0.8;
   }

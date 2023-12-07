@@ -2,12 +2,12 @@
   <!-- <h1 class="text-2xl md:text-3xl font-semibold text-center text-black mb-5 mt-12">
     Announcements
   </h1> -->
-  <div class="mx-auto mt-12">
+  <div>
     <!--<h1 class="text-2xl font-semibold mb-3 text-center text-gray-700 mt-4">Cities are Crowded</h1>-->
 
-    <div class="title_divider font-semibold" style="margin-top: 5rem !important;">
+    <!-- <div class="title_divider font-semibold" style="margin-top: 5rem !important;">
       <div class="subtitle">ANNOUNCEMENTS</div>
-    </div>
+    </div> -->
 
     <div
       v-if="eventLoading"
@@ -18,8 +18,9 @@
     <!-- desktop view -->
     <div class="hidden md:block">
       <el-carousel 
-        :interval="3000" 
-        height="500px" 
+        :interval="3000"
+        initial-index="1"
+        height="594px"
         justify="center" 
         indicator-position="none"
         class="shadow-xl shadow-slate-900/10"
@@ -30,7 +31,7 @@
             :key="data.id"
           >
             <div class="item">
-              <div class="item__content">
+              <div class="item__content-desktop">
                 {{ data.title }}
               </div>
               <img class="item__image" :src="data.image" :alt="data.title" />
@@ -41,8 +42,10 @@
 
     <!-- mobile view -->
     <div class="md:hidden">
+      <div class="title_divider font-semibold">
+        <div class="subtitle">ANNOUNCEMENTS</div>
+      </div>
       <el-carousel 
-        :autoplay="false"
         height="300px" 
         justify="center" 
         direction="vertical"
@@ -54,7 +57,7 @@
             :key="data.id"
           >
             <div class="item">
-              <div class="item__content">
+              <div class="item__content-mobile">
                 {{ data.title }}
               </div>
               <img class="item__image" :src="data.image" :alt="data.title" />
@@ -99,7 +102,7 @@
     text-align: center;
   }
 
-  .item__content {
+  .item__content-mobile {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -111,6 +114,17 @@
     padding: 3px;
   }
 
+  .item__content-desktop {
+    position: absolute;
+    width: 100%;
+    margin-top: 85px;
+    font-size: 72px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    padding: 3px;
+  }
   .item__image {
     width: 100%;
     height: 100%;

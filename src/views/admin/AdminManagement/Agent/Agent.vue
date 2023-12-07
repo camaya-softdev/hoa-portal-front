@@ -159,12 +159,12 @@ let tableData = computed(() => store.state.agent.agent);
 const search = ref("");
 const filterTableData = computed(() => tableData.value.data);
 
-let searchAgent = debounce(function(){
+let searchAgent = debounce(function () {
   store
     .dispatch("agent/getSearchAgents", { data: search.value, url: 1 })
     .then(() => (tableData = computed(() => store.state.agent.agent)))
     .catch((err) => alert(err));
-},1000)
+}, 1000);
 
 const tableRowClassName = ({ row, rowIndex }) => {
   //change table row to  red if the agent is disable
@@ -188,7 +188,7 @@ async function changeStatus(index, row) {
       const res = await store.dispatch("agent/changeStatus", row.id);
       if (res.status === 204) {
         await store.dispatch("agent/getAgents");
-        await store.commit("alert/notify", {
+        store.commit("alert/notify", {
           title: "Success",
           type: "success",
           message: "The agent data status was successfully updated",

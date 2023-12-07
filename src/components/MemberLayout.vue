@@ -5,9 +5,9 @@
     element-loading-text="Fetching Data..."
   ></div>
   <div v-else class="flex h-full flex-col">
-    <header class="py-5">
+    <header class="py-5 member-header">
       <Disclosure as="nav" v-slot="{ open }">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-10xl px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
               <div class="hidden md:block flex-shrink-0">
@@ -34,103 +34,42 @@
 
             <!-- desktop view -->
             <div class="hidden md:block">
-              <div class="m-0 p-0 text-sm text-right" style="color: gray">
-                {{ dateNow + ' ' +timeDate }}
-              </div>
               <div class="ml-4 flex items-center">
                 <router-link
-                  class="group inline-flex items-center justify-center"
-                  style="font-size: 1.3rem"
+                  class="group inline-flex items-center justify-center text-sm"
                   :to="{ name: 'Home' }"
-                  >HOA<span style="color: #ca8a04"
-                    ><strong>PORTAL</strong></span
-                  ></router-link
+                  >HOME</router-link
                 >
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  content="Profile Page"
-                  placement="bottom"
+                <router-link
+                  :to="{ name: 'Profile' }"
+                  :class="[
+                    active ? 'text-black' : '',
+                    'block px-4 py-2 text-sm text-black',
+                  ]"
+                  >PROFILE
+                </router-link>
+                <router-link
+                  :to="{ name: 'PickLot' }"
+                  :class="[
+                    active ? 'text-black' : '',
+                    'block px-4 py-2 text-sm text-black',
+                  ]"
                 >
-                  <router-link
-                    :to="{ name: 'Profile' }"
-                    :class="[
-                      active ? 'text-black' : '',
-                      'block px-4 py-2 text-sm text-black',
-                    ]"
-                    ><svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                      />
-                    </svg>
-                  </router-link>
-                </el-tooltip>
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  content="Change Lot Page"
-                  placement="bottom"
+                  CHANGE LOT
+                </router-link>
+
+                <router-link
+                  :to="{ name: 'Billing' }"
+                  :class="[
+                    active ? 'text-black' : '',
+                    'block px-4 py-2 text-sm text-black',
+                  ]"
                 >
-                  <router-link
-                    :to="{ name: 'PickLot' }"
-                    :class="[
-                      active ? 'text-black' : '',
-                      'block px-4 py-2 text-sm text-black',
-                    ]"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819"
-                      />
-                    </svg>
-                  </router-link>
-                </el-tooltip>
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  content="Logout"
-                  placement="bottom"
-                >
-                  <DisclosureButton
-                    v-slot="{ active }"
-                    @click="logout"
-                    as="a"
-                    href="#"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-5 h-5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
-                      />
-                    </svg>
-                  </DisclosureButton>
-                </el-tooltip>
+                  BILLING
+                </router-link>
+                <DisclosureButton v-slot="{ active }" @click="logout" as="a" href="#">
+                  SIGN OUT
+                </DisclosureButton>
               </div>
             </div>
 
@@ -140,18 +79,10 @@
               <DisclosureButton
                 class="relative z-10 inline-flex items-center justify-center p-2 rounded-md hover:text-gray focus:outline-none gap-x-3 md:gap-x-5"
               >
-                <text
-                  class="group inline-flex items-center justify-center"
-                  style="font-size: 1.3rem"
-                  >HOA<span style="color: #ca8a04"
-                    ><strong>PORTAL</strong></span
-                  ></text
-                >
-                <MenuIcon
-                  v-if="!open"
-                  class="block h-6 w-6"
-                  aria-hidden="true"
-                />
+                <!-- <text class="group inline-flex items-center justify-center text-base"
+                  >HOME</text
+                > -->
+                <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
                 <XIcon v-else class="block h-6 w-6" aria-hidden="true" />
               </DisclosureButton>
             </div>
@@ -159,10 +90,7 @@
         </div>
 
         <DisclosurePanel class="-mr-1 md:hidden px-5">
-          <div
-            class="fixed inset-0 bg-slate-300/50 opacity-100"
-            aria-hidden="true"
-          ></div>
+          <div class="fixed inset-0 bg-slate-300/50 opacity-100" aria-hidden="true"></div>
           <div
             class="px-5 pt-2 pb-3 space-y-1 sm:px-3 inset-x-0 top-full mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-slate-900 shadow-xl ring-1 ring-slate-900/5 opacity-100 scale-100"
           >
@@ -198,7 +126,7 @@
       </Disclosure>
     </header>
 
-    <div class="mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- <div class="mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="text-center text-3xl font-medium leading-none">
         Hey, {{ user.data.hoa_member_name }}!
       </div>
@@ -244,7 +172,7 @@
           </span>
         </p>
       </div>
-    </div>
+    </div> -->
     <AutoLogout v-if="user"></AutoLogout>
     <router-view></router-view>
     <Footer />
@@ -254,6 +182,7 @@
 <script>
 import { format } from "date-fns";
 import AutoLogout from "./AutoLogout.vue";
+import Announcement from "../views/member/IndexComponents/Announcement.vue";
 import Footer from "./Footer.vue";
 import {
   Disclosure,
@@ -280,7 +209,7 @@ const userNavigation = [
 ];
 const getCurrentTime = () => format(new Date(), "h:mm:ss a");
 let timeDate = ref(getCurrentTime());
-let dateNow = ref(format(new Date(), 'yyyy-MM-dd'));
+let dateNow = ref(format(new Date(), "yyyy-MM-dd"));
 export default {
   components: {
     Disclosure,
@@ -294,6 +223,7 @@ export default {
     MenuIcon,
     XIcon,
     AutoLogout,
+    Announcement
   },
   setup() {
     const store = useStore();
@@ -314,7 +244,6 @@ export default {
     watch(
       () => store.state.navigation.member.data,
       (newValue, oldValue) => {
-        console.log(newValue);
         if (parseInt(newValue.data.lot_default) === 0) {
           router.push({ name: "PickLot" });
         }
@@ -344,7 +273,6 @@ export default {
     }
 
     function runningClock() {
-
       timeDate.value = getCurrentTime();
     }
     watchEffect((onInvalidate) => {

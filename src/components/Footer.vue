@@ -1,5 +1,5 @@
 <template>
-  <div class="footerWrap top-[100vh] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="footerWrap top-[100vh] mx-auto  px-4 sm:px-6 lg:px-8">
     <div class="footer">
       <!-- desktop view -->
       <div
@@ -65,6 +65,7 @@ console.log(isMember.value);
 .footerWrap {
   width: 100%;
   position: sticky;
+  background-color: #FFCF00 ;
   bottom: 0px;
 }
 .footer {

@@ -34,7 +34,10 @@
   </Table> -->
 
   <div class="mx-auto">
-    <ul role="list" class="mt-5 mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
+    <div class="text-center mt-20">
+    <h1 class="text-5xl text-[#333]">WELCOME, Mr/Mrs. LUNA?</h1>  
+    </div>
+    <ul role="list" class="mx-auto grid max-w-2xl grid-cols-1 gap-6 sm:gap-8 lg:mt-20 lg:max-w-none lg:grid-cols-3">
       <li>
         <ul role="list" class="flex flex-col gap-y-6 sm:gap-y-8 transform transition duration-500 hover:scale-105">
           <li>
@@ -46,12 +49,9 @@
                 <figcaption class="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
                   <div>
                     <div class="font-display text-base text-slate-900">Privilege Load</div>
-                    <!-- <div class="mt-1 text-sm text-slate-500">Description</div> -->
                   </div>
                   <div class="overflow-hidden rounded-full bg-slate-50">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
-                    </svg> -->
+                  
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6" opacity="25%">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
                     </svg>

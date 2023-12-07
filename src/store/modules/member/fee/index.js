@@ -60,7 +60,7 @@ export default {
       });
     },
 
-
+  
     getFee({ commit }, id) {
       commit("setCurrentFeeLoading", true);
       return axiosClient
@@ -76,6 +76,17 @@ export default {
         });
     },
 
+    changeStatus({}, id) {
+      return axiosClient
+        .put(`/api/admin/fee/change/status/${id}/`)
+        .then((res) => {
+          return res;
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+
     deleteFee({}, id) {
       return axiosClient.delete(`/api/admin/fee/${id}/`);
     },
@@ -86,8 +97,8 @@ export default {
     },
     setEditFee:(state,feeData)=>{
       let fees = state.fee.data;
-      const update_obj = fess.findIndex((obj=>obj.id == feeData.data.id))
-      fess[update_obj] = {...feeData.data}
+      const update_obj = fees.findIndex((obj=>obj.id == feeData.data.id))
+      fees[update_obj] = {...feeData.data}
     },
     setCurrentFee: (state, feeData) => {
       state.currentFee.data = feeData;

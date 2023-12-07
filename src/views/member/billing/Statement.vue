@@ -216,7 +216,7 @@ const props = defineProps<{
   statementID: Number;
 }>();
 let billingData = ref('');
-console.log(props.statementID)
+
 if (props.statementID !== 0) {
   store.dispatch("billing/getBillings", props.statementID);
   billingData = computed(() => store.state.billing.billings.data);

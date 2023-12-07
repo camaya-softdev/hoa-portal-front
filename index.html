@@ -23,9 +23,14 @@
 
       .title_divider {
         display: flex;
-        flex-direction: row;
-        margin-top: 2.5rem;
-        margin-bottom: 2.5rem;
+        flex-direction: column;
+        align-items: space-between;
+        width: 100%;
+        margin-left: 2.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-decoration: underline;
+        text-decoration-color: #754924;
         /* color: #ca8a04; */
         color: #333;
       }
@@ -104,7 +109,6 @@
 
       .el-carousel, .el-carousel--vertical {
         position: relative;
-        border-radius: 1rem !important;
       }
 
       table {
@@ -115,6 +119,9 @@
         width: 100%;
         height: fit-content;
         overflow-y: scroll;
+      }
+      tr:nth-child(even){
+        background-color: #F1F1F1;
       }
 
       .el-table th.el-table__cell>.cell {

@@ -1,13 +1,19 @@
 <template>
-  <div class="md:max-lg:flex">
-
-    <h1 class="text-xl md:text-2xl font-semibold text-center text-black mt-12">
-      Payment History
-    </h1>
-
+  <div class="md:max-sm:flex justify-center lg:px-48 md:px-20">
     <!-- desktop view -->
-    <div class="px-48 hidden md:block">
-      <Table class="mt-3" stripe style="width: 100%">
+    <div class="hidden md:block mb-4 mt-12">
+      <div class="flex text-center">
+        <div class="flex-none w-14 h-14">
+          Subdivision Logo
+        </div>
+        <div class="flex-auto w-64">
+          <h1 class="text-xl md:text-2xl font-semibold text-center text-black">
+            Hi Tinio!
+          </h1>
+          <p>Menara Point Payment History</p>
+        </div>
+      </div>
+      <Table class="mt-3"  style="width: 100%">
         <template v-slot:table>
           <thead class="border-gray-50 border-b-2">
             <tr>
@@ -81,7 +87,13 @@
     </div>
 
     <!-- mobile view -->
-    <div class="pt-0 mt-0 px-4 md:hidden">
+    <div class="pt-0 mt-0 px-4 md:hidden mt-5 mb-10">
+      <div class="mt-12">
+        <h1 class="text-xl md:text-2xl font-semibold text-center text-black">
+          Hi Tinio!
+        </h1>
+        <p class="text-center">Menara Point Payment History</p>
+      </div>
       <Table class="mt-3" stripe style="width: 100%">
         <template v-slot:table>
           <thead class="border-gray-50 border-b-2">

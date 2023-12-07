@@ -18,6 +18,7 @@
             HOA<span style="color: #ca8a04"><strong>PORTAL</strong></span>
           </h2>
         </div>
+        
         <form class="mt-8 space-y-6 m-5" @submit="login">
           <div
             v-if="errorMsg"

@@ -29,6 +29,7 @@
         style="width: 100%; overflow-x: auto"
         :flexible="true"
         table-layout="auto"
+        :row-class-name="tableRowClassName"
       >
         <el-table-column
           sortable
@@ -71,6 +72,32 @@
                 ></el-button
               > -->
               </el-tooltip>
+              <el-tooltip
+                v-if="scope.row.hoa_fees_status === 1"
+                content="Disabled Member Fees"
+                placement="bottom"
+                effect="light"
+              >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Lock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
+              <el-tooltip
+                v-else
+                content="Enabled Member Fees"
+                placement="bottom"
+                effect="light"
+              >
+                <el-button
+                  size="small"
+                  type="warning"
+                  :icon="Unlock"
+                  @click="changeStatus(scope.$index, scope.row)"
+                ></el-button
+              ></el-tooltip>
             </el-popover>
           </template>
         </el-table-column>
@@ -105,12 +132,12 @@
 <script setup>
 import { ref, computed } from "vue";
 
-import { Edit, Delete } from "@element-plus/icons-vue";
+import { Edit, Delete,Lock, Unlock } from "@element-plus/icons-vue";
 import AddOtherFees from "./Actions/AddOtherFees.vue";
 import EditOtherFees from "./Actions/EditOtherFees.vue";
 import { useRoute } from "vue-router";
 import store from "../../../../store";
-import {debounce} from "lodash";
+import { debounce } from "lodash";
 
 const addFees = ref(false);
 const editFees = ref(false);
@@ -142,6 +169,14 @@ function editModal(row) {
   editFees.value = true;
 }
 
+const tableRowClassName = ({ row, rowIndex }) => {
+  //change table row to  red if the Member Fee is disable
+  if (row.hoa_fees_status === 0) {
+    return "danger-row";
+  }
+  return "";
+};
+
 let searchFee = debounce(function () {
   store
     .dispatch("fee/getSearchFees", { data: search.value, url: 1 })
@@ -149,7 +184,7 @@ let searchFee = debounce(function () {
     .catch((err) => console.log(err));
 }, 1000);
 
-let label=1;
+let label = 1;
 async function getForPage(ev, link) {
   ev.preventDefault();
   if (!link.url || link.active) {
@@ -161,17 +196,34 @@ async function getForPage(ev, link) {
       label: Number(link.label),
     });
   } else {
-    if(link.label == 'Next &raquo;'){
+    if (link.label == "Next &raquo;") {
       await store.dispatch("fee/getFees", { url: Number(1 + label) });
       label++;
       return;
     }
-    if(link.label == '&laquo; Previous'){
+    if (link.label == "&laquo; Previous") {
       await store.dispatch("fee/getFees", { url: Number(label - 1) });
       label--;
       return;
     }
     await store.dispatch("fee/getFees", { data: lotId, url: link.label });
+  }
+}
+async function changeStatus(index, row) {
+  if (confirm(`Are you sure you want to update subdivision dues data status?`)) {
+    try {
+      const res = await store.dispatch("fee/changeStatus", row.id);
+      if (res.status === 204) {
+        await store.dispatch("fee/getFees", lotId);
+        await store.commit("alert/notify", {
+          title: "Success",
+          type: "success",
+          message: "The fees data status was successfully updated",
+        });
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
@@ -193,3 +245,8 @@ async function deleteFee(row) {
   }
 }
 </script>
+<style>
+.el-table .danger-row {
+  --el-table-tr-bg-color: var(--el-color-danger-light-9);
+}
+</style>
