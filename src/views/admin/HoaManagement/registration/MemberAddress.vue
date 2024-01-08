@@ -143,7 +143,6 @@ store.dispatch("lot/getLotAgent");
 const subdivisionData = computed(() => store.state.lot.lotSubdivision);
 const agentData = computed(() => store.state.lot.lotAgent);
 const tableData = computed(() => store.state.lot.lot);
-console.log(store.state.lot.lot);
 const lotLoading = computed(() => store.state.lot.lot.loading);
 
 const search = ref("");
