@@ -41,7 +41,7 @@
               size="small"
               @keyup="searchSubdivision"
               v-if="auth != 2"
-              placeholder="Type to search Test"
+              placeholder="Type to search"
             />
           </template>
           <template #default="scope">
