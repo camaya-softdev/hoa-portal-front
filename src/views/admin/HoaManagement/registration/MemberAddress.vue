@@ -143,15 +143,22 @@ store.dispatch("lot/getLotAgent");
 const subdivisionData = computed(() => store.state.lot.lotSubdivision);
 const agentData = computed(() => store.state.lot.lotAgent);
 const tableData = computed(() => store.state.lot.lot);
+console.log(store.state.lot.lot);
 const lotLoading = computed(() => store.state.lot.lot.loading);
 
 const search = ref("");
 
 const filterTableData = computed(() =>
-  tableData.value.data.filter(
+
+tableData.value.data.filter(
     (data) =>
       !search.value ||
-      data.hoa_subd_name.toLowerCase().includes(search.value.toLowerCase())
+      data.hoa_subd_name.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.hoa_subd_lot_street_name.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.hoa_subd_lot_num.toLowerCase().includes(search.value.toLowerCase()) ||
+      data.hoa_subd_lot_area.toString().toLowerCase().includes(search.value.toLowerCase())
+
+
   )
 );
 
